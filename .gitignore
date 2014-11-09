@@ -1,0 +1,10 @@
+#ignore hidden files in any  directory (file without names)
+.*
+
+#keep the git ignore file
+!/.gitignore
+
+#ignore directories have names below:
+RemoteSystemsTempFiles/
+bin/
+dataset/

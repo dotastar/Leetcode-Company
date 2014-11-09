@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ====================================================================== 
+     Jun 10, 2013 11:35:57 PM                                                        
+
+     socket server    
+     learning server technology
+                   
+     Asia                                                                
+     ====================================================================== -->
+<project name="Socket Server" default="default" basedir=".">
+    <target name="default" depends="depends" description="description">
+
+        <jar destfile="c:/MySocketServer.jar">
+        	<manifest>
+        		<attribute name = "Main-Class" value="WebProgramming.MySocketServer"/>
+        		<attribute name = "Class-Path" value="."/>
+        	</manifest>
+        	<fileset dir="D:/Asia/Dropbox/MyWorkingSpace/MyJava/bin"/>
+        </jar>
+    </target>
+
+    <target name="depends">
+    </target>
+
+</project>
