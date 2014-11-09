@@ -8,8 +8,6 @@ e.g. solutions of interview questions, course projects, personal projects, pract
 
 Details:
 
-1.QueryProcessEngineImpl - my graduate database course project
+1.My Java - all my practices of Java
 
-2.My Java - all my practices of Java
-
-3.My Python - all my practices of Python(Some codes are not mine, just for referencing).
+2.My Python - all my practices of Python(Some codes are not mine, just for referencing).
