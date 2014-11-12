@@ -13,6 +13,7 @@ public class RedBlackTreeImpl {
 		insertionSort(a);
 		System.out.println(Arrays.toString(a));
 		String s = "";
+		
 		Stack<String> test = new Stack<String>();
 		List<String> l = new ArrayList<String>(test);
 		System.out.println(Character.isLetterOrDigit('0'));

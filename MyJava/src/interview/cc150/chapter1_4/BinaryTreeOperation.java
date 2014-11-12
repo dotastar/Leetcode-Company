@@ -1,6 +1,6 @@
 package interview.cc150.chapter1_4;
 import general.datastructure.BNode;
-import general.datastructure.BTree;
+import general.datastructure.BTreeOperations;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -17,10 +17,10 @@ public class BinaryTreeOperation{
 	 * @author yazhoucao
 	 *
 	 */
-	public BTree<Integer> createMinimalBST(int[] sortedData){
+	public BTreeOperations<Integer> createMinimalBST(int[] sortedData){
 		int end = sortedData.length-1;
 		BNode<Integer> root = createMinimalBST(sortedData, 0, end);	
-		BTree<Integer> bst = new BTree<Integer>(root);
+		BTreeOperations<Integer> bst = new BTreeOperations<Integer>(root);
 		return bst;
 	}
 	
@@ -68,7 +68,7 @@ public class BinaryTreeOperation{
 	 * in each layer, linked them together, and put them in a queue
 	 * for next layer.
 	 */
-	public ArrayList<LinkedList<BNode<Integer>>> linkNodes(BTree<Integer> tree){
+	public ArrayList<LinkedList<BNode<Integer>>> linkNodes(BTreeOperations<Integer> tree){
 		ArrayList<LinkedList<BNode<Integer>>> lists = new ArrayList<LinkedList<BNode<Integer>>>();
 
 		LinkedList<BNode<Integer>> currents = new LinkedList<BNode<Integer>>();
@@ -107,7 +107,7 @@ public class BinaryTreeOperation{
 		int[] data = new int[]{0,1,2,3,4,5,6,7,8,9};
 		System.out.println("Create BinarySearchTree by sorted array: "+Arrays.toString(data));
 		BinaryTreeOperation btOper = new BinaryTreeOperation();
-		BTree<Integer> btree = btOper.createMinimalBST(data);
+		BTreeOperations<Integer> btree = btOper.createMinimalBST(data);
 		System.out.println(btree.toString());
 		System.out.println();
 		

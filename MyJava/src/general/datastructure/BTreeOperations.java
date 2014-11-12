@@ -6,11 +6,11 @@ import java.util.List;
 import java.util.Queue;
 import java.util.Stack;
 
-public class BTree<T extends Comparable<T>> {
+public class BTreeOperations<T extends Comparable<T>> {
 	private int size;
 	private BNode<T> root;
 	
-	public BTree(BNode<T> rootIn){
+	public BTreeOperations(BNode<T> rootIn){
 		root = rootIn;
 	}
 	
@@ -261,7 +261,7 @@ public class BTree<T extends Comparable<T>> {
 		 * 		 F H
 		*/
 		
-		BTree<Character> btree = new BTree<Character>(a);
+		BTreeOperations<Character> btree = new BTreeOperations<Character>(a);
 		
 		System.out.println("Initialize btree:");
 		System.out.println(btree.toString());
