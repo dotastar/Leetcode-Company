@@ -6,6 +6,14 @@ import java.util.Arrays;
  * Linear probing hash table implementation,
  * also called closed hashing/open addressing
  * 
+ * 1.put can insert, update, delete
+ * 2.put, delete should consider resize
+ * 3.be careful about the LOAD_FACTOR, shouldn't be greater than 1
+ * 4.It's prone to enter infinite loop state in findKeyIndex() function,
+ * be careful to deal with the capacity, resizing logic, or add a count to
+ * detect such state and throw an exception.
+ * 
+ * 
  * @author yazhoucao
  * 
  */
@@ -58,8 +66,12 @@ public class HashMap_Probing<K, V> implements SymbolTable<K, V> {
 	 */
 	private int findKeyIndex(K k) {
 		int idx = hash(k);
-		while (keys[idx] != null && !keys[idx].equals(k))
+		int cnt = 0;
+		while (keys[idx] != null && !keys[idx].equals(k)){
 			idx = idx == capacity - 1 ? 0 : idx + 1;
+			if( ++cnt > capacity)
+				throw new AssertionError("Error! Enter inifinite loop.");
+		}
 		return idx;
 	}
 
