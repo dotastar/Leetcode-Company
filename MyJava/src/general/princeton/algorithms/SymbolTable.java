@@ -3,6 +3,8 @@ package general.princeton.algorithms;
 public interface SymbolTable<K, V> {
 	public int size();
 
+	public int capacity();
+	
 	public boolean isEmpty();
 
 	public boolean contains(K k);
