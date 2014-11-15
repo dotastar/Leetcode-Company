@@ -262,7 +262,7 @@ public class HashMapTest {
 		Random ran = new Random();
 		for(int i=0; i<50; i++)
 			map.put(ran.nextInt(1000), i);
-		
+		assert map.size()==50;
 //		Iterable<Integer> iter = map.keys();
 //		int no = 1;
 //		for(Integer k : iter)
