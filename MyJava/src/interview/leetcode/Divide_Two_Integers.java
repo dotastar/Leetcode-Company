@@ -38,6 +38,18 @@ public class Divide_Two_Integers {
 		System.out.println(divide2(-2147483648, 1000));
 
 		/**
+		 * Negative number is represented in two's complementary representation.
+		 */
+		int min = Integer.MIN_VALUE;
+		System.out.println(min);
+		System.out.println(Integer.toBinaryString(min));
+		System.out.println(min | 1);
+		System.out.println(Integer.toBinaryString(min | 1));
+		System.out.println(-1);
+		System.out.println(Integer.toBinaryString(-1));
+		System.out.println(min / min);
+
+		/**
 		 * For a Integer number, if it overflows, it goes back to the minimum
 		 * value and continues from there. If it underflows, it goes back to the
 		 * maximum value and continues from there.
@@ -83,11 +95,7 @@ public class Divide_Two_Integers {
 			res += 1 << (count - 1);
 			p -= q << (count - 1);
 		}
-
-		if ((dividend > 0 && divisor > 0) || (dividend < 0 && divisor < 0))
-			return res;
-		else
-			return -res;
+		return ((dividend ^ divisor) >>> 31) == 0 ? res : -res;
 	}
 
 	/**
@@ -96,41 +104,59 @@ public class Divide_Two_Integers {
 	 * Based on the form: num = a_0*2^0 + a_1*2^1 + a_2*2^2 +...+ a_n*2^n
 	 */
 	public static int divide2(int dividend, int divisor) {
-		if (divisor == 0)
-			return Integer.MAX_VALUE;
-		if (dividend == 0)
-			return 0;
-
+		// unsigned shifting (>>>)
+		boolean neg = ((dividend ^ divisor) >>> 31) == 1;
 		int res = 0;
-
-		// Math.abs() won't work on Integer.MIN
-		if (dividend == Integer.MIN_VALUE) {
-			// equal to - ( abs(dividend) - abs(advisor) )
-			dividend += Math.abs(divisor); // so that Math.abs could work
-			res += 1; // minus one divisor, so result should add one
-		}
-		if (divisor == Integer.MIN_VALUE)
-			return res;
-		// notice: must be unsigned shifting (>>>)
-		boolean neg = (dividend ^ divisor) >>> 31 == 1 ? true : false;
 		dividend = Math.abs(dividend);
 		divisor = Math.abs(divisor);
-
-		int bits = 0; // bits moved
-		while ((dividend >> 1) >= divisor) {
-			divisor <<= 1;
-			bits++;
+		// Math.abs() won't work on Integer.MIN
+		if (divisor == Integer.MIN_VALUE)
+			return dividend == Integer.MIN_VALUE ? 1 : 0;
+		else if (dividend == Integer.MIN_VALUE) {
+			dividend += divisor;
+			dividend = Math.abs(dividend);
+			res++;
 		}
-		// add dividend!=0 could make the loop break earlier
-		while (bits >= 0 && dividend!=0) {	
+		int k = 0;
+		while (dividend >> 1 >= divisor) {
+			divisor = divisor << 1;
+			k++;
+		}
+		while (dividend > 0 && k >= 0) {
 			if (dividend >= divisor) {
 				dividend -= divisor;
-				res += (1 << bits);
+				res += 1 << k; // 2^k
 			}
-			divisor >>= 1;
-			bits--;
+			k--;
+			divisor = divisor >> 1;
+		}
+		return neg ? -res : res;
+	}
+
+	/**
+	 * A more concise version, combined above two solution
+	 */
+	public static int divide3(int dividend, int divisor) {
+		int res = 0;
+		int p = Math.abs(dividend);
+		int q = Math.abs(divisor);
+		if (q == Integer.MIN_VALUE) // Math.abs() won't work on Integer.MIN
+			return p == Integer.MIN_VALUE ? 1 : 0;
+		else if (p == Integer.MIN_VALUE) {
+			p -= q;
+			res++;
 		}
 
-		return neg ? -res : res;
+		while (p >= q) {
+			int k = 1; // bits moved
+			// equals to p/(2^k) >= q or p >= q*(2^k)
+			while ((p >> k) >= q)
+				k++;
+			res += 1 << (k - 1);
+			p -= q << (k - 1);
+		}
+
+		return (dividend ^ divisor) >>> 31 == 0 ? res : -res;
+
 	}
 }
