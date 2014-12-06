@@ -7,7 +7,9 @@ public class BasicOOFeatures {
 		son = new Son();
 		parent = son;
 		
+		//parent.id's address is decided at compile time
 		System.out.println(parent.id);
+		//parent.idSelf()'s address is decided at execution time(late binding).
 		System.out.println(parent.idSelf());
 		
 		System.out.println(son.id);
@@ -27,12 +29,12 @@ class Parent {
 }
 
 class Son extends Parent{
-	int id;
+	int id;					//shadowing
 	public Son(){
 		id = 100;
 	}
 	
-	public String idSelf(){
+	public String idSelf(){	//overriding
 		return "son "+id;
 	}
 }
