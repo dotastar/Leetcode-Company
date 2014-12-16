@@ -13,7 +13,7 @@ public class AutoTestUtils {
 	private AutoTestUtils() {}
 	
 	/**
-	 * Run test cases in the Class provided by the input
+	 * Run test cases in the Class provided by the classname
 	 */
 	public static String runTestClass(String classname){	
 		try {

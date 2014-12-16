@@ -19,6 +19,7 @@ public class Q5_Compute_X_Mul_Y_Without_Multiply_Or_Add {
 	}
 
 	/**
+	 * Time: O(n), n is the width of y (number of bits).
 	 * Idea: use right shift << equals to *2 to simulate multiplication.
 	 */
 	public static long multiplyNoOperator(long x, long y) {
