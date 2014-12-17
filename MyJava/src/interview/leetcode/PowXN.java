@@ -17,14 +17,14 @@ public class PowXN {
 
 		double x2 = 34.00515;
 		int n2 = -3;
-		double res2 = 0.00003;
+		double res2 = Math.pow(x2, n2);
 		double calcRes2 = pow(x2, n2);
 		assert calcRes2 == res2 : calcRes2;
 
 		double x3 = 4.70975;
 		int n3 = -6;
 		double res3 = 0.00009;
-		double calcRes3 = pow(x3, n3);
+		double calcRes3 = Math.floor(pow(x3, n3) * 100000) / 100000;
 		assert calcRes3 == res3 : calcRes3;
 
 	}

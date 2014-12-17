@@ -19,8 +19,9 @@ public class Q5_Compute_X_Mul_Y_Without_Multiply_Or_Add {
 	}
 
 	/**
-	 * Time: O(n), n is the width of y (number of bits).
-	 * Idea: use right shift << equals to *2 to simulate multiplication.
+	 * Time: O(n^2), n is the width of y (number of bits).
+	 * Idea: use (2^p + 2^q + ... + 2^k) to represent y, <<k equals to 2^k
+	 * x*y = x*(2^p + 2^q + ... + 2^k) = x*2^p + x*2^q + ... + x*2^k.
 	 */
 	public static long multiplyNoOperator(long x, long y) {
 		if (x == 0 || y == 0)
@@ -67,10 +68,14 @@ public class Q5_Compute_X_Mul_Y_Without_Multiply_Or_Add {
 	@Test
 	public void test0() { // random test
 		Random r = new Random();
-		for (int i = 0; i < 10000; ++i) {
-			int x = r.nextInt(), y = r.nextInt();
-			long prod = multiplyNoOperator(x, y);
-			assertTrue(prod == (long) x * y);
+		int boundary = 100000;
+		for (Method m : AutoTestUtils.findMethod(methodName, c)) {
+			for (int i = 0; i < 10000; ++i) {
+				int x = r.nextInt(boundary) - boundary / 2, y = r
+						.nextInt(boundary) - boundary / 2;
+				long prod = invokeMethod(m, x, y);
+				assertTrue(prod == (long) x * y);
+			}
 		}
 	}
 
