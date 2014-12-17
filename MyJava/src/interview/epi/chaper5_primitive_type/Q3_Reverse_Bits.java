@@ -5,7 +5,7 @@ import static org.junit.Assert.assertTrue;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import interview.epi.AutoTestUtils;
+import interview.AutoTestUtils;
 
 import org.junit.Test;
 

@@ -1,7 +1,7 @@
 package interview.epi.chaper5_primitive_type;
 
 import static org.junit.Assert.assertTrue;
-import interview.epi.AutoTestUtils;
+import interview.AutoTestUtils;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

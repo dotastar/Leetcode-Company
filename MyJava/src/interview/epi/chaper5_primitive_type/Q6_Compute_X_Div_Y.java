@@ -8,7 +8,7 @@ import java.util.Random;
 
 import org.junit.Test;
 
-import interview.epi.AutoTestUtils;
+import interview.AutoTestUtils;
 
 /**
  * Problem 5.6
