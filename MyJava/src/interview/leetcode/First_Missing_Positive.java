@@ -19,6 +19,10 @@ public class First_Missing_Positive {
 	/**
 	 * Time: 2n = O(n)
 	 * 
+	 * The first missing positive value must be in the range of 1...n+1, it is
+	 * n+1 when every entry value in the array A[i] = i+1, if there is one or
+	 * more duplicate values, the missing value must be less than n+1.
+	 * 
 	 * A[i] == A[A[i]] is the result of swap(A, i, A[i]),
 	 * 
 	 * if(A[i]==A[A[i]]) == true, it means the position A[i] is going to be put
@@ -50,9 +54,39 @@ public class First_Missing_Positive {
 		return A[0] == A.length ? A.length + 1 : A.length;
 	}
 
+	/**
+	 * Same solution, more comments, from EPI
+	 */
+	public static int firstMissingPositive2(int[] A) {
+		// Record which values are present by writing A[i] to index A[i] - 1 if
+		// A[i] is between 1 and A.length, inclusive. We save the value at index
+		// A[i] - 1 by swapping it with the entry at i. If A[i] is negative or
+		// greater than n, we just advance i.
+		int i = 0;
+		while (i < A.length) {
+			if (A[i] > 0 && A[i] <= A.length && A[A[i] - 1] != A[i]) {
+				swap(A, A[i] - 1, i);
+			} else {
+				++i;
+			}
+		}
+
+		// Second pass through A to search for the first index i such that
+		// A[i] != i+1, indicating that i + 1 is absent. If all numbers between
+		// 1 and A.length are present, the smallest missing positive is
+		// A.length + 1.
+		for (i = 0; i < A.length; ++i) {
+			if (A[i] != i + 1) {
+				return i + 1;
+			}
+		}
+		return A.length + 1;
+	}
+
 	public static void swap(int[] A, int i, int j) {
 		int tmp = A[i];
 		A[i] = A[j];
 		A[j] = tmp;
 	}
+
 }

@@ -72,20 +72,31 @@ public class Jump_Game {
 	 * @return
 	 */
 	public static boolean canJump2(int[] A) {
-        int steps = A[0];
-        int reach = A[0];
-        for(int i=1; i<A.length; i++){
-            if(steps==0)
-                return false;
-            if(reach>=A.length-1)
-                return true;
-            steps--;
-            if(A[i]>steps){
-                steps = A[i];
-                reach = i+A[i];
-            }
-        }
-        return true;
+		int steps = A[0];
+		int reach = A[0];
+		for (int i = 1; i < A.length; i++) {
+			if (steps == 0)
+				return false;
+			if (reach >= A.length - 1)
+				return true;
+			steps--;
+			if (A[i] > steps) {
+				steps = A[i];
+				reach = i + A[i];
+			}
+		}
+		return true;
+	}
+
+	/**
+	 * Linear Time, more concise version
+	 */
+	public boolean canJump_concise(int[] A) {
+		int furthestReach = 0;
+		for (int i = 0; i <= furthestReach && furthestReach < A.length - 1; ++i) {
+			furthestReach = Math.max(furthestReach, i + A[i]);
+		}
+		return furthestReach >= A.length - 1;
 	}
 
 }
