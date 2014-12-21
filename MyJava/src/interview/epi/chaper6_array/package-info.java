@@ -12,6 +12,16 @@
  * 
  * Q10 : LeetCode Maximum Product Subarray
  * 
+ * Q14 : LeetCode Next Permutation
+ * 
+ * Q21 : LeetCode Valid Sudoku
+ * 
+ * Q22 : LeetCode Spiral Matrix (similar)
+ * 
+ * Q23 : LeetCode Spiral Matrix (exactly)
+ * 
+ * Q24 : Pascal's Triangle 
+ * 
  */
 /**
  * @author yazhoucao

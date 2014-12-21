@@ -42,6 +42,11 @@ public class Next_Permutation {
 	}
 
 	/**
+	 * The key insight is that we want to increase the permutation by as little
+	 * as possible. We look at the entry e that appears just before the longest
+	 * decreasing suffix. We swap e with that the smallest entry s in the suffix
+	 * which is larger than e so as to minimize the change to the prefix. At
+	 * last, we should reverse the decreasing suffix so that it is the smallest.
 	 * 
 	 * @param num
 	 */
@@ -68,7 +73,42 @@ public class Next_Permutation {
 		}
 	}
 
-	
+	/**
+	 * Same solution, more concise, more comments, from EPI
+	 */
+	public int[] nextPermutation2(int[] p) {
+		int k = p.length - 2;
+		while (k >= 0 && p[k] >= p[k + 1]) {
+			--k;
+		}
+		if (k == -1) {
+			return new int[0]; // p is the last permutation.
+		}
+
+		// Swap the smallest entry after index k that is greater than p[k].
+		// We exploit the fact that p[k + 1 : p.size() - 1] is decreasing so if
+		// we search in reverse order, the first entry that is greater than p[k]
+		// is the smallest such entry.
+		for (int i = p.length - 1; i > k; --i) {
+			if (p[i] > p[k]) {
+				swap(p, k, i);
+				break;
+			}
+		}
+
+		// Since p[k + 1 : p.size() - 1] is in decreasing order, we can build
+		// the
+		// smallest dictionary ordering of this subarray by reversing it.
+		reverse(p, k + 1, p.length - 1);
+		return p;
+	}
+
+	private void reverse(int[] p, int a, int b) {
+		for (int i = a, j = b; i < j; ++i, --j) {
+			swap(p, i, j);
+		}
+	}
+
 	public void swap(int[] num, int i, int j) {
 		int tmp = num[i];
 		num[i] = num[j];

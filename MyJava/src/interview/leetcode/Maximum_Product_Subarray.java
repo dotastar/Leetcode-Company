@@ -63,16 +63,13 @@ public class Maximum_Product_Subarray {
 	}
 
 	/**
-	 * Dynamic Programming
+	 * Dynamic Programming, Time: O(n), Space: O(1)
 	 * 
-	 * Best solution, very neat, maintain a current max and min continuous
-	 * product that ends at i, the max continuous product at point i could be
-	 * either
+	 * Very neat solution, maintain a current max and min continuous product
+	 * that ends at i, the max continuous product at point i could be either
 	 * 
 	 * oldmax(i-1)*A[i] if A[i]>0
-	 * 
 	 * or
-	 * 
 	 * oldmin(i-1)*A[i] if A[i]<=0
 	 * 
 	 * Because of the property of multiplication: one big negative number * one
@@ -99,8 +96,6 @@ public class Maximum_Product_Subarray {
 		}
 		return global;
 	}
-    
-
 
 	private static int max(int a, int b) {
 		return a > b ? a : b;
@@ -109,4 +104,17 @@ public class Maximum_Product_Subarray {
 	private static int min(int a, int b) {
 		return a < b ? a : b;
 	}
+
+	/******************* Variant *******************/
+
+	/**
+	 * Let A be an array. Compute an array B where B[i] is the product of all
+	 * elements in A except A[i]. You cannot use division, in O(n) time, O(1)
+	 * space.
+	 */
+
+	/**
+	 * Let A be an array. Compute the maximum over the product of all triples of
+	 * distinct elements of A. O(n) time, O(1) space.
+	 */
 }
