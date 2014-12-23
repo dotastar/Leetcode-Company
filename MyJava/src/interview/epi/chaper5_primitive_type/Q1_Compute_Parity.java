@@ -25,6 +25,10 @@ public class Q1_Compute_Parity {
 	Class<?> c = Q1_Compute_Parity.class;
 
 	public static void main(String[] args) {
+		int x = 12; // 1100;
+		System.out.println(~x);
+		System.out.println((~(x - 1)));
+		System.out.println(x & (~(x - 1)));
 		AutoTestUtils.runTestClassAndPrint(Q1_Compute_Parity.class);
 	}
 
@@ -72,6 +76,34 @@ public class Q1_Compute_Parity {
 		return res;
 	}
 
+	/**
+	 * Precompute and cache all the numbers, we can compute the parity of a
+	 * 64-bit integer by grouping its bits into four nonoverlapping 16 bit
+	 * words, computing the parity of each subset, and XORing these four
+	 * results.
+	 */
+	private static short[] precomputedParity;
+
+	static {
+		precomputedParity = new short[1 << 16];
+		for (int i = 0; i < 1 << 16; i++)
+			precomputedParity[i] = parity_improved2(i);
+	}
+
+	/**
+	 * Because we just calculate the number of bit 1, don't differentiate the
+	 * higher or lower significance, therefore we can split the number into
+	 * several parts and calculate them separately and then aggregate them by
+	 * XOR ^.
+	 * Time: O(1)
+	 */
+	public static short parity_precompute(int data) {
+		final int WORD_SIZE = 16;
+		final int BIT_MASK = 0xFFFF;
+		return (short) (precomputedParity[(data >> WORD_SIZE) & BIT_MASK] ^ precomputedParity[data
+				& BIT_MASK]);
+	}
+
 	/****************** Unit Test ******************/
 
 	public short invokeMethod(Method m, int data) {
@@ -88,9 +120,9 @@ public class Q1_Compute_Parity {
 
 	@Test
 	public void test_1() {
-		int data = 1;
+		int data = 85;		// 1010101
 		for (Method m : AutoTestUtils.findMethod(methodName, c))
-			assertTrue(invokeMethod(m, data) == 1);
+			assertTrue(invokeMethod(m, data) == 0);
 	}
 
 	@Test
@@ -102,13 +134,20 @@ public class Q1_Compute_Parity {
 
 	@Test
 	public void test_3() {
+		int data = 12; // 1100
+		for (Method m : AutoTestUtils.findMethod(methodName, c))
+			assertTrue(invokeMethod(m, data) == 0);
+	}
+
+	@Test
+	public void test_4() {
 		int data = Integer.MAX_VALUE;
 		for (Method m : AutoTestUtils.findMethod(methodName, c))
 			assertTrue(invokeMethod(m, data) == 1);
 	}
 
 	@Test
-	public void test_4() {
+	public void test_5() {
 		int data = Integer.MAX_VALUE - 1;
 		for (Method m : AutoTestUtils.findMethod(methodName, c))
 			assertTrue(invokeMethod(m, data) == 0);
