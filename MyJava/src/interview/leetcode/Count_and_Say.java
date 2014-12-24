@@ -21,16 +21,17 @@ public class Count_and_Say {
 
 	public static void main(String[] args) {
 		for (int i = 1; i <= 7; i++) {
-			System.out.println(countAndSay(i)+"\n\n");
+			System.out.println(countAndSay(i) + "\n\n");
 		}
-		
+
 		System.out.println(countAndSay2(20));
 	}
+
 	/**
 	 * Generate current sequence by the previous sequence, (n)th by (n-1)th, n-1
 	 * by n-2, etc...
 	 * 
-	 * Time: O(n * L)
+	 * Time: O(n * L), L is the average length of all intermediate Strings.
 	 */
 	public static String countAndSay(int n) {
 		String s = "1";
@@ -40,9 +41,9 @@ public class Count_and_Say {
 			int cnt = 1;
 			for (int i = 0; i < size; i++) {
 				char c = s.charAt(i);
-				if (i + 1 < size && c == s.charAt(i + 1)) { 
-					cnt++;	//count
-				} else {	//say
+				if (i + 1 < size && c == s.charAt(i + 1)) {
+					cnt++; // count
+				} else { // say
 					sb.append(cnt).append(c);
 					cnt = 1;
 				}
@@ -65,13 +66,13 @@ public class Count_and_Say {
 			StringBuilder newstr = new StringBuilder();
 			for (int j = 0; j < len; j++) {
 				if (j != len - 1 && sb.charAt(j) == sb.charAt(j + 1))
-					count++;	//count
-				else {	//say
+					count++; // count
+				else { // say
 					newstr.append(count).append(sb.charAt(j));
 					count = 1;
 				}
 			}
-			System.out.println(i+", "+newstr.length());
+			System.out.println(i + ", " + newstr.length());
 			sb = newstr;
 		}
 		return sb.toString();
