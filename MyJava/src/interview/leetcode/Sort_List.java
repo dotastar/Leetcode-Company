@@ -29,6 +29,39 @@ public class Sort_List {
 	}
 
 	/**
+	 * Selection sort
+	 * Time: O(n^2)
+	 */
+	public ListNode sortList_Insertion(ListNode head) {
+		ListNode dummy = new ListNode(0);
+		ListNode tail = dummy;
+		ListNode prehead = new ListNode(0);
+		prehead.next = head;
+		while (prehead.next != null) {
+			ListNode prev = prehead;
+			ListNode curr = prehead.next;
+			ListNode smallest = curr;
+			while (curr.next != null) {
+				if (curr.val < curr.next.val)
+					smallest = prev;
+				curr = curr.next;
+				prev = prev.next;
+			}
+			ListNode deleted = delete(smallest);
+			tail.next = deleted;
+			tail = tail.next;
+		}
+		return dummy.next;
+	}
+
+	private ListNode delete(ListNode prev) {
+		ListNode deleted = prev.next;
+		if (deleted != null)
+			prev.next = deleted.next;
+		return deleted;
+	}
+
+	/**
 	 * Merge sort
 	 * 
 	 * 1.break list in middle recursively

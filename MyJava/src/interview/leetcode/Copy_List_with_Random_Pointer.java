@@ -15,7 +15,6 @@ import java.util.Map;
 public class Copy_List_with_Random_Pointer {
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 		RandomListNode h = new RandomListNode(-1);
 		h.next = new RandomListNode(-1);
 		h.random = h;
@@ -74,6 +73,12 @@ public class Copy_List_with_Random_Pointer {
 	 * 3. break the list to two
 	 * 
 	 * Time: O(n), Space: O(1)
+	 * 
+	 * Note: step 2 and 3 can't be combined to one step, because the random
+	 * pointer could point to a previous node, if do copying and breaking the
+	 * list simultaneously in such a case, the random pointer will point to the
+	 * node in original list instead of the node in copy list cause the previous
+	 * nodes are all broke.
 	 * 
 	 */
 	public static RandomListNode copyRandomList_Improved(RandomListNode head) {

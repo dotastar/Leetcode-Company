@@ -118,6 +118,8 @@ public class Intersection_of_Two_Linked_Lists {
 	 * find the anyone of the two begin point as an end. (Actually one of them
 	 * is the result.)
 	 * 
+	 * Details see p239 EPI
+	 * 
 	 * @author yazhoucao
 	 * 
 	 */
