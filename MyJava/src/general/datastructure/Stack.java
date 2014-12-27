@@ -2,7 +2,7 @@ package general.datastructure;
 
 public class Stack<T extends Comparable<T>>{
 	private int size;
-	private LinkedNode<T> top;
+	private Node<T> top;
 
 	public Stack(){
 		size = 0;
@@ -26,7 +26,7 @@ public class Stack<T extends Comparable<T>>{
 	}
 
 	public void push(T data){
-		LinkedNode<T> newtop = new LinkedNode<T>(data);
+		Node<T> newtop = new Node<T>(data);
 		newtop.setNext(top);
 		top = newtop;
 		size++;

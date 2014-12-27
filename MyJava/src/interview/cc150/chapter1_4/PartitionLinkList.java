@@ -1,5 +1,5 @@
 package interview.cc150.chapter1_4;
-import general.datastructure.LinkedNode;
+import general.datastructure.Node;
 import general.datastructure.SingLinkList;
 
 
@@ -8,7 +8,7 @@ public class PartitionLinkList{
 	public static void main(String[] args){
 		SingLinkList<Integer> list = new SingLinkList<Integer>();
 		SortLinkList.randomInitializeInt(list, 10);
-		LinkedNode<Integer> node = list.getHead();
+		Node<Integer> node = list.getHead();
 		
 		System.out.println(list.toString());
 		list.setHead(partition2(500, node));	
@@ -22,10 +22,10 @@ public class PartitionLinkList{
 	 * @param pivot
 	 * @param head
 	 */
-	public static void partition1(int pivot, LinkedNode<Integer> head){
+	public static void partition1(int pivot, Node<Integer> head){
 		
-		LinkedNode<Integer> left = null;
-		LinkedNode<Integer> current = head;
+		Node<Integer> left = null;
+		Node<Integer> current = head;
 		
 		if(current==null) return;
 		
@@ -68,11 +68,11 @@ public class PartitionLinkList{
 	 * @param node
 	 * @return
 	 */
-	public static LinkedNode<Integer> partition2(int pivot, LinkedNode<Integer> node){
-		LinkedNode<Integer> smallStart = null;
-		LinkedNode<Integer> smallEnd = null;
-		LinkedNode<Integer> bigStart = null;
-		LinkedNode<Integer> bigEnd = null;
+	public static Node<Integer> partition2(int pivot, Node<Integer> node){
+		Node<Integer> smallStart = null;
+		Node<Integer> smallEnd = null;
+		Node<Integer> bigStart = null;
+		Node<Integer> bigEnd = null;
 		
 		while(node!=null){
 			if(node.getData()>pivot){

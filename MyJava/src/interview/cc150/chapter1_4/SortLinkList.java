@@ -1,5 +1,5 @@
 package interview.cc150.chapter1_4;
-import general.datastructure.LinkedNode;
+import general.datastructure.Node;
 import general.datastructure.SingLinkList;
 
 import java.util.Random;
@@ -16,10 +16,10 @@ public class SortLinkList{
 //		System.out.println(Arrays.toString(test));
 		SingLinkList<Integer> list = new SingLinkList<Integer>();
 		randomInitializeInt(list, 12);
-		list.add(new LinkedNode<Integer>(11));
-		list.add(new LinkedNode<Integer>(22));
-		list.add(new LinkedNode<Integer>(2));
-		list.add(new LinkedNode<Integer>(5));
+		list.add(new Node<Integer>(11));
+		list.add(new Node<Integer>(22));
+		list.add(new Node<Integer>(2));
+		list.add(new Node<Integer>(5));
 		System.out.println(list.toString());
 		
 		quicksort(list, list.getHead(), list.getTail());
@@ -57,13 +57,13 @@ public class SortLinkList{
 	 * @param first
 	 * @param last
 	 */
-	public static <T extends Comparable<T>> void quicksort(SingLinkList<T> list, LinkedNode<T> first, LinkedNode<T> last){
+	public static <T extends Comparable<T>> void quicksort(SingLinkList<T> list, Node<T> first, Node<T> last){
 		if(first.equals(last)) return;
 		
-		LinkedNode<T> pivot = first; 
-		LinkedNode<T> left = first;	//nodes before it are done(include)
-		LinkedNode<T> prevleft = first;
-		LinkedNode<T> current = first.next();
+		Node<T> pivot = first; 
+		Node<T> left = first;	//nodes before it are done(include)
+		Node<T> prevleft = first;
+		Node<T> current = first.next();
 
 		while(!current.equals(last)){
 			//swap
@@ -98,7 +98,7 @@ public class SortLinkList{
 			quicksort(list, left.next(), last);
 	}
 	
-	private static <T extends Comparable<T>> void swap(LinkedNode<T> i, LinkedNode<T> j){
+	private static <T extends Comparable<T>> void swap(Node<T> i, Node<T> j){
 		//swap data
 		T data = i.getData();
 		i.setData(j.getData());
@@ -111,7 +111,7 @@ public class SortLinkList{
 		
 		Random ran = new Random();
 		for(int i=0; i<size; i++)
-			list.add(new LinkedNode<Integer>(ran.nextInt(size*100)));
+			list.add(new Node<Integer>(ran.nextInt(size*100)));
 	}
 	
 	private static void swap(int[] list, int i, int j){

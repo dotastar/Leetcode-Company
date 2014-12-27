@@ -2,8 +2,8 @@ package general.datastructure;
 
 public class SingLinkList<T extends Comparable<T>> {
 	
-	private LinkedNode<T> head;
-	private LinkedNode<T> tail;
+	private Node<T> head;
+	private Node<T> tail;
 	
 	private int size;
 	
@@ -14,11 +14,11 @@ public class SingLinkList<T extends Comparable<T>> {
 	}
 	
 	public int size(){ return size; }
-	public void setHead(LinkedNode<T> newHead){ head = newHead; }
-	public LinkedNode<T> getHead(){ return head; }
-	public LinkedNode<T> getTail(){ return tail; }
+	public void setHead(Node<T> newHead){ head = newHead; }
+	public Node<T> getHead(){ return head; }
+	public Node<T> getTail(){ return tail; }
 	
-	public void add(LinkedNode<T> node){ 
+	public void add(Node<T> node){ 
 		if(node==null)	return;
 		size++;
 		
@@ -32,17 +32,17 @@ public class SingLinkList<T extends Comparable<T>> {
 		}
 	}
 	
-	public LinkedNode<T> delete(int index){
+	public Node<T> delete(int index){
 		if(index>size-1) return null;
 		
 		if(index==0){
-			LinkedNode<T> res = head;
+			Node<T> res = head;
 			head = head.next();
 			return res;
 		}
 		
-		LinkedNode<T> current = head.next();
-		LinkedNode<T> prev = head;
+		Node<T> current = head.next();
+		Node<T> prev = head;
 		for(int i=1; i<index; i++){
 			prev = current;
 			current = current.next();
@@ -53,9 +53,9 @@ public class SingLinkList<T extends Comparable<T>> {
 		return current;
 	}
 	
-	public LinkedNode<T> get(int index){
+	public Node<T> get(int index){
 		if(index>size-1) return null;
-		LinkedNode<T> current = head;
+		Node<T> current = head;
 		for(int i=0; i<index; i++)
 			current = current.next();
 		
@@ -65,9 +65,9 @@ public class SingLinkList<T extends Comparable<T>> {
 	public void swap(int i, int j){
 		if(i>size-1||j>size-1) return;
 		
-		LinkedNode<T> nodei = null;
-		LinkedNode<T> nodej = null;		
-		LinkedNode<T> current = head;
+		Node<T> nodei = null;
+		Node<T> nodej = null;		
+		Node<T> current = head;
 		
 		for(int k=0; k<size; k++){
 			if(i==k) nodei = current;
@@ -82,7 +82,7 @@ public class SingLinkList<T extends Comparable<T>> {
 	public String toString(){
 		if(size==0) return "[]";
 		StringBuffer sb = new StringBuffer("["+head.getData().toString());
-		LinkedNode<T> current = head;
+		Node<T> current = head;
 		while(true){
 			current = current.next();
 			if(current==null) break;

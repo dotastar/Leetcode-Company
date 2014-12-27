@@ -2,8 +2,8 @@
 package general.datastructure;
 
 public class MinStack<T extends Comparable<T>>{
-	private LinkedNode<T> top;
-	private LinkedNode<T> min;
+	private Node<T> top;
+	private Node<T> min;
 	private int size;
 
 	public MinStack(){
@@ -40,15 +40,15 @@ public class MinStack<T extends Comparable<T>>{
 	public void push(T data){
 		size++;
 		
-		LinkedNode<T> newtop = new LinkedNode<T>(data);
+		Node<T> newtop = new Node<T>(data);
 		newtop.setNext(top);
 		top = newtop;
 		
 		if(min==null)
-			min = new LinkedNode<T>(data);
+			min = new Node<T>(data);
 		else{		
 			if(data.compareTo(min.getData())<=0){
-				LinkedNode<T> newmin = new LinkedNode<T>(data);	
+				Node<T> newmin = new Node<T>(data);	
 				newmin.setNext(min);
 				min = newmin;
 			}
@@ -61,7 +61,7 @@ public class MinStack<T extends Comparable<T>>{
 		else if(size==1) return "["+top.toString()+"]";
 		
 		StringBuffer sb = new StringBuffer("["+top.toString());
-		LinkedNode<T> iter = top.next();
+		Node<T> iter = top.next();
 		while(iter!=null){
 			sb.append(","+iter.toString());
 			iter = iter.next();

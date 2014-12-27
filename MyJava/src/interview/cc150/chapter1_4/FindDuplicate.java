@@ -1,5 +1,5 @@
 package interview.cc150.chapter1_4;
-import general.datastructure.LinkedNode;
+import general.datastructure.Node;
 
 /*
 * 2.1 Write code to remove duplicates from an unsorted linked list. 
@@ -9,11 +9,11 @@ import general.datastructure.LinkedNode;
 public class FindDuplicate{
 	
 	
-	public <T extends Comparable<T>> void NestedLoopDeleteDuplicate(LinkedNode<T> node){
-		LinkedNode<T> outter = node;
+	public <T extends Comparable<T>> void NestedLoopDeleteDuplicate(Node<T> node){
+		Node<T> outter = node;
 		while(outter.next()!=null){
-			LinkedNode<T> prevInner = outter;
-			LinkedNode<T> inner = outter.next();
+			Node<T> prevInner = outter;
+			Node<T> inner = outter.next();
 			while(inner!=null){
 				if(inner.equals(outter)){
 					prevInner.setNext(inner.next());

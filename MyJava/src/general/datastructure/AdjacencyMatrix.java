@@ -5,13 +5,13 @@ import java.util.List;
 
 public class AdjacencyMatrix<T> implements Graph{
 	
-	private List<Node<T>> vertices;
+	private List<T> vertices;
 	int vertexNum;
 	private int[][] edges;
 	private int edgeNum;
 	private final boolean isDirected;
 	
-	public AdjacencyMatrix(List<Node<T>> verticesIn, boolean isDirectedIn){
+	public AdjacencyMatrix(List<T> verticesIn, boolean isDirectedIn){
 		vertices = verticesIn;
 		int n = vertices.size();
 		edges = new int[n][n];
@@ -31,7 +31,7 @@ public class AdjacencyMatrix<T> implements Graph{
 		}
 	}
 	
-	public void addVertex(Node<T> vertex){
+	public void addVertex(T vertex){
 		vertices.add(vertex);
 		vertexNum++;
 	}
@@ -66,7 +66,7 @@ public class AdjacencyMatrix<T> implements Graph{
 
 	public String toString(){
 		StringBuffer sb = new StringBuffer();
-		for(Node<T> node : vertices)
+		for(T node : vertices)
 			sb.append("\t"+node.toString());
 		sb.append("\n");
 		
@@ -84,13 +84,13 @@ public class AdjacencyMatrix<T> implements Graph{
 	
 	
 	public static void main(String[] args){
-		List<Node<String>> nodes = new ArrayList<Node<String>>();
-		nodes.add(new Node<String>("A"));
-		nodes.add(new Node<String>("B"));
-		nodes.add(new Node<String>("C"));
-		nodes.add(new Node<String>("D"));
-		nodes.add(new Node<String>("E"));
-		nodes.add(new Node<String>("F"));
+		List<String> nodes = new ArrayList<String>();
+		nodes.add(new String("A"));
+		nodes.add(new String("B"));
+		nodes.add(new String("C"));
+		nodes.add(new String("D"));
+		nodes.add(new String("E"));
+		nodes.add(new String("F"));
 		
 		AdjacencyMatrix<String> matrix = new AdjacencyMatrix<String>(nodes, false);
 		matrix.addEdge(0, 1);

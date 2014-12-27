@@ -2,7 +2,6 @@ package interview.cc150.chapter1_4;
 
 import general.datastructure.AdjacencyMatrix;
 import general.datastructure.Graph;
-import general.datastructure.Node;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -90,13 +89,13 @@ public class GraphTraversal{
 	}
 	
 	public static void main(String[] args){
-		List<Node<String>> nodes = new ArrayList<Node<String>>();
-		nodes.add(new Node<String>("A"));
-		nodes.add(new Node<String>("B"));
-		nodes.add(new Node<String>("C"));
-		nodes.add(new Node<String>("D"));
-		nodes.add(new Node<String>("E"));
-		nodes.add(new Node<String>("F"));
+		List<String> nodes = new ArrayList<String>();
+		nodes.add(new String("A"));
+		nodes.add(new String("B"));
+		nodes.add(new String("C"));
+		nodes.add(new String("D"));
+		nodes.add(new String("E"));
+		nodes.add(new String("F"));
 		
 		Graph g = new AdjacencyMatrix<String>(nodes, false);
 		g.addEdge(0, 1);
