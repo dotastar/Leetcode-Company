@@ -84,4 +84,24 @@ public class Valid_Parentheses {
         return stk.isEmpty();
     }
 
+    /**
+     * Third time practice
+     */
+    public boolean isValid3(String s) {
+        Stack<Character> stk = new Stack<Character>();
+        for(int i=0; i<s.length(); i++){
+            Character c = s.charAt(i);
+            if(c==')' || c=='}' || c==']'){
+                if(stk.isEmpty())
+                    return false;
+                Character first = stk.pop();
+                if((first=='(' && c==')') || (first=='[' && c==']') || (first=='{' && c=='}'))
+                    continue;
+                else
+                    return false;
+            }else
+                stk.push(c);
+        }
+        return stk.isEmpty();
+    }
 }
