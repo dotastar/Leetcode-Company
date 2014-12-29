@@ -26,8 +26,6 @@ public class Single_Number_II {
 	 * All bits in that array should be the multiple of 3,
 	 * except for all the bits of that single number is the multiple of 3 + 1. 
 	 * 
-	 * @param A
-	 * @return
 	 */
 	public static int singleNumber(int[] A) {
 		int res = 0;
