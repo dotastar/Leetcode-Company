@@ -26,7 +26,6 @@ import java.util.Stack;
 public class Path_Sum_II {
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 		TreeNode root = new TreeNode(-2);
 		root.right = new TreeNode(-3);
 		List<List<Integer>> res = pathSum(root, -2);

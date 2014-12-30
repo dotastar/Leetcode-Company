@@ -34,6 +34,9 @@ public class Symmetric_Tree {
 
 	}
 
+	/**
+	 * Iterative fasion
+	 */
 	public static boolean isSymmetric_Iter(TreeNode root){
 		if(root==null) return true;
 		
@@ -42,18 +45,17 @@ public class Symmetric_Tree {
 		stk.push(root.right);
 		
 		while(!stk.empty()){
-			TreeNode r = stk.pop();
-			TreeNode l = stk.pop();
-			if(l==null&&r==null)
-				continue;
-			if((l==null&&r!=null)||(l!=null&&r==null))
-				return false;
-			if(l.val!=r.val)
-				return false;
-			stk.push(l.left);
-			stk.push(r.right);
-			stk.push(l.right);
-			stk.push(r.left);
+            TreeNode r = stk.pop();
+            TreeNode l = stk.pop();
+            if(l==null && r==null)
+                continue;
+            if(l!=null && r!=null && l.val==r.val){
+                stk.push(l.left);
+                stk.push(r.right);
+                stk.push(l.right);
+                stk.push(r.left);
+            }else
+                return false;
 		}
 		return true;
 	}
@@ -74,6 +76,22 @@ public class Symmetric_Tree {
 		return isSymmetric_Recur(l.left, r.right) && isSymmetric_Recur(l.right, r.left);
 	}
 	
+	
+	/**
+	 * Second time practice
+	 */
+    public boolean isSymmetric2(TreeNode root) {
+        return root==null ? true : isSymmetric2(root.left, root.right);
+    }
+    
+    public boolean isSymmetric2(TreeNode left, TreeNode right){
+        if(left==null && right==null)
+            return true;
+        if(left!=null && right!=null && left.val==right.val)
+            return isSymmetric2(left.left, right.right) && isSymmetric2(left.right, right.left);
+        else
+            return false;
+    }
 	
 	public static class TreeNode {
 		int val;
