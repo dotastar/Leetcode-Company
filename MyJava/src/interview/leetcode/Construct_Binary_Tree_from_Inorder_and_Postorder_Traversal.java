@@ -38,8 +38,7 @@ public class Construct_Binary_Tree_from_Inorder_and_Postorder_Traversal {
 				postorder.length - 1);
 	}
 
-	public TreeNode build(int[] inorder, int instart, int inend,
-			int[] postorder, int postart, int poend) {
+	public TreeNode build(int[] inorder, int instart, int inend, int[] postorder, int postart, int poend) {
 		if (instart > inend)
 			return null;
 		TreeNode subroot = new TreeNode(postorder[poend]);
@@ -51,10 +50,8 @@ public class Construct_Binary_Tree_from_Inorder_and_Postorder_Traversal {
 			}
 		int leftLen = idx - instart;
 		// int rightLen = inend-idx+1;
-		subroot.left = build(inorder, instart, idx - 1, postorder, postart,
-				postart + leftLen - 1);
-		subroot.right = build(inorder, idx + 1, inend, postorder, postart
-				+ leftLen, poend - 1);
+		subroot.left = build(inorder, instart, idx - 1, postorder, postart, postart + leftLen - 1);
+		subroot.right = build(inorder, idx + 1, inend, postorder, postart + leftLen, poend - 1);
 		return subroot;
 	}
 
@@ -65,19 +62,15 @@ public class Construct_Binary_Tree_from_Inorder_and_Postorder_Traversal {
 	 * Time: O(n), Space: O(n).
 	 * 
 	 */
-	public TreeNode build(int[] inorder, int inBegin, int inEnd,
-			int[] postorder, int poBegin, int poEnd,
-			Map<Integer, Integer> inIdxMap) {
+	public TreeNode build(int[] inorder, int inBegin, int inEnd, int[] postorder, int poBegin, int poEnd, Map<Integer, Integer> inIdxMap) {
 		if (inBegin > inEnd || poBegin > poEnd)
 			return null;
 		int rootVal = postorder[poEnd];
 		TreeNode root = new TreeNode(rootVal);
 		int i = inIdxMap.get(rootVal);
 		int leftLen = i - inBegin;
-		root.left = build(inorder, inBegin, i - 1, postorder, poBegin, poBegin
-				+ leftLen - 1, inIdxMap);
-		root.right = build(inorder, i + 1, inEnd, postorder, poBegin + leftLen,
-				poEnd - 1, inIdxMap);
+		root.left = build(inorder, inBegin, i - 1, postorder, poBegin, poBegin + leftLen - 1, inIdxMap);
+		root.right = build(inorder, i + 1, inEnd, postorder, poBegin + leftLen, poEnd - 1, inIdxMap);
 		return root;
 	}
 
