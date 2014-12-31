@@ -64,10 +64,8 @@ public class Binary_Tree_Postorder_Traversal {
 					stack.push(curr.left);
 				else if(curr.right!=null)
 					stack.push(curr.right);
-				else{
-					stack.pop();
-					res.add(curr.val);
-				}
+				else
+					res.add(stack.pop().val);
 			}else if(curr.left==prev){
 				//just went up the tree from left node    
 	            //need to check if there is a right child
@@ -75,20 +73,49 @@ public class Binary_Tree_Postorder_Traversal {
 	            //otherwise, process parent and pop stack
 				if(curr.right!=null)
 					stack.push(curr.right);
-				else{
-					stack.pop();
-					res.add(curr.val);
-				}
-			}else if(curr.right==prev){
+				else
+					res.add(stack.pop().val);
+			}else if(curr.right==prev)
 	            //just went up the tree from right node 
 	            //after coming back from right node, process parent node and pop stack. 
-				stack.pop();
-				res.add(curr.val);
-			}
+				res.add(stack.pop().val);
+
 			prev = curr;
 		}
 		return res;
 	}
+	
+	/**
+	 * The same as above, iterative fashion, more concise, remove comments
+	 */
+    public List<Integer> postorderTraversal_Concise(TreeNode root) {
+        List<Integer> res = new ArrayList<>();
+        if(root==null) 
+            return res;
+        Stack<TreeNode> stk = new Stack<>();
+        TreeNode prev = null;
+        stk.push(root);
+        while(!stk.isEmpty()){
+            TreeNode curr = stk.peek();
+            if(prev==null || prev.left==curr || prev.right==curr){ //down
+                if(curr.left!=null) //down left
+                    stk.push(curr.left);
+                else if(curr.right!=null){  //down right
+                    stk.push(curr.right);
+                }else   // leave
+                    res.add(stk.pop().val);
+            }else if(prev==curr.left){  // up from left
+                if(curr.right==null)
+                    res.add(stk.pop().val);
+                else
+                    stk.push(curr.right);
+            }else 
+                res.add(stk.pop().val);	 // up from right
+                
+            prev = curr;
+        }
+        return res;
+    }
 	
 	/**
 	 * Same solution as above, it is just added more readable comments
