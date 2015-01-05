@@ -56,15 +56,12 @@ public class Maximum_Subarray {
 	}
 
 	public int maxSubArray_Improved2(int[] A) {
-		int global = A[0];
-		int local = global;
+		int sum = A.length > 0 ? A[0] : 0;
+		int max = sum;
 		for (int i = 1; i < A.length; i++) {
-			if (local > 0) {
-				local += A[i];
-			} else
-				local = A[i];
-			global = local > global ? local : global;
+			sum = sum > 0 ? sum + A[i] : A[i];
+			max = sum > max ? sum : max;
 		}
-		return global;
+		return max;
 	}
 }

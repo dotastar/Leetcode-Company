@@ -48,7 +48,7 @@ public class Spiral_Matrix {
 		int x = 0;
 		int y = 0;
 		while (m != 0 && n != 0) {
-			// if one row/column left, no circle can be formed
+			// if there is only one row/column left, no circle can be formed
 			if (m == 1) {
 				for (int i = 0; i < n; i++)
 					res.add(matrix[x][y++]);

@@ -15,7 +15,7 @@ import java.util.List;
 public class Permutations {
 
 	public static void main(String[] args) {
-		List<List<Integer>> lists = permute(new int[] { 1, 2, 3 });
+		List<List<Integer>> lists = permute2(new int[] { 1, 2, 3, 4 });
 		for (List<Integer> l : lists)
 			System.out.println(l.toString());
 	}
