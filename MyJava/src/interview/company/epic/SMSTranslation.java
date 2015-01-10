@@ -10,8 +10,8 @@ import org.junit.Test;
  * 1 - NULL, 2 - ABC, 3 - DEF, 4 - GHI, 5 - JKL, 6 - MON, 7 - PQRS, 8 - TUV, 9 -
  * WXYZ, * - <Space>, # - <Break>
  * We must convert the numbers to text.
- * Eg
- * I/P - O/P
+ * E.g
+ * I/P  O/P
  * 22 - B
  * 23 - AD
  * 223 - BD

@@ -17,6 +17,26 @@ public class NumberSplitSum {
 		System.out.println(o.canSplitSum(123446)); // true 12+34=46
 	}
 
+	/**
+	 * Second time
+	 */
+	public boolean canSplitSum1(int num) {
+		String n = Integer.toString(num);
+		for (int i = 1; i <= n.length() / 2; i++) {
+			for (int j = i + 1; j < n.length(); j++) {
+				int a = Integer.valueOf(n.substring(0, i));
+				int b = Integer.valueOf(n.substring(i, j));
+				int c = Integer.valueOf(n.substring(j, n.length()));
+				if (check(a, b, c))
+					return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * split the number in different position
+	 */
 	public boolean canSplitSum(int num) {
 		String n = Integer.toString(num);
 		int half = n.length() / 2;

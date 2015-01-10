@@ -6,7 +6,7 @@ package interview.company.epic;
  * below it is +1 or -1 its value. For example,
  * 
  * 1 3 2 6 8
- * -9 7 1 -1 2
+ * 9 7 1 -1 2
  * 1 5 0 1 9
  * 
  * In this grid, (3, 2, 1, 0, 1) is a snake sequence.

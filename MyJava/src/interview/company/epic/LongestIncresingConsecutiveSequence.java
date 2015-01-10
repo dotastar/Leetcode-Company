@@ -34,17 +34,59 @@ public class LongestIncresingConsecutiveSequence {
 		{ 4, 5, 10, 11 }, 
 		{ 2, 3, 4, 5 } };
 
-		List<Integer> snake = o.findSnake(mat);
-		System.out.println(snake.toString());
+		List<Integer> snake = o.findSubsequence_recursion(mat);
+		int length = o.findMaxLength(mat);
+		assert snake.size() == length;
+		System.out.println(snake.toString() + "\tmax length:" + length);
+	}
+
+	/**
+	 * Dynamic Programming - for just finding the max length
+	 */
+	public int findMaxLength(int[][] mat) {
+		int max = 0;
+		int m = mat.length;
+		int n = m == 0 ? 0 : mat[0].length;
+		int[][] dp = new int[m][n];
+		for (int i = 0; i < m; i++) {
+			for (int j = 0; j < n; j++) {
+				int length = maxLength(mat, i, j, dp);
+				max = length > max ? length : max;
+			}
+		}
+		return max;
+	}
+
+	private int maxLength(int[][] mat, int i, int j, int[][] dp) {
+		if (dp[i][j] != 0)
+			return dp[i][j];
+		int up = 0, down = 0, left = 0, right = 0;
+		if (i - 1 >= 0 && mat[i - 1][j] - mat[i][j] == 1)
+			up = maxLength(mat, i - 1, j, dp);
+		if (i + 1 < mat.length && mat[i + 1][j] - mat[i][j] == 1)
+			down = maxLength(mat, i + 1, j, dp);
+		if (j - 1 >= 0 && mat[i][j - 1] - mat[i][j] == 1)
+			up = maxLength(mat, i, j - 1, dp);
+		if (j + 1 < mat[0].length && mat[i][j + 1] - mat[i][j] == 1)
+			down = maxLength(mat, i, j + 1, dp);
+
+		int length = max(max(up, down), max(left, right)) + 1;
+		dp[i][j] = length;
+		return length;
+
+	}
+
+	private int max(int a, int b) {
+		return a > b ? a : b;
 	}
 	
 	
-	List<Integer> res;	
-
 	/**
-	 * Brute force, try every point
+	 * Brute force, try every point -- for find the sequence
 	 */
-	public List<Integer> findSnake(int[][] mat) {
+	List<Integer> res;
+
+	public List<Integer> findSubsequence_recursion(int[][] mat) {
 		res = null;
 		List<Integer> container = new ArrayList<>();
 		for (int i = 0; i < mat.length; i++) {

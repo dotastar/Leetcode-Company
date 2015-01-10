@@ -7,7 +7,7 @@ import java.util.List;
  * Goldbach's conjecture : Every even integer greater than 2 can be expressed as
  * the sum of two primes.
  * Write a function which takes a number as input, verify if is an even number
- * greater than 2 and also print atleast one pair of prime numbers.
+ * greater than 2 and also print at least one pair of prime numbers.
  * 
  * @author yazhoucao
  * 

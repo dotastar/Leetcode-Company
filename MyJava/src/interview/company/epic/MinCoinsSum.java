@@ -6,9 +6,8 @@ import interview.AutoTestUtils;
 import org.junit.Test;
 
 /**
- * Dynamic programming problem: Coin change problem: Find the minimum number of
- * coins required to make change for a given sum (given unlimited number of N
- * different denominations coin)
+ * Coin change problem: Find the minimum number of coins required to make change
+ * for a given sum (given unlimited number of N different denominations coin)
  * 
  * @author yazhoucao
  * 

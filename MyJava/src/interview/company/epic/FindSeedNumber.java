@@ -24,13 +24,13 @@ public class FindSeedNumber {
 
 	/**
 	 * Brute force, Time: O(sqrt(n))
-	 * Try every number that is smaller than or equals to sqrt(n).
+	 * Try every number after sqrt(n) cause seed is always greater than sqrt(n).
 	 */
 	public List<Integer> seedNumb(int n) {
 		List<Integer> res = new ArrayList<>();
-		for (int seed = 1; seed * 1 < n; seed++) {
+		for (int seed = (int) Math.sqrt(n); seed < n; seed++) {
 			if (n % seed == 0) {
-				int product = digitsProduct(seed);
+				int product = seed * digitsProduct(seed);
 				if (product == n)
 					res.add(seed);
 			}
@@ -38,8 +38,11 @@ public class FindSeedNumber {
 		return res;
 	}
 
+	/**
+	 * product of every digit
+	 */
 	private int digitsProduct(int num) {
-		int product = num;
+		int product = 1;
 		while (num != 0) {
 			product *= num % 10; // multiply the last digit
 			num /= 10; // remove the digit

@@ -1,5 +1,7 @@
 package interview.company.epic;
 
+import java.util.Random;
+
 /**
  * There is a game they termed as Mingo. A random generator (like a speaker
  * standing in a group housie game calls out a number) generates out any number
@@ -19,15 +21,59 @@ public class Mingo {
 	public static void main(String[] args) {
 		Mingo mg = new Mingo();
 		mg.initialize();
-		mg.isMingo(mg.matrix);
+		mg.doMingo(mg.matrix);
 		mg.printMingle();
 	}
 
 	int[][] matrix = new int[10][10];
-	static int count = 0;
-	static boolean diagChecked = false;
+	boolean diagLeftVisited = false;
+	boolean diagRightVisited = false;
 
-	void initialize() {
+	public void doMingo(int[][] mat) {
+		int m = mat.length;
+		int size = m * m;
+		Random ran = new Random();
+		for (int k = 0; k < size; k++) {
+			int i = ran.nextInt(m);
+			int j = ran.nextInt(m);
+			while (mat[i][j] != 0) {
+				i = ran.nextInt(m);
+				j = ran.nextInt(m);
+			}
+			mat[i][j] = ran.nextInt(size);
+			checkMingo(mat, i, j);
+		}
+	}
+
+	private void checkMingo(int[][] mat, int i, int j) {
+		int len = mat.length;
+		int rowCnt = 0, colCnt = 0, diagLeftCnt = 0, diagRightCnt = 0;
+		for (int k = 0; k < len; k++) {
+			if (mat[i][k] > 0)
+				rowCnt++;
+			if (mat[k][j] > 0)
+				colCnt++;
+
+			if (!diagLeftVisited && mat[k][k] > 0)
+				diagLeftCnt++;
+			if (!diagRightVisited && mat[k][len - 1 - k] > 0)
+				diagRightCnt++;
+		}
+		if (rowCnt == len)
+			System.out.println("Mingo row :" + i);
+		if (colCnt == len)
+			System.out.println("Mingo col :" + j);
+		if (!diagLeftVisited && diagLeftCnt == len) {
+			System.out.println("Mingo diagonal left");
+			diagLeftVisited = true;
+		}
+		if (!diagRightVisited && diagRightCnt == len) {
+			System.out.println("Mingo diagonal right");
+			diagRightVisited = true;
+		}
+	}
+
+	private void initialize() {
 		for (int i = 0; i < matrix.length; i++) {
 			for (int j = 0; j < matrix[0].length; j++) {
 				matrix[i][j] = 0;
@@ -35,68 +81,12 @@ public class Mingo {
 		}
 	}
 
-	void printMingle() {
+	private void printMingle() {
 		for (int i = 0; i < matrix.length; i++) {
 			for (int j = 0; j < matrix[0].length; j++) {
 				System.out.print(matrix[i][j] + "\t");
 			}
 			System.out.println();
-		}
-	}
-
-	void isMingo(int[][] matrix) {
-		int value = 0;
-		int row = 0;
-		int col = 0;
-		int data = 0;
-		for (int i = 0; i < 100; i++) {
-			value = (int) (Math.random() * 100);
-			row = value / 10;
-			col = value - row * 10;
-			while (matrix[row][col] != 0) {
-				value = (int) (Math.random() * 100);
-				row = value / 10;
-				col = value - row * 10;
-			}
-			data = (int) (Math.random() * 1000);
-			matrix[row][col] = data;
-			checkMingle(matrix, row, col);
-		}
-
-	}
-
-	void checkMingle(int[][] matrix, int row, int col) {
-		// check row
-		int index = 0;
-		while (index < matrix[row].length && matrix[row][index] != 0) {
-			index++;
-		}
-		if (index == matrix[row].length) {
-			count++;
-			System.out.println("Number " + count + " mingle" + " row:" + row);
-		}
-		// check column
-		index = 0;
-		while (index < matrix.length && matrix[index][col] != 0) {
-			index++;
-		}
-		if (index == matrix.length) {
-			count++;
-			System.out.println("Number " + count + " mingle" + " col: " + col);
-		}
-		// check diag
-		if (!diagChecked) {
-			index = 0;
-			while (index < matrix.length && matrix[index][index] != 0) {
-				index++;
-			}
-			if (index == matrix.length) {
-				count++;
-				System.out.println("Number " + count + " mingle" + " row:"
-						+ row + " col: " + col + "\tIt is diag!!!!");
-				diagChecked = true;
-			}
-
 		}
 	}
 

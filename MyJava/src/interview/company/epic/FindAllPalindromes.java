@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Print all palindromes of size greater than equal to 3 of a given string
+ * Print all palindromes of size greater than or equal to 3 of a given string
  * 
  * @author yazhoucao
  * 
