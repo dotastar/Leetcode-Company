@@ -2,22 +2,16 @@ package general.datastructure;
 
 public class Node<T extends Comparable<T>> implements Comparable<Node<T>>{
 	
-	private T data;
-	private Node<T> next;
+	public T data;
+	public Node<T> next;
 	
 	public Node(T dataIn){
 		data = dataIn;
 	}
 	
-	public T getData(){ return data; }
-	public void setData(T dataIn){ data = dataIn; }
-	
-	public Node<T> next(){ return next; }
-	public void setNext(Node<T> nextIn){ next = nextIn; }
-
 	@Override
 	public int compareTo(Node<T> o) {
-		T cmp = o.getData();
+		T cmp = o.data;
 		return data.compareTo(cmp);
 	}
 	

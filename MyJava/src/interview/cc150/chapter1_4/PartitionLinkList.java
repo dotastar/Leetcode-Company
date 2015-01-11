@@ -31,33 +31,33 @@ public class PartitionLinkList{
 		
 		//initial left
 		while(left==null){
-			if(current.getData()<pivot){
+			if(current.data<pivot){
 				left = head;	//head
 				//swap
-				int data = current.getData();
-				current.setData(left.getData());
-				left.setData(data);
+				int data = current.data;
+				current.data = left.data;
+				left.data = data;
 				//current++
-				current = current.next();
+				current = current.next;
 				break;
 			}
-			current = current.next();
+			current = current.next;
 			
 			if(current==null) return;
 		}
 		
 		//scan and swap
 		while(current!=null){
-			if(current.getData()<pivot){
-				left = left.next();
+			if(current.data<pivot){
+				left = left.next;
 				if(!current.equals(left)){
 					//swap data only
-					int data = current.getData();
-					current.setData(left.getData());
-					left.setData(data);
+					int data = current.data;
+					current.data = left.data;
+					left.data = data;
 				}
 			}
-			current = current.next();
+			current = current.next;
 		}
 	}
 	
@@ -75,13 +75,13 @@ public class PartitionLinkList{
 		Node<Integer> bigEnd = null;
 		
 		while(node!=null){
-			if(node.getData()>pivot){
+			if(node.data>pivot){
 				//big list initial
 				if(bigStart==null){
 					bigStart = node;
 					bigEnd = node;
 				}else{
-					bigEnd.setNext(node); //append to big list
+					bigEnd.next = node; //append to big list
 					bigEnd  = node;	
 				}
 				
@@ -91,19 +91,19 @@ public class PartitionLinkList{
 					smallStart = node;
 					smallEnd = node;
 				}else{
-					smallEnd.setNext(node); //append to small list
+					smallEnd.next = node; //append to small list
 					smallEnd = node;
 				}
 			}
 			
-			node = node.next();	//current++
+			node = node.next;	//current++
 		}
 		
-		if(bigEnd.next()==null){
-			smallEnd.setNext(bigStart);
+		if(bigEnd.next==null){
+			smallEnd.next = bigStart;
 		}else{
-			bigEnd.setNext(null);
-			smallEnd.setNext(bigStart);
+			bigEnd.next = null;
+			smallEnd.next = bigStart;
 		}
 		
 		return smallStart;

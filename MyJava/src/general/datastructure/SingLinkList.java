@@ -27,7 +27,7 @@ public class SingLinkList<T extends Comparable<T>> {
 			tail = node;
 		}
 		else{
-			tail.setNext(node);
+			tail.next = node;
 			tail = node;
 		}
 	}
@@ -37,19 +37,19 @@ public class SingLinkList<T extends Comparable<T>> {
 		
 		if(index==0){
 			Node<T> res = head;
-			head = head.next();
+			head = head.next;
 			return res;
 		}
 		
-		Node<T> current = head.next();
+		Node<T> current = head.next;
 		Node<T> prev = head;
 		for(int i=1; i<index; i++){
 			prev = current;
-			current = current.next();
+			current = current.next;
 		}
 		
 		//delete
-		prev.setNext(current.next());
+		prev.next=current.next;
 		return current;
 	}
 	
@@ -57,7 +57,7 @@ public class SingLinkList<T extends Comparable<T>> {
 		if(index>size-1) return null;
 		Node<T> current = head;
 		for(int i=0; i<index; i++)
-			current = current.next();
+			current = current.next;
 		
 		return current;
 	}
@@ -74,19 +74,19 @@ public class SingLinkList<T extends Comparable<T>> {
 			if(j==k) nodej = current;
 			
 			if(nodei!=null&&nodej!=null) return;
-			else current = current.next();
+			else current = current.next;
 		}
 	}
 	
 	@Override
 	public String toString(){
 		if(size==0) return "[]";
-		StringBuffer sb = new StringBuffer("["+head.getData().toString());
+		StringBuffer sb = new StringBuffer("["+head.data.toString());
 		Node<T> current = head;
 		while(true){
-			current = current.next();
+			current = current.next;
 			if(current==null) break;
-			sb.append(", "+current.getData().toString());
+			sb.append(", "+current.data.toString());
 		}
 		sb.append("]");
 		return sb.toString();

@@ -11,20 +11,20 @@ public class FindDuplicate{
 	
 	public <T extends Comparable<T>> void NestedLoopDeleteDuplicate(Node<T> node){
 		Node<T> outter = node;
-		while(outter.next()!=null){
+		while(outter.next!=null){
 			Node<T> prevInner = outter;
-			Node<T> inner = outter.next();
+			Node<T> inner = outter.next;
 			while(inner!=null){
 				if(inner.equals(outter)){
-					prevInner.setNext(inner.next());
-					inner = inner.next(); //inner++
+					prevInner.next = inner.next;
+					inner = inner.next; //inner++
 				}else{
 					prevInner = inner;
-					inner = inner.next(); //inner++
+					inner = inner.next; //inner++
 				}
 			}//end inner while
-			outter = outter.next();	//outter++
-			if(outter.next()==null) break;
+			outter = outter.next;	//outter++
+			if(outter.next==null) break;
 		}
 	}
 }

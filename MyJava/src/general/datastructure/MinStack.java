@@ -17,10 +17,10 @@ public class MinStack<T extends Comparable<T>>{
 	public T pop(){ 
 		if(top==null) return null;
 
-		T data = top.getData();
-		top = top.next();
-		if(min.getData().compareTo(data)==0)
-			min = min.next();
+		T data = top.data;
+		top = top.next;
+		if(min.data.compareTo(data)==0)
+			min = min.next;
 
 		size--;
 		
@@ -29,27 +29,27 @@ public class MinStack<T extends Comparable<T>>{
 
 	public T peek(){
 		if(top==null) return null;
-		else return top.getData();
+		else return top.data;
 	}
 
 	public T min(){ 
 		if(top==null) return null;
-		else return min.getData();
+		else return min.data;
 	}
 
 	public void push(T data){
 		size++;
 		
 		Node<T> newtop = new Node<T>(data);
-		newtop.setNext(top);
+		newtop.next = top;
 		top = newtop;
 		
 		if(min==null)
 			min = new Node<T>(data);
 		else{		
-			if(data.compareTo(min.getData())<=0){
+			if(data.compareTo(min.data)<=0){
 				Node<T> newmin = new Node<T>(data);	
-				newmin.setNext(min);
+				newmin.next = min;
 				min = newmin;
 			}
 		}
@@ -61,10 +61,10 @@ public class MinStack<T extends Comparable<T>>{
 		else if(size==1) return "["+top.toString()+"]";
 		
 		StringBuffer sb = new StringBuffer("["+top.toString());
-		Node<T> iter = top.next();
+		Node<T> iter = top.next;
 		while(iter!=null){
 			sb.append(","+iter.toString());
-			iter = iter.next();
+			iter = iter.next;
 		}
 		sb.append("]");
 		return sb.toString();

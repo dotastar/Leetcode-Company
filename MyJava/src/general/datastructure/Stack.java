@@ -13,21 +13,21 @@ public class Stack<T extends Comparable<T>>{
 
 	public T peek(){
 		if(top==null) return null;
-		else return top.getData();
+		else return top.data;
 	}
 
 	public T pop(){
 		if(top==null) return null;
 
-		T data = top.getData();
-		top = top.next();
+		T data = top.data;
+		top = top.next;
 		size--;
 		return data;
 	}
 
 	public void push(T data){
 		Node<T> newtop = new Node<T>(data);
-		newtop.setNext(top);
+		newtop.next = top;
 		top = newtop;
 		size++;
 	}

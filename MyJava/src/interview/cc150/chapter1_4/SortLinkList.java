@@ -63,18 +63,18 @@ public class SortLinkList{
 		Node<T> pivot = first; 
 		Node<T> left = first;	//nodes before it are done(include)
 		Node<T> prevleft = first;
-		Node<T> current = first.next();
+		Node<T> current = first.next;
 
 		while(!current.equals(last)){
 			//swap
 			if(pivot.compareTo(current)>0){
 				prevleft = left;
-				left = left.next();	//left++
+				left = left.next;	//left++
 				if(!left.equals(current))
 					swap(left, current);	//swap only data
 			}
 			
-			current = current.next(); //current++
+			current = current.next; //current++
 			if(current==null) break;
 			
 			//System.out.println(list.toString());
@@ -83,7 +83,7 @@ public class SortLinkList{
 		//compare last, current = last
 		if(pivot.compareTo(current)>0){
 			prevleft = left;
-			left = left.next();
+			left = left.next;
 			if(!left.equals(current))
 				swap(left, current);	//swap only data
 		}
@@ -95,14 +95,14 @@ public class SortLinkList{
 		if(!first.equals(prevleft))
 			quicksort(list, first, prevleft);
 		if(!left.equals(last))
-			quicksort(list, left.next(), last);
+			quicksort(list, left.next, last);
 	}
 	
 	private static <T extends Comparable<T>> void swap(Node<T> i, Node<T> j){
 		//swap data
-		T data = i.getData();
-		i.setData(j.getData());
-		j.setData(data);
+		T data = i.data;
+		i.data = j.data;
+		j.data = data;
 	}
 	
 	
