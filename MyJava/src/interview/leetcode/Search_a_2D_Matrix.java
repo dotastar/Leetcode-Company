@@ -25,10 +25,14 @@ public class Search_a_2D_Matrix {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		int[][] mat = new int[2][1];
+		int[][] mat = new int[1][2];
 		mat[0][0] = 1;
-		mat[1][0] = 3;
-		System.out.println(searchMatrix2(mat, 3));
+		mat[0][1] = 3;
+		System.out.println(searchMatrix3(mat, 3));
+
+		int[][] mat2 = new int[1][1];
+		mat2[0][0] = 1;
+		System.out.println(searchMatrix3(mat, 0));
 	}
 
 	public static boolean searchMatrix(int[][] matrix, int target) {
@@ -71,13 +75,14 @@ public class Search_a_2D_Matrix {
 		int r = m - 1;
 		while (l <= r) {
 			int mid = (l + r) / 2;
-			if (mid==m-1 ||(target >= matrix[mid][0] && target < matrix[mid + 1][0])) {
+			if (mid == m - 1
+					|| (target >= matrix[mid][0] && target < matrix[mid + 1][0])) {
 				row = mid;
 				break;
 			} else if (target < matrix[mid][0])
-				r = mid-1;
+				r = mid - 1;
 			else
-				l = mid+1;
+				l = mid + 1;
 		}
 		if (row < 0)
 			return false;
@@ -93,6 +98,42 @@ public class Search_a_2D_Matrix {
 				r = mid - 1;
 		}
 
+		return false;
+	}
+
+	public static boolean searchMatrix3(int[][] matrix, int target) {
+		if (matrix.length == 0)
+			return false;
+		int m = matrix.length;
+		int n = matrix[0].length;
+		int l = 0, r = m - 1;
+		int row = -1;
+		while (l <= r) {
+			int mid = l + ((r - l) >> 1);
+			if (target >= matrix[mid][0]) {
+				if (mid == m - 1 || target < matrix[mid + 1][0]) {
+					row = mid;
+					break;
+				} else
+					l = mid + 1;
+			} else
+				r = mid - 1;
+		}
+		if (row < 0)
+			return false;
+
+		l = 0;
+		r = n - 1;
+		while (l <= r) {
+			int mid = l + ((r - l) >> 1);
+			if (target == matrix[row][mid])
+				return true;
+			else if (target > matrix[row][mid])
+				l = mid + 1;
+			else
+				r = mid - 1;
+
+		}
 		return false;
 	}
 }

@@ -34,21 +34,21 @@ public class Search_in_Rotated_Sorted_Array {
 		System.out.println(search2(A2, 3));
 	}
 
-	public static int search(int[] A, int target) {
+	public static int search(int[] A, int k) {
 		int l = 0;
 		int r = A.length - 1;
 
 		while (l <= r) {
 			int mid = (l + r) / 2;
-			if (target == A[mid])
+			if (k == A[mid])
 				return mid;
 			if (A[mid] >= A[l]) { // it must be >=
-				if (target > A[mid] || target < A[l])
+				if (k > A[mid] || k < A[l])
 					l = mid + 1; // move to right
 				else
 					r = mid - 1; // move to left
 			} else {
-				if (target < A[mid] || target > A[r])
+				if (k < A[mid] || k > A[r])
 					r = mid - 1; // to left
 				else
 					l = mid + 1; // to right
@@ -62,21 +62,21 @@ public class Search_in_Rotated_Sorted_Array {
 	 * Same solution, a different view of the four if/else conditions
 	 * 
 	 */
-	public static int search2(int[] A, int target) {
+	public static int search2(int[] A, int k) {
 		int l = 0;
 		int r = A.length - 1;
 
 		while (l <= r) {
 			int mid = (l + r) / 2;
-			if (A[mid] == target)
+			if (A[mid] == k)
 				return mid;
 			else if (A[mid] < A[l]) {
-				if (target > A[mid] && target <= A[r])
+				if (k > A[mid] && k <= A[r])
 					l = mid + 1;
 				else
 					r = mid - 1;
 			} else { // A[mid]>=A[l]
-				if (target < A[mid] && target >= A[l])
+				if (k < A[mid] && k >= A[l])
 					r = mid - 1;
 				else
 					l = mid + 1;
