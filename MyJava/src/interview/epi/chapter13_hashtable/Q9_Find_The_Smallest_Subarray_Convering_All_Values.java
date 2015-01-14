@@ -32,7 +32,7 @@ public class Q9_Find_The_Smallest_Subarray_Convering_All_Values {
 	}
 
 	/**
-	 * Sliding window
+	 * Sliding window, it can also solve the follow-up.
 	 * Map<String, Integer> dict is important
 	 * The Integer in dict is a count, count how many words there are need to match
 	 */

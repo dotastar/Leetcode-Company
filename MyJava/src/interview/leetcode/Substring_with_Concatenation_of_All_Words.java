@@ -110,6 +110,10 @@ public class Substring_with_Concatenation_of_All_Words {
     }
 
 
+    /**
+     * Sliding window, move left/right one wordLength at a time.
+     * Time: O(n*m), n = S.length(), m = L[0].length() (wordLength).
+     */
 	public static List<Integer> findSubstring(String S, String[] L) {
 		int slen = S.length();
 		int llen = L.length;
