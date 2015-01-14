@@ -22,10 +22,10 @@ public class Q4_Variant_Search_K_In_Rotated_Sorted_Array {
 
 	/**
 	 * Two cases:
-	 * 1.A[l] <= A[mid], it is in a normal sorted array, do normal binary search
-	 * 2.A[l] > A[mid], means l to r includes the rotated index (local minimum),
-	 * then do a reversed one, the search direction is opposite to normal binary
-	 * search.
+	 * 1.A[l] <= A[mid], left part of mid is monotonic, mid could be at both
+	 * smaller or greater part, but still either way the left of mid is fixed.
+	 * 2.A[l] > A[mid], right part of mid is monotonic, mid must be at the
+	 * smaller part (right) of the array.
 	 */
 	public int bsearch(int[] A, int k) {
 		int l = 0, r = A.length - 1;

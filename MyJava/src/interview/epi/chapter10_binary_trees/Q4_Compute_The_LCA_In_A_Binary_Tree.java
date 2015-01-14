@@ -61,16 +61,16 @@ public class Q4_Compute_The_LCA_In_A_Binary_Tree {
 	 * Structurally similar to a recursive preorder traversal.
 	 * Time: O(n), Space: O(lgn).
 	 */
-	public static <T> BinaryTree<T> LCA_Improved(BinaryTree<T> n,
+	public static <T> BinaryTree<T> LCA_Improved(BinaryTree<T> curr,
 			BinaryTree<T> a, BinaryTree<T> b) {
-		if (n == null)
+		if (curr == null)
 			return null;
-		if (a == n || b == n)
-			return n;
-		BinaryTree<T> left = LCA_Improved(n.getLeft(), a, b);
-		BinaryTree<T> right = LCA_Improved(n.getRight(), a, b);
+		if (a == curr || b == curr)
+			return curr;
+		BinaryTree<T> left = LCA_Improved(curr.getLeft(), a, b);
+		BinaryTree<T> right = LCA_Improved(curr.getRight(), a, b);
 		if (left != null && right != null)
-			return n;
+			return curr;
 		else
 			return left != null ? left : right;
 	}
