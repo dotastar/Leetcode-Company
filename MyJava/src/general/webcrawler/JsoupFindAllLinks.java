@@ -1,4 +1,4 @@
-package general.webcrawler.helloword;
+package general.webcrawler;
 
 import java.io.IOException;
 
@@ -13,12 +13,13 @@ public class JsoupFindAllLinks {
 		if (args.length == 1)
 			print("usage: supply url to fetch");
 		else
-			args = new String[] { "https://www.google.com/#newwindow=1&q=software+engineer" };
-
+			args = new String[] { "https://www.google.com/about/careers/search#t=sq&q=j&d=software%2520engineer%2520new%2520grad&li=10&j=software%2520engineer%2520new%2520grad" };
+		// https://www.google.com/#newwindow=1&q=software+engineer
+		// https://www.facebook.com/careers/university
 		String url = args[0];
 		print("Fetching %s...", url);
 
-		Document doc = Jsoup.connect(url).get();
+		Document doc = Jsoup.connect(url).userAgent("Mozilla").get();
 		Elements links = doc.select("a[href]");
 		Elements media = doc.select("[src]");
 		Elements imports = doc.select("link[href]");
