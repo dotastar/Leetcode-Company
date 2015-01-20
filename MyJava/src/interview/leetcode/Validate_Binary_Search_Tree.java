@@ -29,34 +29,38 @@ public class Validate_Binary_Search_Tree {
 		root.right.left = new TreeNode(6);
 		root.right.right = new TreeNode(20);
 		System.out.println(isValidBST(root));
+		
+		
+		TreeNode node = new TreeNode(0);
+		System.out.println(isValidBST(node));
 	}
 
 	/**
 	 * Recursion solution, based on the definition, every node will have value
 	 * range based on its father and ancestors.
 	 * 
+	 * Notice: this solution uses long to resolve the overflow problem! 
+	 * E.g. A valid tree like below will return false if use int instead of long: 
+	 * Integer.MIN_VALUE
+	 *	   / \
+	 * null  Integer.MAX_VALUE 
+	 * 
 	 * Time: O(n), traverse all the nodes
 	 * 
 	 * Space: O(lg(n)), recursion stack
 	 * 
 	 */
-	public static boolean isValidBST(TreeNode root) {
-		return isValidBST(root, Integer.MIN_VALUE, Integer.MAX_VALUE);
-	}
-
-	public static boolean isValidBST(TreeNode root, int min, int max) {
-		if (root == null)
+    public static boolean isValidBST(TreeNode root) {
+        return isValidBST(root, Long.MIN_VALUE, Long.MAX_VALUE);
+    }
+	
+    private static boolean isValidBST(TreeNode node, long min, long max){
+		if (node == null)
 			return true;
-		if (root.left != null
-				&& (root.left.val >= root.val || root.left.val <= min))
+		if (node.val <= min || node.val >= max)
 			return false;
-		if (root.right != null
-				&& (root.right.val <= root.val || root.right.val >= max))
-			return false;
-
-		return isValidBST(root.left, min, root.val)
-				&& isValidBST(root.right, root.val, max);
-	}
+        return isValidBST(node.left, min, node.val) && isValidBST(node.right, node.val, max);
+    }
 
 	/**
 	 * Iterative solution, make use of the property that in-order traversing
@@ -69,24 +73,21 @@ public class Validate_Binary_Search_Tree {
 	 * Space: O(lg(n)), need a stack to do iterative traversal
 	 */
 	public boolean isValidBST2(TreeNode root) {
-		Stack<TreeNode> stk = new Stack<TreeNode>();
-		TreeNode p = root;
-		int lastVal = Integer.MIN_VALUE;
-		while (!stk.isEmpty() || p != null) {
-			if (p != null) {
-				stk.push(p);
-				p = p.left;
-			} else {
-				TreeNode node = stk.pop();
-				if (node.val > lastVal) {
-					lastVal = node.val;
-				} else
-					return false;
-
-				p = node.right;
-			}
-		}
-		return true;
+        Stack<TreeNode> stk = new Stack<TreeNode>();
+        TreeNode p = root, prev = null;
+        while(!stk.isEmpty()||p!=null){
+            if(p!=null){
+                stk.push(p);
+                p = p.left;
+            }else{
+                p = stk.pop();  // parent
+                if(prev!=null && prev.val>=p.val)
+                    return false;
+                prev = p;
+                p = p.right;
+            }
+        }
+        return true;
 	}
 
 	public static class TreeNode {
