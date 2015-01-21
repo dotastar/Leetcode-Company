@@ -24,8 +24,38 @@ import java.util.Stack;
 public class Subsets {
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
+		int[] S = { 1, 2, 3, 4, 5 };
+		List<List<Integer>> res = generateSubsets(S);
+		for (List<Integer> subset : res)
+			System.out.println(subset.toString());
+	}
 
+	/**
+	 * Alternative solution, Time: O(n*(2^n))
+	 * Realizing that for a given ordering of length n and the set of all
+	 * subsets of S, there exists a one-to-one correspondence between the 2^n
+	 * bit arrays of length n and the set of all subsets of S --- the 1s in the
+	 * n-length bit array v indicate the elements of S in the subset
+	 * corresponding to v.
+	 */
+	private static final double LOG_2 = Math.log(2);
+
+	public static List<List<Integer>> generateSubsets(int[] S) {
+		Arrays.sort(S);
+		List<List<Integer>> res = new ArrayList<>();
+		for (int i = 0; i < (1 << S.length); ++i) {
+			List<Integer> subset = new ArrayList<Integer>();
+			int x = i;
+			while (x != 0) {
+				// x & ~(x - 1): remain only the lowest bit that is 1
+				// log.e.x / log.e.2 = log.2.(x)
+				int tar = (int) (Math.log(x & ~(x - 1)) / LOG_2);
+				subset.add(S[tar]);
+				x &= x - 1; // remove the lowest bit that is 1
+			}
+			res.add(subset);
+		}
+		return res;
 	}
 
 	/**
