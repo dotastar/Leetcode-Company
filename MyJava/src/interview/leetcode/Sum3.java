@@ -43,10 +43,7 @@ public class Sum3 {
 	/**
 	 * Two pointers
 	 * 
-	 * Time O(n)
-	 * 
-	 * @param num
-	 * @return
+	 * Time: n^2 + nlogn = O(n^2)
 	 */
 	public static List<List<Integer>> threeSum(int[] num) {
 		Arrays.sort(num);

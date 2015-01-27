@@ -12,11 +12,17 @@ import java.util.Queue;
  * 
  * For example,
  * 
- * X X X X X O O X X X O X X O X X
+ * X X X X
+ * X O O X
+ * X X O X
+ * X O X X
  * 
  * After running your function, the board should be:
  * 
- * X X X X X X X X X X X X X O X X
+ * X X X X
+ * X X X X
+ * X X X X
+ * X O X X
  * 
  * @author yazhoucao
  * 
@@ -40,19 +46,17 @@ public class Surrounded_Regions {
 	}
 
 	/**
-	 * BFS
-	 * 
-	 * @param board
+	 * BFS, Time: O(mn), Space: O(mn)
 	 */
 	public void solve(char[][] board) {
 		int m = board.length;
 		int n = m == 0 ? 0 : board[0].length;
 		for (int i = 0; i < n; i++) {
-			floodfill(board, 0, i); 	// top
+			floodfill(board, 0, i); // top
 			floodfill(board, m - 1, i); // bottom
 		}
 		for (int i = 1; i < m - 1; i++) {
-			floodfill(board, i, 0); 	// leftmost
+			floodfill(board, i, 0); // leftmost
 			floodfill(board, i, n - 1); // rightmost
 		}
 		// check all cells
@@ -88,7 +92,7 @@ public class Surrounded_Regions {
 			int x = pos / n;
 			int y = pos % n;
 			if (x >= 0 && x < m && y >= 0 && y < n && board[x][y] == 'O') {
-				board[x][y] = '#';	//mark it as not surrounded
+				board[x][y] = '#'; // mark it as not surrounded
 				q.add((x + 1) * n + y);
 				q.add((x - 1) * n + y);
 				q.add(x * n + y + 1);

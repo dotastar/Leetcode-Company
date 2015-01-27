@@ -4,6 +4,20 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Given an array of size n, find the majority element. The majority element is
+ * the element that appears more than ⌊ n/2 ⌋ times.
+ * 
+ * You may assume that the array is non-empty and the majority element always
+ * exist in the array.
+ * 
+ * 
+ * Follow up : find items occur certain times (e.g. appears 33%)
+ * Solution see Q12_The_Heavy_Hitter_Problem of Chapter18 of EPI
+ * 
+ * @author yazhoucao
+ * 
+ */
 public class Majority_Element {
 
 	public static void main(String[] args) {
@@ -35,9 +49,9 @@ public class Majority_Element {
 	 * Else length is even, then there are two cases:
 	 * 1.median left == median right: 1233 3345, return either left or right.
 	 * 2.median left != median right, then there are also two cases:
-	 *  a.majority is at left part: 1111 2245, if this is the case,
+	 * a.majority is at left part: 1111 2245, if this is the case,
 	 * then the first element (num[0]) must equal to the median left.
-	 *  b.majority is at right part: 1233 4444, if this is the case,
+	 * b.majority is at right part: 1233 4444, if this is the case,
 	 * then the last element (num[lenght-1]) must equal to the median right.
 	 */
 	public int majorityElement_Sort(int[] num) {

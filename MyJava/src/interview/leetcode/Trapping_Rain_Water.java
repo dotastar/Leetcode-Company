@@ -1,6 +1,5 @@
 package interview.leetcode;
 
-
 /**
  * Given n non-negative integers representing an elevation map where the width
  * of each bar is 1, compute how much water it is able to trap after raining.
@@ -26,7 +25,7 @@ public class Trapping_Rain_Water {
 	 * right max and at the same time calculate the current water volume,
 	 * volume = min( leftMax[i], rightMax[i] ) - A[i]
 	 * 
-	 * Time: O(n) = 2n
+	 * Time: O(n) = 2n, Space: O(n)
 	 */
 	public static int trap(int[] A) {
 		if (A.length <= 1)
@@ -61,7 +60,7 @@ public class Trapping_Rain_Water {
 	 * the next bar is lower than height.
 	 * So the volume of the bar = height - A[l]/A[r];
 	 * 
-	 * Time: O(n) = n
+	 * Time: O(n) = n, Space: O(1)
 	 */
 	public static int trap2(int[] A) {
 		int water = 0;
@@ -86,4 +85,50 @@ public class Trapping_Rain_Water {
 		}
 		return water;
 	}
+
+	/**
+	 * Solution form EPI, greedy algorithm
+	 * Time: O(n) = 3n, Space: O(1)
+	 * 
+	 * The capacity =
+	 * the water within 1 to maxHeightIdx + water within maxHeightIdx+1 to n.
+	 */
+	public int calculateTrappingWater(int[] A) {
+		if (A.length == 0)
+			return 0;
+		// Finds the index with maximum height.
+		int maxH = getIndexOfMaxElement(A);
+		// Calculates the water within [1 : maxH - 1].
+		int sum = 0, left = A[0];
+		for (int i = 1; i < maxH; ++i) {
+			if (A[i] >= left) {
+				left = A[i];
+			} else {
+				sum += left - A[i];
+			}
+		}
+		// Calculates the water within [maxH + 1 : A.length - 2].
+		int right = A[A.length - 1];
+		for (int i = A.length - 2; i > maxH; --i) {
+			if (A[i] >= right) {
+				right = A[i];
+			} else {
+				sum += right - A[i];
+			}
+		}
+		return sum;
+	}
+
+	private int getIndexOfMaxElement(int[] A) {
+		int max = Integer.MIN_VALUE;
+		int maxH = -1;
+		for (int i = 0; i < A.length; i++) {
+			if (A[i] > max) {
+				max = A[i];
+				maxH = i;
+			}
+		}
+		return maxH;
+	}
+
 }
