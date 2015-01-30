@@ -32,20 +32,19 @@ public class Swap_Nodes_in_Pairs {
 	}
 
 	public static ListNode swapPairs(ListNode head) {
-        ListNode prehead = new ListNode(0);
-        prehead.next = head;
-        ListNode pre = prehead;
-        ListNode curr = head;
-        while(curr!=null && curr.next!=null){
-            ListNode next = curr.next.next;
-            pre.next = curr.next;
-            curr.next.next = curr;  //swapping
-            curr.next = next;
-            
-            pre = curr;
-            curr = curr.next;
-        }
-        return prehead.next;
+		ListNode prehead = new ListNode(1);
+		prehead.next = head;
+		ListNode prev = prehead, curr = head;
+		while (curr != null && curr.next != null) {
+			ListNode nextCurr = curr.next.next;
+			prev.next = curr.next;
+			prev.next.next = curr;
+			curr.next = nextCurr;
+
+			prev = curr;
+			curr = curr.next;
+		}
+		return prehead.next;
 	}
 
 	public static class ListNode {

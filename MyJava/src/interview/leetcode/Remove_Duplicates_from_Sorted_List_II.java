@@ -28,25 +28,45 @@ public class Remove_Duplicates_from_Sorted_List_II {
 		}
 		System.out.println("null");
 	}
-	
-    public static ListNode deleteDuplicates(ListNode head) {
-        ListNode prehead = new ListNode(0);
-        prehead.next = head;
-        ListNode curr = head;
-        ListNode pre = prehead;
-        while(curr!=null && curr.next!=null){
-            if(curr.val==curr.next.val){
-                while(curr.next!=null && curr.val==curr.next.val){
-                    curr.next = curr.next.next;
-                }
-                pre.next = curr.next;
-            }else
-                pre = pre.next;
-            curr = curr.next;
-        }
-        return prehead.next;
-    }
-    
+
+	/**
+	 * Second time
+	 */
+	public ListNode deleteDuplicates2(ListNode head) {
+		ListNode prehead = new ListNode(0);
+		prehead.next = head;
+		ListNode prev = prehead, curr = head;
+		while (curr != null) {
+			if (curr.next != null && curr.next.val == curr.val) {
+				int repeat = curr.val;
+				while (curr != null && curr.val == repeat) {
+					prev.next = curr.next;
+					curr = curr.next;
+				}
+			} else {
+				prev = curr;
+				curr = curr.next;
+			}
+		}
+		return prehead.next;
+	}
+
+	public static ListNode deleteDuplicates(ListNode head) {
+		ListNode prehead = new ListNode(0);
+		prehead.next = head;
+		ListNode prev = prehead, curr = head;
+		while (curr != null) {
+			if (curr.next != null && curr.next.val == curr.val) {
+				while (curr.next != null && curr.next.val == curr.val)
+					curr.next = curr.next.next;
+				prev.next = curr.next;
+			} else
+				prev = curr;
+			curr = curr.next;
+		}
+		return prehead.next;
+	}
+
 	public static class ListNode {
 		int val;
 		ListNode next;

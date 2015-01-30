@@ -25,6 +25,24 @@ public class Remove_Nth_Node_From_End_of_List {
 	}
 
 	/**
+	 * Second time
+	 */
+	public ListNode removeNthFromEnd2(ListNode head, int n) {
+		assert head != null; // if head is null, delete will have problem
+		ListNode prehead = new ListNode(0);
+		prehead.next = head;
+		ListNode curr = prehead, preNth = prehead;
+		for (int i = 0; i < n && curr.next != null; i++)
+			curr = curr.next;
+		while (curr.next != null) {
+			curr = curr.next;
+			preNth = preNth.next;
+		}
+		preNth.next = preNth.next.next; // delete
+		return prehead.next;
+	}
+
+	/**
 	 * Set two pointers, first pointer go n step first, and then second and
 	 * first pointers go at the same time, and they always have a distance of n
 	 * nodes, when first pointer reaches the end, the second pointer is the node
@@ -33,21 +51,21 @@ public class Remove_Nth_Node_From_End_of_List {
 	 * @return
 	 */
 	public static ListNode removeNthFromEnd(ListNode head, int n) {
-        ListNode prehead = new ListNode(0);
-        prehead.next = head;
-        ListNode curr = head;
-        while(curr!=null && n>0){
-            curr = curr.next;
-            n--;
-        }
+		ListNode prehead = new ListNode(0);
+		prehead.next = head;
+		ListNode curr = head;
+		while (curr != null && n > 0) {
+			curr = curr.next;
+			n--;
+		}
 
-        ListNode preN = prehead;
-        while(curr!=null){
-            curr = curr.next;
-            preN = preN.next;
-        }
-        preN.next = preN.next.next;
-        return prehead.next;
+		ListNode preN = prehead;
+		while (curr != null) {
+			curr = curr.next;
+			preN = preN.next;
+		}
+		preN.next = preN.next.next;
+		return prehead.next;
 	}
 
 	public static class ListNode {

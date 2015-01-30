@@ -25,7 +25,7 @@ public class Merge_k_Sorted_Lists {
 		testlist.add(new ListNode(4));
 		testlist.add(null);
 		testlist.add(null);
-		//it is very inefficient to remove null in this fasion
+		// it is very inefficient to remove null in this fasion
 		System.out.println(testlist.toString());
 		for (int i = 0; i < testlist.size(); i++)
 			testlist.remove(i);
@@ -42,30 +42,27 @@ public class Merge_k_Sorted_Lists {
 	 * 
 	 */
 	public static ListNode mergeKLists(List<ListNode> lists) {
-		int k = lists.size();
-		if (k == 0)
-			return null;
-		PriorityQueue<ListNode> q = new PriorityQueue<ListNode>(k,
-				new Comparator<ListNode>() { // min heap
+		// default is min heap
+		PriorityQueue<ListNode> heap = new PriorityQueue<>(
+				new Comparator<ListNode>() {
 					@Override
 					public int compare(ListNode o1, ListNode o2) {
 						return o1.val - o2.val;
 					}
 				});
-
-		for (ListNode khead : lists)
-			if (khead != null)
-				q.add(khead);
-		ListNode pre = new ListNode(0);
-		ListNode curr = pre;
-		while (!q.isEmpty()) {
-			ListNode min = q.poll();
-			if (min.next != null)
-				q.add(min.next);
+		ListNode prehead = new ListNode(0);
+		for (ListNode h : lists)
+			if (h != null)
+				heap.add(h);
+		ListNode curr = prehead;
+		while (!heap.isEmpty()) {
+			ListNode min = heap.poll();
 			curr.next = min;
 			curr = curr.next;
+			if (min.next != null)
+				heap.add(min.next);
 		}
-		return pre.next;
+		return prehead.next;
 	}
 
 	/**

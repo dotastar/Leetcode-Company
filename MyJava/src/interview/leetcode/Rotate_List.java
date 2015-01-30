@@ -1,6 +1,5 @@
 package interview.leetcode;
 
-
 /**
  * Given a list, rotate the list to the right by k places, where k is
  * non-negative.
@@ -15,23 +14,45 @@ public class Rotate_List {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		for(int i=0; i<=9; i++){
+		for (int i = 0; i <= 9; i++) {
 			ListNode head = new ListNode(1);
 			head.next = new ListNode(2);
 			head.next.next = new ListNode(3);
 			head.next.next.next = new ListNode(4);
 			head.next.next.next.next = new ListNode(5);
 			head.next.next.next.next.next = new ListNode(6);
-			
+
 			ListNode res = rotateRight(head, i);
-			System.out.print("i = "+i+":\t");
+			System.out.print("i = " + i + ":\t");
 			while (res != null) {
 				System.out.print(res.toString() + " -> ");
 				res = res.next;
 				if (res == null)
 					System.out.println("null");
-			}	
+			}
 		}
+	}
+
+	/**
+	 * Second time
+	 */
+	public ListNode rotateRight2(ListNode head, int n) {
+		int length = 0;
+		ListNode curr = head, tail = null;
+		for (; curr != null; tail = curr, curr = curr.next)
+			length++;
+
+		n = length == 0 ? 0 : n % length;
+		if (n == 0)
+			return head;
+		n = length - n; // the n is start from the end
+		curr = head; // find the (start rotating point - 1)
+		for (int i = 0; i < n - 1; i++)
+			curr = curr.next;
+		ListNode newhead = curr.next; // new head
+		tail.next = head; // concatenate old head
+		curr.next = null; // new tail
+		return newhead;
 	}
 
 	/**
@@ -40,31 +61,31 @@ public class Rotate_List {
 	 * Note: n could be greater than the length, 2 times, 3 times greater.
 	 */
 	public static ListNode rotateRight(ListNode head, int n) {
-        if(n==0 || head==null)  
-            return head;
-            
-        int length = 1;
-        ListNode tail = head;
-        while(tail.next!=null){ //get length
-            tail = tail.next;
-            length++;
-        }
-        int k = n%length;
-        if(k==0)
-            return head;
-            
-        //convert our goal to rotate left j nodes
-        int j = length - k;
-        ListNode prev = null;
-        ListNode curr = head;
-        while(curr!=null && j>0){
-            prev = curr;
-            curr = curr.next;
-            j--;
-        }
-        tail.next = head;
-        prev.next = null;
-        return curr;
+		if (n == 0 || head == null)
+			return head;
+
+		int length = 1;
+		ListNode tail = head;
+		while (tail.next != null) { // get length
+			tail = tail.next;
+			length++;
+		}
+		int k = n % length;
+		if (k == 0)
+			return head;
+
+		// convert our goal to rotate left j nodes
+		int j = length - k;
+		ListNode prev = null;
+		ListNode curr = head;
+		while (curr != null && j > 0) {
+			prev = curr;
+			curr = curr.next;
+			j--;
+		}
+		tail.next = head;
+		prev.next = null;
+		return curr;
 	}
 
 	public static class ListNode {

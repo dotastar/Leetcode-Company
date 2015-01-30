@@ -31,93 +31,89 @@ public class Reverse_Nodes_in_k_Group {
 		head.next.next.next = new ListNode(4);
 		head.next.next.next.next = new ListNode(5);
 		head.next.next.next.next.next = new ListNode(6);
-		
-		ListNode res = obj.reverseKGroup2(head, 3);
-		while(res!=null){
-			System.out.print(res.toString()+" -> ");
-			res = res.next;
-			if(res==null)
-				System.out.println("null");
-		}
-	}
-	
-    public ListNode reverseKGroup2(ListNode head, int k) {
-        if(k<2 || head==null) 
-            return head;
-        ListNode prehead = new ListNode(0);
-        prehead.next = head;
-        ListNode preK = prehead;
-        ListNode curr = head;
-        int i=1;
-        while(curr!=null){
-        	if(i%k==0){
-        		preK = reverseKNodes(preK, curr.next);
-        		curr = preK.next;
-        	}else
-        		curr = curr.next;
-        	i++;
-        	
-        }
-        return prehead.next;
-    }
-    
-    private ListNode reverseKNodes(ListNode pre, ListNode end){
-    	ListNode prev = pre;
-    	ListNode curr = pre.next;
-    	while(curr!=end){
-    		ListNode next = curr.next;
-    		curr.next = prev;
-    		
-    		prev = curr;
-    		curr = next;
-    	}
-    	ListNode newpre = pre.next;
-    	newpre.next = end;	//link tail
-    	pre.next = prev;	//link head
-    	return newpre;
-    	
-    }
 
-	/**
-	 * Time : 2n = O(n)
-	 * 
-	 */
-	public ListNode reverseKGroup(ListNode head, int k) {
+		ListNode res = obj.reverseKGroup2(head, 3);
+		printList(res);
+
+		ListNode head1 = new ListNode(1);
+		head1.next = new ListNode(2);
+		ListNode res1 = obj.reverseKGroup2(head1, 3);
+		printList(res1);
+	}
+
+	public ListNode reverseKGroup2(ListNode head, int k) {
 		ListNode prehead = new ListNode(0);
 		prehead.next = head;
-		ListNode pre = prehead;
-		ListNode current = head;
-		int i=0;
-		while(current!=null){
+		ListNode start = prehead, end = head;
+		int i = 0;
+		while (end != null) {
 			i++;
-			if(i%k==0){//reverse k-length
-				pre = reverse(pre, current.next);
-				current = pre.next;
-			}else
-				current = current.next;
-		}		
+			end = end.next;
+			if (i % k == 0) { // reversing from start+1 to end-1
+				ListNode tail = start.next;
+				ListNode curr = tail.next;
+				while (curr != end) {
+					// cache for others and
+					// assign for tail when curr reaches to end
+					tail.next = curr.next;
+					curr.next = start.next;
+					start.next = curr;
+					curr = tail.next;
+				}
+				start = tail;
+			}
+		}
 		return prehead.next;
 	}
 
 	/**
-	 * Reverse a link list between pre and next exclusively
-	 * @param pre
-	 * @param next
+	 * Time : 2n = O(n)
+	 */
+	public ListNode reverseKGroup(ListNode head, int k) {
+		ListNode prehead = new ListNode(0);
+		prehead.next = head;
+		ListNode start = prehead;
+		ListNode end = head;
+		int i = 0;
+		while (end != null) {
+			i++;
+			if (i % k == 0) {// reverse k-length
+				start = reverse(start, end.next);
+				end = start.next;
+			} else
+				end = end.next;
+		}
+		return prehead.next;
+	}
+
+	/**
+	 * Reverse a link list between start and end exclusively (start+1 to end-1)
+	 * 
 	 * @return the tail of reversed list
 	 */
-	public ListNode reverse(ListNode pre, ListNode next) {
-		ListNode tail = pre.next;	//first will be the tail
+	public ListNode reverse(ListNode start, ListNode end) {
+		ListNode tail = start.next; // first will be the tail
 		ListNode p = tail.next;
-		while (p!=next) {
-			//when this end, tail points to next, 
-			//it also caches the next node of p
-			tail.next = p.next; 	
-			p.next = pre.next;
-			//when this end, pre points to head (was the tail)
-			pre.next = p;
-			p = tail.next;			
+		while (p != end) {
+			// when this end, tail points to next,
+			// it also caches the next node of p
+			tail.next = p.next;
+			p.next = start.next;
+			// when this end, start points to head (was the tail)
+			start.next = p;
+			p = tail.next;
 		}
 		return tail;
+	}
+
+	private static void printList(ListNode res) {
+		while (res != null) {
+			System.out.print(res.toString() + " -> ");
+			res = res.next;
+			if (res == null)
+				System.out.println("null");
+		}
+
 	}
 
 	public static class ListNode {
