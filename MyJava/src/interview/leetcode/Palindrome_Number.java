@@ -29,19 +29,15 @@ public class Palindrome_Number {
 	public static boolean isPalindrome(int x) {
 		if (x < 0)
 			return false;
-
-		// reverse integer
-		int tmp = x;
-		int reversed = 0;
-		while (tmp != 0) {
-			int digit = tmp % 10;
-			tmp /= 10;
+		int reversed = 0, num = x;
+		while (num != 0) {
+			int digit = num % 10;
+			if (reversed > (Integer.MAX_VALUE - digit) / 10)
+				return false; // overflow
 			reversed = reversed * 10 + digit;
+			num /= 10;
 		}
-
 		return reversed == x;
 	}
-	
-	
 
 }

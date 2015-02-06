@@ -116,6 +116,15 @@ public class Q6_Search_For_A_Sequence_In_A_2D_Array {
 		public int hashCode() {
 			return 31 * 31 * a + 31 * b + c;
 		}
+		
+		@Override
+        public boolean equals(Object o){
+            if(o instanceof Tuple){
+            	Tuple t2 = (Tuple)o;
+                return this.a==t2.a && this.b==t2.b && this.c==t2.c;
+            }
+            return false;
+        }
 	}
 
 	@Test

@@ -24,7 +24,6 @@ import java.util.Stack;
  */
 public class Combination_Sum {
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 		int[] candidates = new int[]{2,3,6,7};
 		int target = 7;
 		List<List<Integer>> res = combinationSum(candidates, target);

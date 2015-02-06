@@ -114,37 +114,34 @@ public class Word_Break_II {
 	 * Recursion + DP
 	 * 
 	 */
-	public List<String> wordBreak(String s, Set<String> dict) {
-		List<String> res = new ArrayList<String>();
-		segmentable = new boolean[s.length() + 1];
-		Arrays.fill(segmentable, true);
-		breakWord(s, dict, 0, new Stack<String>(), res);
-		return res;
-	}
-
-	boolean[] segmentable; // this is important, use dp thought
-
-	public void breakWord(String s, Set<String> dict, int begin,
-			Stack<String> words, List<String> res) {
-		if (begin == s.length()) {
-			StringBuilder sb = new StringBuilder();
-			for (String w : words)
-				sb.append(w + " ");
-			sb.deleteCharAt(sb.length() - 1);
-			res.add(sb.toString());
-		}
-
-		for (int i = begin; i < s.length(); i++) {
-			String word = s.substring(begin, i + 1);
-			// eliminate unnecessory search
-			if (dict.contains(word) && segmentable[i + 1]) {
-				words.push(word);
-				int oldsize = res.size();
-				breakWord(s, dict, i + 1, words, res);
-				// if no solution, set the possible to false
-				segmentable[i + 1] = (res.size() != oldsize);
-				words.pop();
-			}
-		}
-	}
+    public List<String> wordBreak(String s, Set<String> dict) {
+        List<String> res = new ArrayList<>();
+        boolean[] breakable = new boolean[s.length()+1]; // for dp
+        Arrays.fill(breakable, true);
+        breakWord(res, s, dict, new StringBuilder(), 0, breakable);
+        return res;
+    }
+    
+    private void breakWord(List<String> res, String s, Set<String> dict, StringBuilder sb, int start, boolean[] breakable){
+        if(start==s.length()){
+            res.add(sb.substring(1));
+            return;
+        }
+        
+        for(int i=start; i<s.length(); i++){
+            if(!breakable[i+1])	// eliminate unnecessory search
+                continue;
+            String word = s.substring(start, i+1);
+            if(dict.contains(word)){
+                int length = sb.length();
+                sb.append(' ');
+                sb.append(word);
+                int resultSize = res.size();
+                breakWord(res, s, dict, sb, i+1, breakable);
+                // if no solution, set the possible to false
+                breakable[i+1] = res.size()!=resultSize;
+                sb.setLength(length);
+            }
+        }
+    }
 }

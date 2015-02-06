@@ -1,6 +1,7 @@
 package interview.leetcode;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -50,13 +51,51 @@ public class NQueens {
 		}
 	}
 
+	/****************** Second time ******************/
+	public List<String[]> solveNQueens2(int n) {
+		int[] board = new int[n];
+		Arrays.fill(board, -1);
+		List<String[]> res = new ArrayList<>();
+		fillBoard(res, board, 0);
+		return res;
+	}
 
+	private void fillBoard(List<String[]> res, int[] board, int row) {
+		if (row == board.length) {
+			res.add(getBoard(board));
+			return;
+		}
 
+		for (int col = 0; col < board.length; col++) {
+			if (isValid(board, row, col)) {
+				board[row] = col;
+				fillBoard(res, board, row + 1);
+				board[row] = -1;
+			}
+		}
+	}
+
+	private String[] getBoard(int[] intboard) {
+		int n = intboard.length;
+		String[] board = new String[n];
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < n; i++)
+			sb.append('.');
+		for (int i = 0; i < n; i++) {
+			int col = intboard[i];
+			sb.setCharAt(col, 'Q');
+			board[i] = sb.toString();
+			sb.setCharAt(col, '.');
+		}
+		return board;
+	}
+
+	/****************** First time ******************/
 	/**
 	 * Assign each queen a row, so they won't be conflicted in rows, so
 	 * we only have to check their column and diagonal conflicts
 	 * 
-	 * Time: O(n!), pruned by the isValid(). 
+	 * Time: O(n!), pruned by the isValid().
 	 * Space: O(n).
 	 */
 	char[] template;
@@ -70,7 +109,6 @@ public class NQueens {
 		return res;
 	}
 
-	
 	/**
 	 * Backtracking, recursively try every possible solution, if failed on a
 	 * point, stop recursion down and backtrack to previous point, and then try
@@ -86,45 +124,38 @@ public class NQueens {
 			}
 			res.add(s);
 		}
-		
+
 		for (int i = 0; i < n; i++) {
-			if (isValid(board, start, i)) {	//pruning
+			if (isValid(board, start, i)) { // pruning
 				board[start] = i;
 				solve(start + 1, n, board, res);
 			}
 		}
 	}
-	
+
 	/**
-	 * Check if the column and two diagonal has something in the way 
+	 * Check if the column and two diagonal has something in the way
 	 * Time: O(n)
-	 * 
-	 * @param colIndice, the board, value is column index, index is row index
-	 * @param startRow, the row index that is going to check.
-	 * @param startCol, the column index that is going to check
-	 * @return
 	 */
-	private boolean isValid(int[] colIndice, int startRow, int startCol) {
-		for (int rowIdx = startRow - 1; rowIdx >= 0; rowIdx--) {
-			if(colIndice[rowIdx]==startCol)	// check column validity
+	private boolean isValid(int[] board, int row, int col) {
+		assert board[row] == -1;
+		for (int i = 0; i < row; i++) { // check column, and two diagonals
+			if (board[i] == col || board[i] + row - i == col
+					|| board[i] - (row - i) == col)
 				return false;
-			int dist = startRow-rowIdx;	// column diagonal distance from startRow to rowIdx
-			if(colIndice[rowIdx]==startCol-dist || colIndice[rowIdx]==startCol+dist)
-				return false;	//check top left and right diagonal validity
 		}
 		return true;
 	}
-	
-	
+
 	/**
 	 * Iterative solution, to be continued
 	 */
-	public List<String[]> solveQueens(int n){
+	public List<String[]> solveQueens(int n) {
 		List<String[]> res = new ArrayList<String[]>();
 		int board[] = new int[n];
-		for(int row=0; row<n; row++){
-			for(int col=0; col<n; col++){
-				if(isValid(board, row, col)){
+		for (int row = 0; row < n; row++) {
+			for (int col = 0; col < n; col++) {
+				if (isValid(board, row, col)) {
 					board[row] = col;
 					break;
 				}

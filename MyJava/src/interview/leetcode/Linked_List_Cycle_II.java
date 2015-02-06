@@ -18,27 +18,22 @@ public class Linked_List_Cycle_II {
 		l1.next.next = l1;
 		detectCycle(l1);
 	}
-	
 
 	public static ListNode detectCycle(ListNode head) {
-		if(head==null)
-			return null;
-		
-		ListNode fast = head;
-		ListNode slow = head;
-		do{
-            if(fast.next==null || fast.next.next==null) 
-                return null;
-            fast = fast.next.next;
-            slow = slow.next;
-        }while(slow!=fast);
-		
-		slow = head;
-		while(slow!=fast){
+		ListNode fast = head, slow = head;
+		while (fast != null && fast.next != null) {
+			fast = fast.next.next;
 			slow = slow.next;
-			fast = fast.next;
+			if (fast == slow) { // fast meets slow, means cycle exists
+				fast = head; // set fast to start point
+				while (fast != slow) { // the point they meet is the begin point
+					fast = fast.next;
+					slow = slow.next;
+				}
+				return slow;
+			}
 		}
-		return slow;
+		return null;
 	}
 
 	public static class ListNode {
@@ -49,8 +44,8 @@ public class Linked_List_Cycle_II {
 			val = x;
 			next = null;
 		}
-		
-		public String toString(){
+
+		public String toString() {
 			return Integer.toString(val);
 		}
 	}

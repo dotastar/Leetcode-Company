@@ -57,33 +57,47 @@ public class Gray_Code {
 	 * 
 	 * 3 bit gray code sequence:
 	 * 
-	 * 0 0 0 
-	 * 0 0 1 
-	 * 0 1 1 
-	 * 0 1 0 
+	 * 0 0 0
+	 * 0 0 1
+	 * 0 1 1
+	 * 0 1 0
 	 * 
 	 * add 1 on no.n bit and reverse the order of above sequence, you will get:
 	 * 
-	 * 1 1 0 
-	 * 1 1 1 
-	 * 1 0 1 
+	 * 1 1 0
+	 * 1 1 1
+	 * 1 0 1
 	 * 1 0 0
-	 * 可以看到第n位的格雷码由两部分构成，一部分是n-1位格雷码，再加上 1<<(n-1)和n-1位格雷码的逆序的和。 
+	 * 可以看到第n位的格雷码由两部分构成，一部分是n-1位格雷码，再加上 1<<(n-1)和n-1位格雷码的逆序的和。
 	 * 
 	 * See here:
 	 * http://en.wikipedia.org/wiki/Gray_code
 	 */
 	public static List<Integer> grayCode(int n) {
-        List<Integer> res = new ArrayList<Integer>();
-        res.add(0);
-        for(int i=0; i<n; i++){
-            int size = res.size();
-            for(int j=size-1; j>=0; j--){
-                int code = res.get(j);
-                code |= (1<<i);
-                res.add(code);    
-            }
-        }
-        return res;
+		List<Integer> res = new ArrayList<Integer>();
+		res.add(0);
+		for (int i = 0; i < n; i++) {
+			int size = res.size();
+			for (int j = size - 1; j >= 0; j--) {
+				int code = res.get(j);
+				code |= (1 << i);
+				res.add(code);
+			}
+		}
+		return res;
+	}
+
+	/**
+	 * Second time
+	 */
+	public List<Integer> grayCode2(int n) {
+		List<Integer> codes = new ArrayList<>();
+		codes.add(0);
+		for (int i = 0; i < n; i++) {
+			int len = codes.size();
+			for (int j = len - 1; j >= 0; j--)
+				codes.add(codes.get(j) | (1 << i));
+		}
+		return codes;
 	}
 }

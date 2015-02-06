@@ -11,17 +11,16 @@ public class Convert_Sorted_List_to_Binary_Search_Tree {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		Convert_Sorted_List_to_Binary_Search_Tree obj = new Convert_Sorted_List_to_Binary_Search_Tree();
+//		Convert_Sorted_List_to_Binary_Search_Tree obj = new Convert_Sorted_List_to_Binary_Search_Tree();
 		ListNode head = new ListNode(3);
 		head.next = new ListNode(5);
 		head.next.next = new ListNode(8);
 		head.next.next.next = new ListNode(10);
-		head.next.next.next.next = new ListNode(12);
-		head.next.next.next.next.next = new ListNode(14);
+//		head.next.next.next.next = new ListNode(12);
+//		head.next.next.next.next.next = new ListNode(14);
 
-		TreeNode root = obj.sortedListToBST(head);
-		System.out.println(root);
 	}
+
 
 	/**
 	 * Create nodes bottom-up, and assign them to its parents. The bottom-up

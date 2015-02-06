@@ -2,6 +2,7 @@ package interview.leetcode;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 /**
  * Given a string s, partition s such that every substring of the partition is a
@@ -24,45 +25,36 @@ public class Palindrome_Partitioning {
 	}
 
 	/**
-	 * Recursion, DFS-like fasion
-	 * Time out
-	 * 
-	 * @param s
-	 * @return
+	 * Backtracking, recursion
 	 */
 	public List<List<String>> partition(String s) {
-		List<List<String>> res = new ArrayList<List<String>>();
-		if (s == null || s.length() == 0)
-			return res;
-		addPartition(s, 0, new ArrayList<String>(), res);
+		List<List<String>> res = new ArrayList<>();
+		partitionString(res, s, new Stack<String>());
 		return res;
 	}
 
-	public void addPartition(String s, int start, List<String> partition,
-			List<List<String>> res) {
-		if (start == s.length()) {
-			res.add(new ArrayList<String>(partition));
+	private void partitionString(List<List<String>> res, String s,
+			Stack<String> parts) {
+		if (s.length() == 0) {
+			res.add(new ArrayList<String>(parts));
 			return;
 		}
 
-		for (int i = start; i < s.length(); i++) {
-			String substr = s.substring(start, i + 1);
-			if (isPalindrome(substr)) {
-				partition.add(substr);
-				addPartition(s, i + 1, partition, res);
-				partition.remove(partition.size() - 1);
+		for (int i = 1; i <= s.length(); i++) {
+			String part = s.substring(0, i);
+			if (isPalindrome(part)) {
+				parts.push(part);
+				partitionString(res, s.substring(i), parts);
+				parts.pop();
 			}
 		}
 	}
 
-	public boolean isPalindrome(String s) {
-		int l = 0;
-		int r = s.length() - 1;
+	private boolean isPalindrome(String s) {
+		int l = 0, r = s.length() - 1;
 		while (l < r) {
-			if (s.charAt(l) != s.charAt(r))
+			if (s.charAt(l++) != s.charAt(r--))
 				return false;
-			l++;
-			r--;
 		}
 		return true;
 	}

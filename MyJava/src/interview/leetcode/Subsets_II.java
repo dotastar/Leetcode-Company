@@ -2,7 +2,9 @@ package interview.leetcode;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Given a collection of integers that might contain duplicates, S, return all
@@ -24,10 +26,37 @@ public class Subsets_II {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		int[] num0 = new int[] { 2, 2 };
-
+		
 		List<List<Integer>> lists = subsetsWithDup2(num0);
 		for (List<Integer> l : lists)
 			System.out.println(l.toString());
+	}
+
+	/**
+	 * Bit manipulation
+	 * Each subset can be represented by a num within the range of 0 ~ (2^n)-1,
+	 * view the number in binary, 1 means choose the element, 0 means not.
+	 * It won't pass the OA, because it does not match the order, need to be
+	 * sorted.
+	 */
+	public List<List<Integer>> subsetsWithDup3(int[] num) {
+		Arrays.sort(num);
+		Set<List<Integer>> res = new HashSet<>();
+		for (int i = 0; i <= ((1 << num.length) - 1); i++) {
+			res.add(generate(i, num));
+		}
+		List<List<Integer>> list = new ArrayList<>(res);
+		return list;
+	}
+
+	private List<Integer> generate(int num, int[] set) {
+		List<Integer> res = new ArrayList<>();
+		for (int i = 0; num != 0; i++) {
+			if ((num & 1) == 1)
+				res.add(set[i]);
+			num >>= 1;
+		}
+		return res;
 	}
 
 	/**
@@ -101,7 +130,7 @@ public class Subsets_II {
 				current.add(copy);
 			}
 
-			if (i == 0 || num[i] != num[i - 1]) {	//not dup
+			if (i == 0 || num[i] != num[i - 1]) { // not dup
 				List<Integer> single = new ArrayList<Integer>();
 				single.add(num[i]);
 				current.add(single);
@@ -112,5 +141,4 @@ public class Subsets_II {
 		res.add(new ArrayList<Integer>());
 		return res;
 	}
-
 }

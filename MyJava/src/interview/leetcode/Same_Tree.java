@@ -15,6 +15,15 @@ public class Same_Tree {
 		// TODO Auto-generated method stub
 
 	}
+	
+	/**
+	 * Second time
+	 */
+    public boolean isSameTree2(TreeNode p, TreeNode q) {
+        if(p==null || q==null)
+            return p==q ? true : false;
+        return p.val==q.val && isSameTree(p.left, q.left) && isSameTree(p.right, q.right);
+    }
 
 	public boolean isSameTree(TreeNode p, TreeNode q) {
 		if (p == null && q == null)

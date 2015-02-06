@@ -88,14 +88,14 @@ public class Recover_Binary_Search_Tree {
 				stk.push(p);
 				p = p.left;
 			} else {
-				TreeNode father = stk.pop();
-				if (father.val <= prev.val) {// father <= lastVal
+				p = stk.pop();
+				if (p.val <= prev.val) {// father <= lastVal
 					if (first == null)
 						first = prev;
-					second = father;
+					second = p;
 				}
-				prev = father;
-				p = father.right;
+				prev = p;
+				p = p.right;
 			}
 		}
 		swap(first, second);

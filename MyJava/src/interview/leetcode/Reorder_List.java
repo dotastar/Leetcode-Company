@@ -50,27 +50,25 @@ public class Reorder_List {
 		if (head == null || head.next == null)
 			return;
 		/************ break ************/
-		ListNode fast = head;
-		ListNode slow = head; // find middle
+		ListNode fast = head, slow = head; // find middle/middle left
 		while (fast.next != null && fast.next.next != null) {
 			fast = fast.next.next;
 			slow = slow.next;
 		}
-		ListNode l1 = head; // break
-		ListNode l2 = slow.next;
-		slow.next = null;
+		ListNode l1 = head, l2 = slow.next;
+		slow.next = null; // break the list
 
 		/************ reverse ************/
 		ListNode prev = null;
-		while (l2.next != null) { // reverse
+		while (l2 != null) { // reverse
 			ListNode nxt = l2.next;
 			l2.next = prev;
 			prev = l2;
 			l2 = nxt;
 		}
-		l2.next = prev;
 
 		/************ merge ************/
+		l2 = prev;
 		while (l2 != null) {
 			ListNode nxt1 = l1.next;
 			ListNode nxt2 = l2.next;

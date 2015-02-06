@@ -43,8 +43,68 @@ import java.util.Queue;
 public class Populating_Next_Right_Pointers_in_Each_Node {
 
 	public static void main(String[] args) {
-		
+
 	}
+
+    /**
+     * Third time, BFS traversal by level
+     */
+    public void connect3(TreeLinkNode root) {
+        if(root==null)
+            return;
+        Queue<TreeLinkNode> q = new LinkedList<>();
+        q.add(root);
+        while(!q.isEmpty()){
+            int len = q.size(); // for each level
+            for(int i=0; i<len; i++){
+                TreeLinkNode curr = q.poll();
+                if(curr.left!=null)
+                    q.add(curr.left);
+                if(curr.right!=null)
+                    q.add(curr.right);
+                    
+                curr.next = i==len-1 ? null : q.peek();	// link to the next
+            }
+        }
+    }
+
+	/**
+	 * Second time practice, more BFS than above solution.
+	 * More elegant.
+	 */
+    public void connect2(TreeLinkNode root) {
+        if(root==null)
+            return;
+        Queue<TreeLinkNode> q = new LinkedList<TreeLinkNode>();
+        q.add(root);
+        while(!q.isEmpty()){
+            TreeLinkNode curr = q.poll();
+            if(curr==null||curr.left==null||curr.right==null)  continue;
+            curr.left.next = curr.right;
+            curr.right.next = curr.next==null?null:curr.next.left;
+            q.add(curr.left);
+            q.add(curr.right);
+        }
+    }
+    
+	/**
+	 * Version 2
+	 * Just connect leftchild to rightchlild of current node, 
+	 * and rightchild to next node's leftchild recursively.
+	 * 
+	 * It's like DFS. Time: O(n), n is the number of nodes.
+	 * Same time complexity.
+	 */
+	public static void connect(TreeLinkNode root) {
+        if(root==null || root.left==null)
+            return;
+        root.left.next = root.right;
+        root.right.next = root.next==null ? null : root.next.left;	// connect to sibling
+        connect(root.left);
+        connect(root.right);
+	}
+	
+
 
 	/**
 	 * Version 1
@@ -72,47 +132,6 @@ public class Populating_Next_Right_Pointers_in_Each_Node {
 		connect0(node.left);
 	}
 	
-	/**
-	 * Second time practice, more BFS than above solution.
-	 * More elegant.
-	 */
-    public void connect2(TreeLinkNode root) {
-        if(root==null)
-            return;
-        Queue<TreeLinkNode> q = new LinkedList<TreeLinkNode>();
-        q.add(root);
-        while(!q.isEmpty()){
-            TreeLinkNode curr = q.poll();
-            if(curr==null||curr.left==null||curr.right==null)  continue;
-            curr.left.next = curr.right;
-            curr.right.next = curr.next==null?null:curr.next.left;
-            q.add(curr.left);
-            q.add(curr.right);
-        }
-    }
-
-	/**
-	 * Version 2
-	 * Just connect leftchild to rightchlild of current node, 
-	 * and rightchild to next node's leftchild recursively.
-	 * 
-	 * It's like DFS. Time: O(n), n is the number of nodes.
-	 * Same time complexity.
-	 */
-	public static void connect(TreeLinkNode node) {
-		if(node==null) 
-			return;
-		if(node.left==null||node.right==null)
-			return;
-		//just connect left to right, and right to next left
-		node.left.next = node.right;
-		node.right.next = node.next==null?null:node.next.left;	
-		
-		connect(node.left);
-		connect(node.right);
-	}
-	
-
 	public class TreeLinkNode {
 		int val;
 		TreeLinkNode left, right, next;

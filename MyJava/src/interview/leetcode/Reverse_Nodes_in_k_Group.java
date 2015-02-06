@@ -37,7 +37,7 @@ public class Reverse_Nodes_in_k_Group {
 
 		ListNode head1 = new ListNode(1);
 		head1.next = new ListNode(2);
-		ListNode res1 = obj.reverseKGroup2(head1, 3);
+		ListNode res1 = obj.reverseKGroup2(head1, 1);
 		printList(res1);
 	}
 
@@ -52,7 +52,7 @@ public class Reverse_Nodes_in_k_Group {
 			if (i % k == 0) { // reversing from start+1 to end-1
 				ListNode tail = start.next;
 				ListNode curr = tail.next;
-				while (curr != end) {
+				while (curr != end) { // stop condition, important!
 					// cache for others and
 					// assign for tail when curr reaches to end
 					tail.next = curr.next;

@@ -2,7 +2,6 @@ package interview.leetcode;
 
 import java.io.UnsupportedEncodingException;
 
-
 /**
  * Given two binary strings, return their sum (also a binary string).
  * 
@@ -14,86 +13,75 @@ import java.io.UnsupportedEncodingException;
  */
 public class Add_Binary {
 	public static void main(String[] args) throws UnsupportedEncodingException {
-		// TODO Auto-generated method stub
-
+		Add_Binary o = new Add_Binary();
+		String res = o.addBinary3("0", "0");
+		System.out.println(res.length());
+		String ans = "0";
+		assert res.equals(ans);
 	}
 
-	
 	/**
-	 * This new solution is more readable
-	 * 
+	 * The fastest solution
+	 * Don't reverse a, b and the result, directly start from back to front
 	 */
-    public String addBinary2(String a, String b) {
-        char[] chsA = a.toCharArray();
-        char[] chsB = b.toCharArray();
-        int ia = chsA.length-1;
-        int ib = chsB.length-1;
-        
-        StringBuilder sb = new StringBuilder();
-        int carry = 0;
-        while(ia>=0 && ib>=0){  //add a+b
-            int sum = (chsA[ia] - '0') + (chsB[ib] - '0') + carry;
-            sb.append(sum%2);
-            carry = sum/2;
-            ia--;
-            ib--;
-        }
-        
-        while(ia>=0){	//add rest a
-            int sum = (chsA[ia]-'0') + carry;
-            sb.append(sum%2);
-            carry = sum/2;
-            ia--;
-        }
-        while(ib>=0){	//add rest b
-            int sum = (chsB[ib]-'0') + carry;
-            sb.append(sum%2);
-            carry = sum/2;
-            ib--;
-        }
-        if(carry>0)
-            sb.append(carry);
-            
-        return sb.reverse().toString();
-    }
-    
-
-	public static String addBinary(String a, String b) {
-		int alen = a.length();
-		int blen = b.length();
-		int minLen = alen;
-		int maxLen = blen;
-		if(alen>blen){
-			maxLen = alen;
-			minLen = blen;
+	public String addBinary3(String a, String b) {
+		int len = a.length() > b.length() ? a.length() : b.length();
+		char[] res = new char[len + 1];
+		int carry = 0;
+		for (int i = a.length() - 1, j = b.length() - 1; i >= 0 || j >= 0; i--, j--) {
+			int bitA = i >= 0 ? a.charAt(i) - '0' : 0;
+			int bitB = j >= 0 ? b.charAt(j) - '0' : 0;
+			int sum = bitA + bitB + carry;
+			carry = sum / 2;
+			sum %= 2;
+			res[len--] = (char) ('0' + sum);
 		}
+		if (carry > 0)
+			res[0] = '1'; // don't forget the last carry
+		carry = carry ^ 1; // revert carry, use it as the offset of res
+		return new String(res, carry, res.length - carry);
+	}
+
+	/**
+	 * Don't reverse a and b, but reverse the result.
+	 * For a and b, directly start from back to front
+	 */
+	public String addBinary2(String a, String b) {
 		StringBuilder sb = new StringBuilder();
 		int carry = 0;
-		for (int i = 0; i < minLen; i++) {	//add the common part of a, b
-			int aint = a.charAt(alen - 1 - i) - '0';
-			int bint = b.charAt(blen - 1 - i) - '0';
-			int res = aint + bint + carry;
-			if (res >= 2) {
-				res %= 2;
-				carry = 1;
-			} else
-				carry = 0;
-			sb.append(Integer.toString(res));
+		for (int i = a.length() - 1, j = b.length() - 1; i >= 0 || j >= 0; i--, j--) {
+			int bitA = i >= 0 ? a.charAt(i) - '0' : 0;
+			int bitB = j >= 0 ? b.charAt(j) - '0' : 0;
+			int sum = bitA + bitB + carry;
+			carry = sum / 2;
+			sum %= 2;
+			sb.append(sum);
 		}
-		
-		String rest = alen>blen?a:b;
-		for(int i=minLen; i<maxLen; i++){	//add the rest string
-			int restInt = rest.charAt(maxLen-1-i) - '0';
-			int res = restInt + carry;
-			if(res>=2){
-				res %= 2;
-				carry = 1;
-			}else
-				carry = 0;
-			sb.append(Integer.toString(res));
+		if (carry > 0)
+			sb.append(1);
+		return sb.reverse().toString();
+	}
+
+	/**
+	 * Reverse a and b, so that it is easier to manipulate
+	 */
+	public String addBinary(String a, String b) {
+		a = new StringBuilder(a).reverse().toString();
+		b = new StringBuilder(b).reverse().toString();
+		StringBuilder sb = new StringBuilder();
+		// use the greater one as length
+		int len = a.length() > b.length() ? a.length() : b.length();
+		int carry = 0;
+		for (int i = 0; i < len; i++) {
+			int bitA = i < a.length() ? a.charAt(i) - '0' : 0;
+			int bitB = i < b.length() ? b.charAt(i) - '0' : 0;
+			int sum = bitA + bitB + carry;
+			carry = sum / 2;
+			sum %= 2;
+			sb.append(sum);
 		}
-		if(carry==1)
-			sb.append("1");
+		if (carry > 0)
+			sb.append(1);
 		return sb.reverse().toString();
 	}
 }

@@ -1,5 +1,6 @@
 package interview.leetcode;
 
+import java.util.Arrays;
 
 /**
  * Follow up for N-Queens problem.
@@ -13,62 +14,50 @@ package interview.leetcode;
 public class NQueens_II {
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
+		NQueens_II o = new NQueens_II();
+		System.out.println(o.totalNQueens(4));
+	}
+
+	public int totalNQueens(int n) {
+		int[] board = new int[n];
+		Arrays.fill(board, -1);
+		int count = 0;
+		for (int i = 0; i < n / 2; i++) {
+			board[0] = i;
+			count += fillBoard(board, 1);
+		}
+
+		count *= 2;
+
+		if (n % 2 == 1) {
+			board[0] = n / 2;
+			count += fillBoard(board, 1);
+		}
+		return count;
 
 	}
 
-    public int totalNQueens(int n) {
-        int[] board = new int[n];
-        int half = 0;
-        for(int i=0; i<n/2; i++){
-        	board[0] = i;
-        	half += solve(1, board);
-        }
-        half *= 2;
-        if(n%2==1){
-        	board[0] = n/2;
-        	half += solve(1, board);
-        }
-        return half;
-    }
-
-	/**
-	 * Backtracking, recusively try every possible solution, if failed on a
-	 * point, stop recurison down and backtrack to previous point, and then try
-	 * next possible point
-	 */
-	public int solve(int startRow, int[] board) {
-		if (startRow == board.length) {
+	private int fillBoard(int[] board, int row) {
+		if (row == board.length)
 			return 1;
+		int count = 0;
+		for (int col = 0; col < board.length; col++) {
+			if (isValid(board, row, col)) {
+				board[row] = col;
+				count += fillBoard(board, row + 1);
+				board[row] = -1;
+			}
 		}
-		
-		int solutions = 0;
-		for (int i = 0; i < board.length; i++) {
-			if (checkValid(startRow, i, board)) { // if valid, recursively go down
-				board[startRow] = i;
-				solutions += solve(startRow + 1, board);
-			} // otherwise try next branch
-		}
-		return solutions;
+		return count;
 	}
 
-	/**
-	 * It is valid if colj and diagnol has no other queens
-	 * 
-	 * Time O(n)
-	 * 
-	 */
-	private boolean checkValid(int rowi, int colj, int[] columnPos) {
-		for (int i = 0; i < rowi; i++) { // only check rows from 0 to rowi-1
-			int currCol = columnPos[i];
-			if (currCol == colj)// check column validity
+	private boolean isValid(int[] board, int row, int col) {
+		assert board[row] == -1;
+		for (int i = 0; i < row; i++) { // check column, and two diagonals
+			if (board[i] == col || board[i] + row - i == col
+					|| board[i] - (row - i) == col)
 				return false;
-
-			int distance = rowi - i; // column diagnol distance from i to rowi
-			if (currCol - distance == colj || currCol + distance == colj)
-				return false; // bottom left and right diagnol
 		}
-
 		return true;
 	}
 }

@@ -36,12 +36,34 @@ public class Populating_Next_Right_Pointers_in_Each_Node_II {
 
 	public static void main(String[] args) {
 		TreeLinkNode root = new TreeLinkNode(1);
-		root.left = new TreeLinkNode(9);
-		root.right = new TreeLinkNode(20);
-		root.right.left = new TreeLinkNode(15);
-		root.right.right = new TreeLinkNode(7);
-		connect(root);
+		root.left = new TreeLinkNode(2);
+		root.right = new TreeLinkNode(3);
+		root.left.left = new TreeLinkNode(4);
+		root.right.right = new TreeLinkNode(5);
+		connect3(root);
 		System.out.println(root.val);
+	}
+
+	/**
+	 * Same as Populating_Next_Right_Pointers_in_Each_Node I
+	 * BFS traversal by level
+	 */
+	public static void connect3(TreeLinkNode root) {
+		if (root == null)
+			return;
+		Queue<TreeLinkNode> q = new LinkedList<>();
+		q.add(root);
+		while (!q.isEmpty()) {
+			int n = q.size();
+			for (int i = 0; i < n; i++) {
+				TreeLinkNode node = q.poll();
+				node.next = i == n - 1 ? null : q.peek();
+				if (node.left != null)
+					q.add(node.left);
+				if (node.right != null)
+					q.add(node.right);
+			}
+		}
 	}
 
 	/****************** Follow up version of Populating_Next_Right_Pointers_in_Each_Node I ******************/
@@ -114,46 +136,6 @@ public class Populating_Next_Right_Pointers_in_Each_Node_II {
 		// must do right first, the order is important
 		connect(root.right);
 		connect(root.left);
-	}
-
-	/**
-	 * Non-Recursive version of above Version 2, second practice
-	 * Just connect leftchild to rightchlild of current node,
-	 * and rightchild to next node's leftchild.
-	 */
-	public void connect2(TreeLinkNode root) {
-		if (root == null)
-			return;
-		Queue<TreeLinkNode> q = new LinkedList<TreeLinkNode>();
-		q.add(root);
-		while (!q.isEmpty()) {
-			TreeLinkNode curr = q.poll();
-			if (curr.left == null && curr.right == null)
-				continue;
-			TreeLinkNode rightmost = null;
-			if (curr.left != null) {
-				rightmost = curr.left;
-				q.add(curr.left);
-			}
-			if (curr.right != null) {
-				rightmost = curr.right;
-				q.add(curr.right);
-			}
-			if (curr.left != null && curr.right != null) {
-				curr.left.next = curr.right;
-			}
-			TreeLinkNode nxt = curr.next;
-			while (nxt != null) {// find the first non-null sibling node
-				if (nxt.left != null) {
-					rightmost.next = nxt.left;
-					break;
-				} else if (nxt.right != null) {
-					rightmost.next = nxt.right;
-					break;
-				}
-				nxt = nxt.next;
-			}
-		}
 	}
 
 	public static class TreeLinkNode {

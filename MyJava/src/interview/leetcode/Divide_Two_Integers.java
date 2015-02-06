@@ -9,7 +9,7 @@ package interview.leetcode;
 public class Divide_Two_Integers {
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
+
 		System.out.print(divide(100, 18) + "\t");
 		System.out.println(divide2(100, 18));
 
@@ -74,7 +74,51 @@ public class Divide_Two_Integers {
 	}
 
 	/**
-	 * Bit shifting solution
+	 * A more concise version, combined below two solution
+	 * 
+	 * Several problems need to be careful:
+	 * 1.Because MAX_VALUE+1 = abs(MIN_VALUE), dividend and divisor could be
+	 * MIN_VALUE which should MAX_VALUE+1,
+	 * Solution for dividend: minus q once in advance in order to plus one so
+	 * that the value is balanced and it won't overflow
+	 * For divisor, the result is fixed, the result is 1 or 0.
+	 * 
+	 * 2.when shifting q<<(i+1) <= p, it could be overflow, should instead
+	 * shifting p: (q <= (p>>(i+1)))
+	 * 
+	 * 3.while adding the result: res += (1<<i), it could be overflow as well
+	 * (e.g. MIN_INT/-1), it should be checked before adding.
+	 */
+	public int divide3(int dividend, int divisor) {
+		int p = abs(dividend), q = abs(divisor);
+		boolean neg = (dividend ^ divisor) >>> 31 == 1;
+		int res = 0;
+		// case analysis
+		if (divisor == Integer.MIN_VALUE) {
+			return dividend == Integer.MIN_VALUE ? 1 : 0;
+		} else if (dividend == Integer.MIN_VALUE) {
+			res++;
+			p = p - q + 1;
+		}
+		while (p >= q) {
+			int i = 0;
+			// potential overflow solved by shifting p instead of q
+			while (q <= (p >> (i + 1)))
+				i++;
+			if (res > Integer.MAX_VALUE - (1 << i))
+				return neg ? Integer.MIN_VALUE : Integer.MAX_VALUE;
+			res += (1 << i); // potential overflow
+			p -= (q << i);
+		}
+		return neg ? -res : res;
+	}
+
+	private int abs(int a) {
+		return a == Integer.MIN_VALUE ? Integer.MAX_VALUE : Math.abs(a);
+	}
+
+	/**
+	 * Bit shifting solution, use long to avoid overflow
 	 * 
 	 * One thing needs to be noticed is that we need to convert the integer to
 	 * long type. Otherwise the Math.abs() value of Integer.MIN_VALUE will be
@@ -86,16 +130,18 @@ public class Divide_Two_Integers {
 	public static int divide(int dividend, int divisor) {
 		long p = Math.abs((long) dividend); // this is importants!
 		long q = Math.abs((long) divisor);
-
+		boolean neg = ((dividend ^ divisor) >>> 31) == 1;
 		int res = 0;
 		while (p >= q) {
-			int count = 0;
-			while (p >= (q << count))
-				count++;
-			res += 1 << (count - 1);
-			p -= q << (count - 1);
+			int i = 0;
+			while (p >= (q << (i + 1)))
+				i++;
+			if (res >= Integer.MAX_VALUE - (1 << i))
+				return neg ? Integer.MIN_VALUE : Integer.MAX_VALUE;
+			res += 1 << i;
+			p -= q << i;
 		}
-		return ((dividend ^ divisor) >>> 31) == 0 ? res : -res;
+		return neg ? -res : res;
 	}
 
 	/**
@@ -133,30 +179,4 @@ public class Divide_Two_Integers {
 		return neg ? -res : res;
 	}
 
-	/**
-	 * A more concise version, combined above two solution
-	 */
-	public static int divide3(int dividend, int divisor) {
-		int res = 0;
-		int p = Math.abs(dividend);
-		int q = Math.abs(divisor);
-		if (q == Integer.MIN_VALUE) // Math.abs() won't work on Integer.MIN
-			return p == Integer.MIN_VALUE ? 1 : 0;
-		else if (p == Integer.MIN_VALUE) {
-			p -= q;
-			res++;
-		}
-
-		while (p >= q) {
-			int k = 1; // bits moved
-			// equals to p/(2^k) >= q or p >= q*(2^k)
-			while ((p >> k) >= q)
-				k++;
-			res += 1 << (k - 1);
-			p -= q << (k - 1);
-		}
-
-		return (dividend ^ divisor) >>> 31 == 0 ? res : -res;
-
-	}
 }

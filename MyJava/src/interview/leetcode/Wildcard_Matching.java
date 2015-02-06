@@ -35,7 +35,7 @@ public class Wildcard_Matching {
 		assert isMatch("aa", "*b")==false;
 		assert isMatch("aa", "aaa")==false;
 		assert isMatch("aa", "aa")==true;
-		assert isMatch("aa", "*")==true;
+		assert isMatch3("aa", "*")==true;
 		assert isMatch("aa", "*?")==true;
 		assert isMatch("cab", "*ab")==true;
 
@@ -59,6 +59,27 @@ public class Wildcard_Matching {
 		System.out.println("isMatch_Improved Running Time: "+ (System.currentTimeMillis() - begin));
 			
 	}	
+	
+    public static boolean isMatch3(String s, String p) {
+        int i=0, j=0, previ = -1, prevj = -1;
+        while(i<s.length()){
+        	char pj = j<p.length() ? p.charAt(j) : '\0';
+            if(pj=='?' || s.charAt(i)==pj){
+                i++;
+                j++;
+            }else if(pj=='*'){
+                previ = i;
+                prevj = ++j;
+            }else if(previ>=0){
+                i = ++previ;
+                j = prevj;
+            }else
+                return false;
+        }
+        while(j<p.length() && p.charAt(j)=='*')
+            j++;
+        return j==p.length();
+    }
 	
 	/**
 	 * Backtracking (Recursion + Pruning), Time: Exponential

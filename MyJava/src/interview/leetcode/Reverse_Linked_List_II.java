@@ -21,7 +21,7 @@ public class Reverse_Linked_List_II {
 		// head0.next.next = new ListNode(3);
 		// head0.next.next.next = new ListNode(4);
 		// head0.next.next.next.next = new ListNode(5);
-		ListNode res = reverseBetween2(head0, 1, 2);
+		ListNode res = reverseBetween(head0, 1, 2);
 		while (res != null) {
 			System.out.print(res.toString() + " -> ");
 			res = res.next;
@@ -30,10 +30,56 @@ public class Reverse_Linked_List_II {
 		}
 
 	}
+	
 
 	/**
-	 * Same solution, another way of writing it
-	 * 
+	 * Move to m-1 (start), reversing m to n by inserting reversely (m+1)th to
+	 * n-th node
+	 */
+	public static ListNode reverseBetween(ListNode head, int m, int n) {
+		ListNode prehead = new ListNode(0);
+		prehead.next = head;
+		ListNode start = prehead;
+		for (int i = 0; i < m - 1; i++)
+			start = start.next;
+		ListNode tail = start.next;
+		ListNode curr = tail == null ? null : tail.next;
+		// reverse from m+1 to n by inserting
+		for (int i = m; i < n && curr != null; i++) {
+			tail.next = curr.next;
+			curr.next = start.next;
+			start.next = curr;
+			curr = tail.next;
+		}
+		return prehead.next;
+	}
+
+	/**
+	 * A different way of reverse, record its start and tail, then reverse it
+	 * directly, and at last concatenate the new head and tail.
+	 */
+	public ListNode reverseBetween3(ListNode head, int m, int n) {
+		ListNode prehead = new ListNode(0);
+		prehead.next = head;
+		ListNode prev = prehead;
+		for (int i = 0; i < m - 1; i++)
+			prev = prev.next;
+
+		ListNode curr = prev.next, start = prev, tail = prev.next;
+		for (int i = m; i <= n && curr != null; i++) {
+			ListNode nxt = curr.next;
+			curr.next = prev;
+			prev = curr;
+			curr = nxt;
+		}
+		tail.next = curr; // concatenate tail
+		start.next = prev; // concatenate head
+		return prehead.next;
+	}
+
+
+	/**
+	 * Same solution, another way of writing it, second time
 	 */
 	public static ListNode reverseBetween2(ListNode head, int m, int n) {
 		if (m >= n)
@@ -64,38 +110,6 @@ public class Reverse_Linked_List_II {
 			}
 			i++;
 		}
-		return prehead.next;
-	}
-
-	/**
-	 * Move to m, reversing m to n, then link the new head and tail again
-	 * 
-	 */
-	public static ListNode reverseBetween(ListNode head, int m, int n) {
-		ListNode prehead = new ListNode(0);
-		prehead.next = head;
-		ListNode preM = prehead;
-
-		int idx = 0;
-		ListNode p = prehead;
-		while (idx + 1 <= m) { // move to m
-			idx++;
-			preM = p;
-			p = p.next;
-		}
-
-		ListNode pre = p;
-		while (idx <= n) { // reverse from m to n
-			idx++;
-			ListNode nxt = p.next;
-			p.next = pre;
-			pre = p;
-			p = nxt;
-		}
-		// because there is a prehead, so preM.next can never be null!
-		preM.next.next = p; // link tail, node M
-		preM.next = pre; // link head, node N
-
 		return prehead.next;
 	}
 

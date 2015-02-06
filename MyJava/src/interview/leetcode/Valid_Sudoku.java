@@ -110,7 +110,6 @@ public class Valid_Sudoku {
 		if (valuesExist[idx])
 			return false;
 		valuesExist[idx] = true;
-		;
 		return true;
 	}
 }

@@ -28,26 +28,20 @@ public class Reverse_Integer {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-
+		System.out.println(Integer.MAX_VALUE);
 	}
-
+	
     public int reverse(int x) {
-        boolean neg = false;
-    	if(x<0){
-    		neg = true;
-    		x = 0 - x;
-    	}
-    	
-    	int res = 0;
-    	while(x>0){
-    		int mod = x%10;
-    		x = x/10;
-    		res = res*10 + mod;
-    	}
-    	
-    	if(neg)
-    		res = 0 - res;
-    	
-    	return res;
+        boolean neg = x<0;
+        int res = 0;
+        while(x!=0){
+            int reminder = x%10;
+            if((!neg && res>(Integer.MAX_VALUE-reminder)/10) || (neg && res<(Integer.MIN_VALUE-reminder)/10)){
+                return 0;   // overflow
+            }
+            res = res*10 + x%10;
+            x /= 10;
+        }
+        return res;
     }
 }

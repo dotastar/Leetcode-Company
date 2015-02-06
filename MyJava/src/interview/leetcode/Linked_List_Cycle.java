@@ -16,17 +16,11 @@ public class Linked_List_Cycle {
 	}
 
 	public boolean hasCycle(ListNode head) {
-		if (head == null)
-			return false;
-		if (head.next == null)
-			return false;
-
-		ListNode fast = head;
-		ListNode slow = head;
+		ListNode fast = head, slow = head;
 		while (fast != null && fast.next != null) {
-			slow = slow.next;
 			fast = fast.next.next;
-			if (fast == slow)
+			slow = slow.next;
+			if (slow == fast)
 				return true;
 		}
 		return false;

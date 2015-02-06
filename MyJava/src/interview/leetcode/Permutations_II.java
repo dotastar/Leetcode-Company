@@ -48,7 +48,9 @@ public class Permutations_II {
 		}
 		// swap 'start' and its element after it
 		for (int i = start; i < num.length; i++) {
-			if (containsNotDuplicate(num, start, i)) {
+			// It can't just check i>start && num[i-1]!=num[i]
+			// because it will be swapped, the order will be wrong
+			if (!containsDuplicate(num, start, i)) {
 				swap(num, i, start);
 				permute(num, start + 1, res);
 				swap(num, start, i);
@@ -56,38 +58,35 @@ public class Permutations_II {
 		}
 	}
 
-	public boolean containsNotDuplicate(int[] num, int start, int end) {
+	public boolean containsDuplicate(int[] num, int start, int end) {
 		for (int k = start; k <= end - 1; k++)
 			if (num[k] == num[end])
-				return false;
-		return true;
+				return true;
+		return false;
 	}
 
-	
 	/**
-	 * Iteration, use HashSet to deduplicate
-	 * 
+	 * Iteration, use HashSet to de-duplicate
 	 */
-    public List<List<Integer>> permuteUnique2(int[] num) {
-        List<List<Integer>> perms = new ArrayList<List<Integer>>();
-        perms.add(new ArrayList<Integer>());
-        for(int n : num){
-            Set<List<Integer>> current = new HashSet<List<Integer>>();
-            for(List<Integer> perm : perms){
-                for(int i=0; i<perm.size(); i++){
-                    List<Integer> newperm = new ArrayList<Integer>(perm);
-                    newperm.add(i, n);
-                    current.add(newperm);
-                }
-                perm.add(n);
-                current.add(perm);
-            }
-            perms = new ArrayList<List<Integer>>(current);
-        }
-        return perms;
-    }
-    
-    
+	public List<List<Integer>> permuteUnique2(int[] num) {
+		List<List<Integer>> perms = new ArrayList<List<Integer>>();
+		perms.add(new ArrayList<Integer>());
+		for (int n : num) {
+			Set<List<Integer>> current = new HashSet<List<Integer>>();
+			for (List<Integer> perm : perms) {
+				for (int i = 0; i < perm.size(); i++) {
+					List<Integer> newperm = new ArrayList<Integer>(perm);
+					newperm.add(i, n);
+					current.add(newperm);
+				}
+				perm.add(n);
+				current.add(perm);
+			}
+			perms = new ArrayList<List<Integer>>(current);
+		}
+		return perms;
+	}
+
 	private void swap(int[] num, int i, int j) {
 		int tmp = num[i];
 		num[i] = num[j];

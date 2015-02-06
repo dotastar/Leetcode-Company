@@ -32,33 +32,30 @@ public class Intersection_of_Two_Linked_Lists {
 	 * common node.
 	 */
 	public static ListNode getIntersectionNode(ListNode headA, ListNode headB) {
-		int lenA = 0, lenB = 0;
-		ListNode p1 = headA, p2 = headB;
-		while (p1 != null) { // get length of A
-			lenA++;
-			p1 = p1.next;
+		int lenA = getLength(headA), lenB = getLength(headB);
+		int diff = lenB - lenA;
+		if (diff < 0) {
+			ListNode temp = headA;
+			headA = headB;
+			headB = temp;
+			diff = -diff;
 		}
-		while (p2 != null) { // get length of B
-			lenB++;
-			p2 = p2.next;
+		for (int i = 0; i < diff; i++)
+			headB = headB.next;
+		while (headA != headB) {
+			headA = headA.next;
+			headB = headB.next;
 		}
-		if (lenA > lenB) { // set longer list to p1, shorter to p2
-			p1 = headA;
-			p2 = headB;
-		} else {
-			p1 = headB;
-			p2 = headA;
-		}
+		return headA == headB ? headA : null;
+	}
 
-		int longer = Math.abs(lenA - lenB); // advancing the longer list
-		while (longer-- > 0)
-			p1 = p1.next;
-
-		while (p1 != null && p2 != null && p1.val != p2.val) {
-			p1 = p1.next;
-			p2 = p2.next;
+	private static int getLength(ListNode h) {
+		int i = 0;
+		while (h != null) {
+			h = h.next;
+			i++;
 		}
-		return (p1 == null || p2 == null) ? null : p1;
+		return i;
 	}
 
 	/**

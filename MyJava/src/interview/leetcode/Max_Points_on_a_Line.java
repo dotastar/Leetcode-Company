@@ -21,10 +21,17 @@ public class Max_Points_on_a_Line {
 	 * }
 	 */
 	public static void main(String[] args) {
+		double pos0 = 0 / (double) 1, neg0 = 0 / (double) -1;
+		String equals = pos0 == neg0 ? "==" : "!=";
+		System.out.println(String.format("%f %s %f", pos0, equals, neg0));
+		Map<Double, String> map = new HashMap<>();
+		map.put(pos0, "Positive Zero");
+		map.put(neg0, "Negative Zero");
+		System.out.println(map.get(pos0) + ", " + map.get(neg0)
+				+ " has different hash code!");
+
 		Point[] pts0 = { new Point(1, 1), new Point(1, 1), new Point(1, 1),
 				new Point(1, 1) };
-		System.out.println(maxPoints2(pts0));
-
 		// common case
 		Point[] pts1 = { new Point(2, 2), new Point(1, 2), new Point(2, 4),
 				new Point(4, 5), new Point(2, 3), new Point(0, 4),
@@ -89,7 +96,7 @@ public class Max_Points_on_a_Line {
 				new Point(10, 6), new Point(6, 119), new Point(0, 2),
 				new Point(-41, 6), new Point(7, 19), new Point(30, 250) };
 
-		System.out.println(maxPoints(pts0) + ":1");// 1
+		System.out.println(maxPoints(pts0) + ":4");// 4
 		System.out.println(maxPoints(pts1) + ":6");// 6
 		System.out.println(maxPoints(pts2) + ":3");// 3
 		System.out.println(maxPoints(pts3) + ":3");// 3
@@ -101,110 +108,47 @@ public class Max_Points_on_a_Line {
 	}
 
 	/**
-	 * Pay attention to 2 cases:
-	 * 1.overlapped points (points have the same value),
-	 * 2.the line perpendicular to X axis cannot be represented by a slope
+	 * Time: O(n^2)
+	 * For each point in the array, fix it, and try every point after it in the
+	 * array and see if slopes are the same, if same then they are on the same
+	 * line.
+	 * Fix one point, and traverse the others, use this fashion to avoid
+	 * calculate the intercept of a line.
+	 * Because one point is fixed, so if two lines have the same slope and
+	 * share the same fixed point, then they must be the same line.
 	 * 
-	 * @param points
-	 * @return
+	 * Two keys:
+	 * 1.fixed one point, traverse the rest, the global max is guaranteed in it.
+	 * 2.be careful when store double in HashMap, double has -0.0, +0.0, they
+	 * are equal in value, but have different hash code.
+	 * When converting int to double: 0.0 + (double) (a.y - b.y) / (a.x - b.x);
+	 * 3.how to represent the slope when P1.x==P2.x (Double.POSITIVE_INFINITY)
 	 */
 	public static int maxPoints(Point[] points) {
-		if (points == null || points.length == 0)
-			return 0;
-
-		int max = 1;
-		Map<Double, Integer> slopeCount = new HashMap<Double, Integer>();
-		for (int i = 0; i < points.length - 1; i++) {
-			slopeCount.clear();
-			// same points' slope is represented by Double.POSITIVE_INFINITY
-			slopeCount.put(Double.POSITIVE_INFINITY, 1);
-
+		int max = 0;
+		Map<Double, Integer> counts = new HashMap<>();
+		for (int i = 0; i < points.length; i++) {
+			counts.clear();
 			Point pi = points[i];
-			int dup = 0;
-
+			int dup = 0, currMax = 1;
 			for (int j = i + 1; j < points.length; j++) {
 				Point pj = points[j];
-				if (pi.x == pj.x && pi.y == pj.y) {
+				if (pi.x == pj.x && pi.y == pj.y) { // equals
 					dup++;
 					continue;
 				}
-
-				double slope = slope(pi, pj);
-				Integer count = slopeCount.get(slope);
-				if (count == null)
-					slopeCount.put(slope, 2);
-				else
-					slopeCount.put(slope, count + 1);
+				double k = slope(pi, pj);
+				Integer cnt = counts.get(k);
+				if (cnt == null)
+					cnt = 1;
+				cnt++;
+				counts.put(k, cnt);
+				currMax = cnt > currMax ? cnt : currMax;
 			}
-
-			for (int count : slopeCount.values()) {
-				if (count + dup > max)
-					max = count + dup;
-			}
+			currMax += dup;
+			max = currMax > max ? currMax : max;
 		}
 		return max;
-	}
-
-	/**
-	 * Same solution, more rigorous, use an extra map to store the lines that
-	 * vertical to the x-axis.
-	 * 
-	 */
-	public static int maxPoints2(Point[] points) {
-		int len = points.length;
-		if (len <= 1)
-			return len;
-		Map<Double, Integer> slopeCnt = new HashMap<Double, Integer>();
-		Map<Integer, Integer> verticalCnt = new HashMap<Integer, Integer>();
-		int max = 0;
-		for (int i = 0; i < len; i++) {
-			slopeCnt.clear();
-			verticalCnt.clear();
-			Point pi = points[i];
-			int dup = 0;
-			for (int j = i + 1; j < len; j++) {
-				Point pj = points[j];
-				if (pi.x == pj.x && pj.y == pi.y) {
-					dup++;
-					continue;
-				}
-
-				if (isVertical(pi, pj)) {
-					Integer cnt = verticalCnt.get(pi.x);
-					if (cnt == null)
-						cnt = 2;
-					else
-						cnt++;
-
-					verticalCnt.put(pi.x, cnt);
-				} else {
-					double slp = slope(pi, pj);
-					Integer cnt = slopeCnt.get(slp);
-					if (cnt == null)
-						cnt = 2;
-					else
-						cnt++;
-					slopeCnt.put(slp, cnt);
-				}
-			}
-
-			for (Integer cnt : slopeCnt.values()) {
-				if (cnt + dup > max)
-					max = cnt + dup;
-			}
-			for (Integer cnt : verticalCnt.values()) {
-				if (cnt + dup > max)
-					max = cnt + dup;
-			}
-			if (max == 0 && dup > 0)
-				max = dup + 1;
-		}
-
-		return max;
-	}
-
-	public static boolean isVertical(Point pa, Point pb) {
-		return pa.x == pb.x;
 	}
 
 	public static double slope(Point a, Point b) {

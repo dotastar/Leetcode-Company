@@ -24,35 +24,34 @@ import java.util.Stack;
 public class Combination_Sum_II {
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		int[] candidates = new int[]{1,1,2,5,6,7,10};
-		int target = 8;
+		int[] candidates = new int[] { 1, 2, 2, 2 };
+		int target = 4;
 		List<List<Integer>> res = combinationSum2(candidates, target);
-		for(List<Integer> comb : res)
+		for (List<Integer> comb : res)
 			System.out.println(comb.toString());
 	}
 
-    public static List<List<Integer>> combinationSum2(int[] num, int target) {
-    	Arrays.sort(num);
-    	List<List<Integer>> res = new ArrayList<List<Integer>>();
-    	addCombSum(num, 0, target, new Stack<Integer>(), res);
-    	return res;
-    }
-    
-    public static void addCombSum(int[] num, int start, int sum, Stack<Integer> comb, List<List<Integer>> res){
-    	if(sum==0){
-    		res.add(new ArrayList<Integer>(comb));
-    		return;
-    	}
-    	if(sum<0)
-    		return;
-    	
-    	for(int i=start; i<num.length; i++){
-    		if(num[i]>sum||(i>start && num[i]==num[i-1]))
-    			continue;
-    		comb.push(num[i]);
-    		addCombSum(num, i+1, sum-num[i], comb, res);	
-    		comb.pop();
-    	}
-    }
+	public static List<List<Integer>> combinationSum2(int[] num, int target) {
+		Arrays.sort(num);
+		List<List<Integer>> res = new ArrayList<List<Integer>>();
+		addCombSum(num, 0, target, new Stack<Integer>(), res);
+		return res;
+	}
+
+	public static void addCombSum(int[] num, int start, int sum,
+			Stack<Integer> comb, List<List<Integer>> res) {
+		if (sum == 0) {
+			res.add(new ArrayList<Integer>(comb));
+			return;
+		}
+
+		for (int i = start; i < num.length; i++) {
+			if (num[i] > sum || (i > start && num[i] == num[i - 1]))
+				continue;
+			System.out.println(num[i]);
+			comb.push(num[i]);
+			addCombSum(num, i + 1, sum - num[i], comb, res);
+			comb.pop();
+		}
+	}
 }

@@ -1,9 +1,12 @@
 package interview.leetcode;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 import java.util.Set;
+import java.util.Stack;
 
 /**
  * Given two words (start and end), and a dictionary, find the length of
@@ -43,16 +46,81 @@ public class Word_Ladder {
 		dict.add("log");
 		System.out.println(obj.ladderLength(start, end, dict));
 
-//		String start1 = "hit";
-//		String end1 = "cog";
-//		Set<String> dict1 = new HashSet<String>();
-//		dict1.add("hot");
-//		dict1.add("dot");
-//		dict1.add("dog");
+		String start1 = "hot";
+		String end1 = "dog";
+		Set<String> dict1 = new HashSet<String>();
+		dict1.add("hot");
+		dict1.add("dot");
+		dict1.add("dog");
 //		dict1.add("lot");
 //		dict1.add("log");
-//		System.out.println(obj.ladderLength_Improved(start1, end1, dict1));
+		System.out.println(obj.findLadders(start1, end1, dict1));
 	}
+	
+    public List<List<String>> findLadders(String start, String end, Set<String> dict) {
+        int length = getShortestLength(start, end, new HashSet<String>(dict));
+        List<List<String>> res = new ArrayList<>();
+        findPath(res, start, end, dict, new Stack<String>(), length);
+        return res;
+    }
+    
+    private void findPath(List<List<String>> res, String start, String end, Set<String> dict, Stack<String> path, int length){
+        if(length==0){
+            if(path.size()>0)
+                res.add(new ArrayList<String>(path));
+            return;
+        }
+        path.push(start);
+        char[] candid = start.toCharArray();
+        for(int j=0; j<start.length(); j++){
+            char original = candid[j];
+            for(char c = 'a'; c<='z'; c++){
+                if(c==original)
+                    continue;
+                candid[j] = c;
+                String candidate = String.valueOf(candid);
+                if(dict.contains(candidate)){
+                    dict.remove(candidate);
+                    findPath(res, candidate, end, dict, path, length-1);
+                    dict.add(candidate);
+                }
+            }
+            candid[j] = original;
+        }
+        path.pop();
+    }
+    
+    
+    private int getShortestLength(String start, String end, Set<String> dict){
+        int length = 1;
+        Queue<String> q = new LinkedList<String>();
+        q.add(start);
+        while(!q.isEmpty()){
+            length++;
+            int size = q.size();
+            for(int i=0; i<size; i++){
+                start = q.poll();
+                char[] candid = start.toCharArray();
+                for(int j=0; j<start.length(); j++){
+                    char original = candid[j];
+                    for(char c = 'a'; c<='z'; c++){
+                        if(c==original)
+                            continue;
+                        candid[j] = c;
+                        String candidate = String.valueOf(candid);
+                        if(candidate.equals(end))
+                            return length;
+                        if(dict.contains(candidate)){
+                            q.add(candidate);
+                            dict.remove(candidate);
+                        }
+                    }
+                    candid[j] = original;
+                }
+            }
+        }
+        return 0;
+    }
 
 	/**
 	 * BFS
@@ -66,8 +134,6 @@ public class Word_Ladder {
 	 */
 	public int ladderLength(String start, String end, Set<String> dict) {
 		int length = 1;
-		if (start.equals(end))
-			return 1;
 		Queue<String> q = new LinkedList<String>();
 		q.add(start);
 		while (!q.isEmpty()) {	//BFS

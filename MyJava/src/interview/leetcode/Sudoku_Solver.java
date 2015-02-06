@@ -42,6 +42,60 @@ public class Sudoku_Solver {
 	}
 
 	/**
+	 * Second time practice, use three arrays to check the validity of board
+	 */
+	boolean[][] rows;
+	boolean[][] cols;
+	boolean[][] blocks;
+
+	public void solveSudoku2(char[][] board) {
+		rows = new boolean[9][9];
+		cols = new boolean[9][9];
+		blocks = new boolean[9][9];
+
+		for (int i = 0; i < 9; i++) {
+			for (int j = 0; j < 9; j++) {
+				if (board[i][j] != '.') {
+					int val = board[i][j] - '1';
+					rows[i][val] = true;
+					cols[j][val] = true;
+					blocks[(i / 3) * 3 + j / 3][val] = true;
+				}
+			}
+		}
+
+		assert solve(board, 0, 0);
+	}
+
+	/**
+	 * The advantage of use backtracking is that you can backward if the current
+	 * path is wrong.
+	 */
+	public boolean solve(char[][] board, int i, int j) {
+		i += j / 9;
+		j = j % 9;
+		if (i >= 9)
+			return true;
+
+		if (board[i][j] != '.')
+			return solve(board, i, j + 1);
+
+		for (int val = 0; val < 9; val++) {
+			if (rows[i][val] || cols[j][val] || blocks[(i / 3) * 3 + j / 3][val])
+				continue;
+			
+			board[i][j] = (char) ('1' + val);			
+			rows[i][val] = cols[j][val] = blocks[(i / 3) * 3 + j / 3][val] = true;
+			if (solve(board, i, j + 1))
+				return true;
+			rows[i][val] = cols[j][val] = blocks[(i / 3) * 3 + j / 3][val] = false;
+		}
+		board[i][j] = '.';
+		
+		return false;
+	}
+
+	/**
 	 * Backtracking
 	 * 
 	 */
@@ -87,61 +141,4 @@ public class Sudoku_Solver {
 		}
 		return true;
 	}
-
-	/**
-	 * Second time practice, use three arrays to check the validity of board
-	 */
-	boolean[][] rows;
-	boolean[][] cols;
-	boolean[][] blocks;
-
-	public void solveSudoku2(char[][] board) {
-		rows = new boolean[9][9];
-		cols = new boolean[9][9];
-		blocks = new boolean[9][9];
-
-		for (int i = 0; i < 9; i++) {
-			for (int j = 0; j < 9; j++) {
-				if (board[i][j] != '.') {
-					int val = board[i][j] - '1';
-					rows[i][val] = true;
-					cols[j][val] = true;
-					blocks[(i / 3) * 3 + j / 3][val] = true;
-				}
-			}
-		}
-
-		assert solve(board, 0, 0);
-	}
-
-	public boolean solve(char[][] board, int i, int j) {
-		if (j == 9)
-			return solve(board, i + 1, 0);
-		if (i == 9)
-			return true;
-		while (board[i][j] != '.') {
-			if (j == 8) {
-				i++;
-				j = 0;
-			} else
-				j++;
-			
-			if (i == 9)
-				return true;
-		}
-
-		for (int val = 0; val < 9; val++) {
-			if (rows[i][val] || cols[j][val]
-					|| blocks[(i / 3) * 3 + j / 3][val])
-				continue;
-			rows[i][val] = cols[j][val] = blocks[(i / 3) * 3 + j / 3][val] = true;
-			board[i][j] = (char) ('1' + val);
-			if (solve(board, i, j + 1))
-				return true;
-			board[i][j] = '.';
-			rows[i][val] = cols[j][val] = blocks[(i / 3) * 3 + j / 3][val] = false;
-		}
-		return false;
-	}
-
 }

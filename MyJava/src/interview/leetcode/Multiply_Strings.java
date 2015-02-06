@@ -20,6 +20,30 @@ public class Multiply_Strings {
 	}
 
 	/**
+	 * Same solution, just do not reverse input at the beginning,
+	 * which will be a little faster.
+	 */
+	public String multiply2(String num1, String num2) {
+		int[] res = new int[num1.length() + num2.length()];
+		for (int i = num1.length() - 1; i >= 0; i--) {
+			int n1 = num1.charAt(i) - '0';
+			for (int j = num2.length() - 1; j >= 0; j--) {
+				int n2 = num2.charAt(j) - '0';
+				res[i + j + 1] += n1 * n2; // error-prone: should be +=
+				res[i + j] += res[i + j + 1] / 10;
+				res[i + j + 1] %= 10;
+			}
+		}
+		StringBuilder sb = new StringBuilder();
+		int i = 0; // ignore 0 at higher significant bit
+		while (i < res.length - 1 && res[i] == 0) // error-prone: check boundary
+			i++;
+		for (; i < res.length; i++)
+			sb.append(res[i]);
+		return sb.toString();
+	}
+
+	/**
 	 * Time: O(len1*len2)
 	 * 
 	 * Space: O(n) = n, one n for int array, n = len1 + len2
@@ -46,35 +70,4 @@ public class Multiply_Strings {
 
 		return sb.toString();
 	}
-	
-	
-	/**
-	 * Same solution, just do not reverse input at the beginning
-	 * 
-	 */
-    public String multiply2(String num1, String num2) {
-        int len1 = num1.length();
-        int len2 = num2.length();
-        
-        int[] bigNum = new int[len1+len2];
-        for(int i=len1-1; i>=0; i--){
-            for(int j=len2-1; j>=0; j--){
-                int pos = len1-1-i+len2-1-j;
-                bigNum[pos] += (num1.charAt(i)-'0')*(num2.charAt(j)-'0');
-                bigNum[pos+1] += bigNum[pos]/10;    //carry for next
-                bigNum[pos] %= 10;
-            }
-        }
-        
-        boolean isRealNum = false;
-        StringBuilder sb = new StringBuilder();
-        for(int i=len1+len2-1; i>=0; i--){
-            if(i!=0 && !isRealNum && bigNum[i]==0)
-                continue;
-            else
-                isRealNum = true;
-            sb.append(bigNum[i]);
-        }
-        return sb.toString();
-    }
 }

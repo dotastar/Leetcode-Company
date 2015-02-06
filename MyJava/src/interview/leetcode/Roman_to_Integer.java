@@ -1,5 +1,8 @@
 package interview.leetcode;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Given a roman numeral, convert it to an integer.
  * 
@@ -9,7 +12,9 @@ package interview.leetcode;
 public class Roman_to_Integer {
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
+		String num7 = "DCXXI";
+		System.out.println(romanToInt4(num7));
+		
 		String num1 = "VIII"; // 8
 		String num2 = "XCIX"; // 99
 		String num3 = "XIV"; // 14
@@ -25,6 +30,52 @@ public class Roman_to_Integer {
 		System.out.println(romanToInt(num6));
 	}
 	
+	
+	/**
+	 * Solution 4
+	 */
+	private final static int[] Values = { 1, 4, 5, 9, 10, 40, 50, 90, 100, 400, 500, 900, 1000 };
+	private final static String[] Romans = { "I", "IV", "V", "IX", "X", "XL", "L", "XC", "C", "CD", "D", "CM", "M" };
+    
+    public static int romanToInt4(String s) {
+        int res = 0;
+        for(int i=0, j=Romans.length-1; i<s.length() && j>=0; i++){
+            char c = s.charAt(i);
+            while(j>0){
+                String roman = Romans[j];
+                if(roman.charAt(0)==c){
+                    if(roman.length()==1)
+                        break;
+                    if(i!=s.length()-1 && roman.length()==2 && roman.charAt(1)==s.charAt(i+1)){
+                        i++;
+                        break;       
+                    }
+                }
+                j--;
+            }
+            res += Values[j];
+        }
+        return res;
+    }
+    
+    /**
+     * The same of solution 4
+     */
+    public static int romanToInt5(String s) {
+    	int res = 0;
+        for(int i=0, j=Values.length-1; i<s.length() && j>=0; ){
+            char c = s.charAt(i);
+            if(c==Romans[j].charAt(0)){
+                if(Romans[j].length()==1 || (i!=s.length()-1 && Romans[j].charAt(1) == s.charAt(i+1))){
+                    res += Values[j];
+                    i = Romans[j].length()==1 ? i+1 : i+2;
+                }else
+                    j--;
+            }else
+                j--;
+        }
+        return res;
+    }
 
 	/**
 	 * A more compact way to write it
@@ -57,6 +108,50 @@ public class Roman_to_Integer {
 		return res;
 	}
 
+	/**
+	 * Third time
+	 */
+    private static final Map<String, Integer> map = getMap();
+    
+    public int romanToInt3(String s) {
+        int res = 0;
+        for(int i=0; i<s.length(); i++){
+            String curr = Character.toString(s.charAt(i));
+            int val = map.get(curr);
+            if(i!=s.length()-1){
+                String nextChar = Character.toString(s.charAt(i+1));
+                int next = map.get(nextChar);
+                if(val<next){
+                    val = map.get(curr+nextChar);
+                    i++;
+                }
+            }
+            res += val;
+        }
+        return res;
+    }
+    
+    private static Map<String, Integer> getMap(){
+        Map<String, Integer> map = new HashMap<>();
+        map.put("I", 1);
+        map.put("IV", 4);
+        map.put("V", 5);
+        map.put("IX", 9);
+        map.put("X", 10);
+        map.put("XL", 40);
+        map.put("L", 50);
+        map.put("XC", 90);
+        map.put("C", 100);
+        map.put("CD", 400);
+        map.put("D", 500);
+        map.put("CM", 900);
+        map.put("M", 1000);
+        return map;
+    }
+    
+    /**
+     * First solution
+     */
 	public static int romanToInt(String s) {
 		char[] chs = s.toCharArray();
 		int res = 0;

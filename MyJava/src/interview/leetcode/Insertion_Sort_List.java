@@ -25,21 +25,23 @@ public class Insertion_Sort_List {
 		System.out.println("null");
 	}
 
+	/**
+	 * Time: O(n^2)
+	 */
 	public static ListNode insertionSortList(ListNode head) {
-		ListNode pre = new ListNode(Integer.MIN_VALUE);
-		while (head != null) { // insert head to the pre list
-			ListNode prev = pre;
-			ListNode curr = pre.next; // find the position in pre list
-			while (curr != null && head.val > curr.val) {
-				prev = curr;
-				curr = curr.next;
-			}
-			ListNode nxt = head.next;
-			prev.next = head;	//inserting
-			head.next = curr;
-			head = nxt;
+		ListNode curr = head, prehead = new ListNode(0);
+		while (curr != null) {
+			ListNode prev = prehead, nxt = curr.next;
+			// find insertion position
+			while (prev.next != null && curr.val > prev.next.val)
+				prev = prev.next;
+			// insert
+			curr.next = prev.next;
+			prev.next = curr;
+			// next to insert
+			curr = nxt;
 		}
-		return pre.next;
+		return prehead.next;
 	}
 
 	public static class ListNode {

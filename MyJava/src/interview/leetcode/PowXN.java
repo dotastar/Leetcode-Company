@@ -30,16 +30,6 @@ public class PowXN {
 	}
 
 	/**
-	 * Naive solution
-	 */
-	public static double pow_naive(double x, int n) {
-		double res = x;
-		for (int i = 0; i < n; i++)
-			res *= x;
-		return res;
-	}
-
-	/**
 	 * Several problems to notice:
 	 * 1.How to deal with the case when n is negative, the base case of
 	 * recursion n==0 will avoid such problem, because 0 don't have any sign, if
@@ -63,10 +53,7 @@ public class PowXN {
 	 * Divide and conquer
 	 */
 	public static double pow(double x, int n) {
-		if (n < 0)
-			return 1 / power(x, n);
-		else
-			return power(x, n);
+		return n < 0 ? 1 / power(x, -n) : power(x, n);
 	}
 
 	public static double power(double x, int n) {
@@ -80,4 +67,48 @@ public class PowXN {
 			return half * half * x;
 	}
 
+	/**
+	 * Decompose n to the form of 2^1 + 2^2 + ... + 2^i.
+	 */
+	public double pow2(double x, int n) {
+		if (n == 0)
+			return 1.0;
+		double res = 1.0;
+		if (n < 0) {
+			if (x >= 1.0 / Double.MAX_VALUE || x <= 1.0 / -Double.MAX_VALUE)
+				x = 1.0 / x;
+			else
+				return Double.MAX_VALUE;
+			if (n == Integer.MIN_VALUE) {
+				res *= x;
+				n++;
+			}
+		}
+		n = Math.abs(n);
+		boolean isNeg = false;
+		if (n % 2 == 1 && x < 0) {
+			isNeg = true;
+		}
+		x = Math.abs(x);
+		while (n > 0) {
+			if ((n & 1) == 1) {
+				if (res > Double.MAX_VALUE / x)
+					return Double.MAX_VALUE;
+				res *= x;
+			}
+			x *= x;
+			n = n >> 1;
+		}
+		return isNeg ? -res : res;
+	}
+
+	/**
+	 * Naive solution
+	 */
+	public static double pow_naive(double x, int n) {
+		double res = x;
+		for (int i = 0; i < n; i++)
+			res *= x;
+		return res;
+	}
 }

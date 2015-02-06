@@ -67,47 +67,38 @@ public class Sort_List {
 	 * 1.break list in middle recursively
 	 * 
 	 * 2.merge them recursively begin from the minimal length list
-	 * 
-	 * @param head
-	 * @return
 	 */
 	public static ListNode sortList(ListNode head) {
 		if (head == null || head.next == null)
 			return head;
-		ListNode fast = head;
-		ListNode slow = head;
+		ListNode fast = head, mid = head;
 		// break the list into two in the middle
 		while (fast.next != null && fast.next.next != null) {
-			slow = slow.next; // must be next and next.next, important,
+			mid = mid.next; // must be next and next.next, important,
 			fast = fast.next.next; // make sure fast and slow.next is not null!
 		}
 
-		ListNode l2 = sortList(slow.next); // split second half of the list
-		slow.next = null; // cut the list in the middle
+		ListNode l2 = sortList(mid.next); // split second half of the list
+		mid.next = null; // cut the list in the middle, Important!
 		ListNode l1 = sortList(head); // split first half of the list
 
 		return merge(l1, l2);
 	}
 
 	public static ListNode merge(ListNode l1, ListNode l2) {
-		ListNode pre = new ListNode(0);
-		ListNode curr = pre;
-		while (l1 != null && l2 != null) {
-			if (l1.val > l2.val) {
-				curr.next = l2;
-				l2 = l2.next;
-			} else {
+		ListNode prehead = new ListNode(0);
+		ListNode curr = prehead;
+		while (l1 != null || l2 != null) {
+			if (l2 == null || (l1 != null && l1.val < l2.val)) {
 				curr.next = l1;
 				l1 = l1.next;
+			} else {
+				curr.next = l2;
+				l2 = l2.next;
 			}
 			curr = curr.next;
 		}
-		if (l1 != null)
-			curr.next = l1;
-		else
-			curr.next = l2;
-
-		return pre.next;
+		return prehead.next;
 	}
 
 	public static class ListNode {

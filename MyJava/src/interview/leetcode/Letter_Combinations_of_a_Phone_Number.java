@@ -29,65 +29,67 @@ public class Letter_Combinations_of_a_Phone_Number {
 		// TODO Auto-generated method stub
 
 	}
-	
+
 	/**
-	 * Combination of different char list 
+	 * Combination of different char list
 	 */
+	private final static String[] combs = { "", "", "abc", "def", "ghi", "jkl", "mno", "pqrs", "tuv", "wxyz" };
+
 	public List<String> letterCombinations(String digits) {
-		String[] map = new String[] { "", "abc", "def", "ghi", "jkl", "mno", "pqrs", "tuv", "wxyz" };
 		List<String> res = new ArrayList<String>();
-		combination(map, 0, new char[digits.length()], digits, res);
+		combinations(res, digits, 0, new StringBuilder());
 		return res;
 	}
-	
-	public void combination(String[] map, int curr, char[] comb, String digits, List<String> res){
-		if(curr==digits.length()){
-			res.add(new String(comb));
+
+	private void combinations(List<String> ans, String digits, int idx, StringBuilder sb) {
+		if (idx >= digits.length()) {
+			ans.add(sb.toString());
 			return;
 		}
-
-		int idx = digits.charAt(curr)-'1';
-		if(idx<0 || idx>=map.length)
+		int num = digits.charAt(idx) - '0';
+		if (num < 0 || num > 9)
 			return;
-		String letters = map[idx];
-		for(int i=0; i<letters.length(); i++){
-			comb[curr] = letters.charAt(i);
-			combination(map, curr+1, comb, digits, res);
+		String comb = combs[num];
+		for (int i = 0; i < comb.length(); i++) {
+			sb.append(comb.charAt(i));
+			combinations(ans, digits, idx + 1, sb);
+			sb.deleteCharAt(sb.length() - 1);
 		}
 	}
-	
+
 	/**
 	 * Same solution, second time practice
 	 */
-    public List<String> letterCombinations2(String digits) {
-        Map<Character, String> map = new HashMap<Character, String>();
-        map.put('2', "abc");
-        map.put('3', "def");
-        map.put('4', "ghi");
-        map.put('5', "jkl");
-        map.put('6', "mno");
-        map.put('7', "pqrs");
-        map.put('8', "tuv");
-        map.put('9', "wxyz");
-        
-        List<String> res = new ArrayList<String>();
-        char[] comb = new char[digits.length()];
-        combine(digits, 0, comb, res, map);
-        return res;
-    }
-    
-    public void combine(String digits, int start, char[] comb, List<String> res, Map<Character, String> map){
-        if(start==digits.length()){
-            res.add(new String(comb));
-            return;
-        }
-        char digit = digits.charAt(start);
-        String letters = map.get(digit);
-        if(letters!=null){
-            for(int i=0; i<letters.length(); i++){
-                comb[start] = letters.charAt(i);
-                combine(digits, start+1, comb, res, map);
-            }   
-        }
-    }
+	public List<String> letterCombinations2(String digits) {
+		Map<Character, String> map = new HashMap<Character, String>();
+		map.put('2', "abc");
+		map.put('3', "def");
+		map.put('4', "ghi");
+		map.put('5', "jkl");
+		map.put('6', "mno");
+		map.put('7', "pqrs");
+		map.put('8', "tuv");
+		map.put('9', "wxyz");
+
+		List<String> res = new ArrayList<String>();
+		char[] comb = new char[digits.length()];
+		combine(digits, 0, comb, res, map);
+		return res;
+	}
+
+	public void combine(String digits, int start, char[] comb,
+			List<String> res, Map<Character, String> map) {
+		if (start == digits.length()) {
+			res.add(new String(comb));
+			return;
+		}
+		char digit = digits.charAt(start);
+		String letters = map.get(digit);
+		if (letters != null) {
+			for (int i = 0; i < letters.length(); i++) {
+				comb[start] = letters.charAt(i);
+				combine(digits, start + 1, comb, res, map);
+			}
+		}
+	}
 }
