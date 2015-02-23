@@ -1,6 +1,5 @@
 package interview.leetcode;
 
-
 /**
  * There are N children standing in a line. Each child is assigned a rating
  * value.
@@ -35,12 +34,15 @@ public class Candy {
 	}
 
 	/**
-	 * DP
-	 * 
-	 * Time O(n)
-	 * 
-	 * @param ratings
-	 * @return
+	 * Two dependencies:
+	 * 1.For left to right: if Rating[l] > Rating[r], then Candy[l] > Candy[r]
+	 * to minimize the total number candies, then Candy[l] = Candy[r] + 1
+	 * 2.For right to left: if Rating[r] > Rating[l], then Candy[r] > Candy[l]
+	 * to minimize the total number candies, then Candy[r] = Candy[l] + 1
+	 */
+
+	/**
+	 * Greedy, Time O(n)
 	 */
 	public static int candy(int[] ratings) {
 		int[] candies = new int[ratings.length];

@@ -26,7 +26,6 @@ import java.util.Arrays;
 public class Next_Permutation {
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 		Next_Permutation o = new Next_Permutation();
 		int[] num0 = { 1, 2 };
 		o.nextPermutation(num0);
@@ -42,13 +41,36 @@ public class Next_Permutation {
 	}
 
 	/**
+	 * Second time
+	 */
+	public void nextPermutation3(int[] num) {
+		// position to swap,
+		// first number that is not in increasing order starts from the end
+		int swapIdx = num.length - 2;
+		while (swapIdx >= 0 && num[swapIdx] >= num[swapIdx + 1])
+			swapIdx--;
+		if (swapIdx >= 0) {
+			// traverse back to the end, find the smallest number that is
+			// greater than num[swap]
+			int i = swapIdx + 1;
+			while (i < num.length - 1 && num[i + 1] > num[swapIdx])
+				i++;
+			// increase the permutation by as little as possible.
+			swap(num, i, swapIdx);
+		}
+		// reverse from swap+1 to end
+		int l = swapIdx + 1, r = num.length - 1;
+		while (l < r) {
+			swap(num, l++, r--);
+		}
+	}
+
+	/**
 	 * The key insight is that we want to increase the permutation by as little
 	 * as possible. We look at the entry e that appears just before the longest
 	 * decreasing suffix. We swap e with that the smallest entry s in the suffix
 	 * which is larger than e so as to minimize the change to the prefix. At
 	 * last, we should reverse the decreasing suffix so that it is the smallest.
-	 * 
-	 * @param num
 	 */
 	public void nextPermutation(int[] num) {
 		int start = num.length - 2;
@@ -97,8 +119,7 @@ public class Next_Permutation {
 		}
 
 		// Since p[k + 1 : p.size() - 1] is in decreasing order, we can build
-		// the
-		// smallest dictionary ordering of this subarray by reversing it.
+		// the smallest dictionary ordering of this subarray by reversing it.
 		reverse(p, k + 1, p.length - 1);
 		return p;
 	}

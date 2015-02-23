@@ -42,12 +42,13 @@ public class Search_in_Rotated_Sorted_Array {
 			int mid = (l + r) / 2;
 			if (k == A[mid])
 				return mid;
+			// [l, mid) is monotonic
 			if (A[mid] >= A[l]) { // it must be >=
 				if (k > A[mid] || k < A[l])
 					l = mid + 1; // move to right
 				else
 					r = mid - 1; // move to left
-			} else {
+			} else { // (mid, r] is monotonic
 				if (k < A[mid] || k > A[r])
 					r = mid - 1; // to left
 				else
@@ -60,23 +61,22 @@ public class Search_in_Rotated_Sorted_Array {
 
 	/**
 	 * Same solution, a different view of the four if/else conditions
-	 * 
 	 */
-	public static int search2(int[] A, int k) {
+	public static int search2(int[] A, int target) {
 		int l = 0;
 		int r = A.length - 1;
 
 		while (l <= r) {
 			int mid = (l + r) / 2;
-			if (A[mid] == k)
+			if (A[mid] == target)
 				return mid;
-			else if (A[mid] < A[l]) {
-				if (k > A[mid] && k <= A[r])
+			else if (A[mid] < A[l]) { // (mid, r] is monotonic
+				if (target > A[mid] && target <= A[r])
 					l = mid + 1;
 				else
 					r = mid - 1;
-			} else { // A[mid]>=A[l]
-				if (k < A[mid] && k >= A[l])
+			} else { // A[mid]>=A[l], [l, mid) is monotonic
+				if (target < A[mid] && target >= A[l])
 					r = mid - 1;
 				else
 					l = mid + 1;

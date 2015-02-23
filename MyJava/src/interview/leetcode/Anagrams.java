@@ -29,8 +29,6 @@ public class Anagrams {
 	 *  O(n*klog(k)) Time
 	 *  O(n) Space
 	 *  n is the number of words, k is the average length of a word
-	 * @param words
-	 * @return
 	 */
 	public static List<String> solution2(String[] words){
 		List<String> anagrams = new ArrayList<String>();
@@ -72,8 +70,6 @@ public class Anagrams {
 	 * Disadvantages:
 	 * 1.only feasible in all are lower case letters and no other characters like !@#$%
 	 * 2.if it is a long word, the Id(long) which represent a word could be overflow.
-	 * @param words
-	 * @return
 	 */
     public static List<String> anagrams(String[] strs) {
         int[] primes = getPrimeNums(26);

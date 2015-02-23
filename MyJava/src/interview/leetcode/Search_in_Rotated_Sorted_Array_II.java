@@ -15,6 +15,7 @@ public class Search_in_Rotated_Sorted_Array_II {
 
 	public static void main(String[] args) {
 		System.out.println(search(new int[] { 3, 1 }, 1));
+		// classic counter example for duplicates: {1, 3, 1, 1, 1}, target = 3
 	}
 
 	/**

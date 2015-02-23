@@ -4,9 +4,9 @@ package interview.leetcode;
  * The string "PAYPALISHIRING" is written in a zigzag pattern on a given number
  * of rows like this: (you may want to display this pattern in a fixed font for
  * better legibility)
- * P   A   H   N
+ * P A H N
  * A P L S I I G
- * Y   I   R
+ * Y I R
  * 
  * And then read line by line: "PAHNAPLSIIGYIR" Write the code that will take a
  * string and make this conversion given a number of rows:
@@ -22,6 +22,28 @@ public class ZigZag_Conversion {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		System.out.println(convert("PAYPALISHIRING", 3));
+	}
+
+	/**
+	 * Second time
+	 * Calculate the distance of the next char of the same row. 
+	 */
+	public String convert2(String s, int nRows) {
+		if (nRows == 1)
+			return s;
+		StringBuilder sb = new StringBuilder();
+		final int step = 2 * nRows - 2; // distance between normal chars
+		int zigzagDist = step; // distance between normal char and zigzag char 
+		for (int i = 0; i < nRows; i++) {
+			for (int j = i; j < s.length(); j += step) {
+				sb.append(s.charAt(j)); // append normal column
+				// first and last row don't have zigzag column
+				if (i > 0 && i < nRows - 1 && j + zigzagDist < s.length())
+					sb.append(s.charAt(j + zigzagDist)); // append zigzag column
+			}
+			zigzagDist -= 2;
+		}
+		return sb.toString();
 	}
 
 	/**

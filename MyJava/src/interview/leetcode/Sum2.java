@@ -24,23 +24,35 @@ import java.util.Map;
 public class Sum2 {
 
 	public static void main(String[] args) {
-		System.out.println(Arrays.toString(twoSum(new int[]{1,2,16,32,21,-1,1}, 33)));
-		System.out.println(Arrays.toString(twoSum(new int[]{1,2,-1}, 0)));
-		System.out.println(Arrays.toString(twoSum(new int[]{3,2,4}, 6)));
-		System.out.println(Arrays.toString(twoSum(new int[]{0,3,2,0}, 0)));
+		System.out.println(Arrays.toString(twoSum(new int[] { 1, 2, 16, 32, 21, -1, 1 }, 33)));
+		System.out.println(Arrays.toString(twoSum(new int[] { 1, 2, -1 }, 0)));
+		System.out.println(Arrays.toString(twoSum(new int[] { 3, 2, 4 }, 6)));
+		System.out.println(Arrays.toString(twoSum(new int[] { 0, 3, 2, 0 }, 0)));
 	}
 
+	/**
+	 * Second time
+	 */
+	public int[] twoSum2(int[] numbers, int target) {
+		Map<Integer, Integer> visited = new HashMap<>();
+		for (int i = 0; i < numbers.length; i++) {
+			if (visited.containsKey(target - numbers[i]))
+				return new int[] { visited.get(target - numbers[i]), i + 1 };
+			visited.put(numbers[i], i + 1);
+		}
+		return new int[2];
+	}
 
-    public static int[] twoSum(int[] numbers, int target) {
-        Map<Integer, Integer> idxMap = new HashMap<Integer, Integer>();
-        for(int i=0; i<numbers.length; i++){
-            int need = target - numbers[i];
-            if(idxMap.containsKey(need)){
-                return new int[]{ idxMap.get(need).intValue()+1, i+1};
-            }else{
-                idxMap.put(numbers[i], i);
-            }
-        }
-        return new int[]{-1,-1};
-    }
+	public static int[] twoSum(int[] numbers, int target) {
+		Map<Integer, Integer> idxMap = new HashMap<Integer, Integer>();
+		for (int i = 0; i < numbers.length; i++) {
+			int need = target - numbers[i];
+			if (idxMap.containsKey(need)) {
+				return new int[] { idxMap.get(need).intValue() + 1, i + 1 };
+			} else {
+				idxMap.put(numbers[i], i);
+			}
+		}
+		return new int[] { -1, -1 };
+	}
 }

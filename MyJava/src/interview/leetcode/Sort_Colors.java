@@ -29,48 +29,23 @@ public class Sort_Colors {
 
 	}
 
-	public void sortColors(int[] A) {
-		int[] color = new int[3];
-		for (int i = 0; i < A.length; i++) {
-			if (A[i] == 0)
-				color[0]++;
-			else if (A[i] == 1)
-				color[1]++;
-			else
-				color[2]++;
-		}
-		int i = 0;
-		while (color[0] > 0) {
-			A[i++] = 0;
-			color[0]--;
-		}
-		while (color[1] > 0) {
-			A[i++] = 1;
-			color[1]--;
-		}
-		while (color[2] > 0) {
-			A[i++] = 2;
-			color[2]--;
-		}
-	}
-
 	/**
-	 * One-pass algorithm, like Quicksort, swap pivot
-	 * Red move to the beginning, Blue move to the end, White wait for to be
-	 * swapped.
-	 * red=0, white=1, blue=2
+	 * One-pass algorithm, swap in place, like remove duplicates in Array
+	 * Imagine it has three parts, move red to the first part, blue to the last
+	 * part, white in the middle which is done by swapping other two colors in
+	 * position.
+	 * p1=red=0, p2=white=1, p3=blue=2
 	 */
 	public void sortColors2(int[] A) {
-		int red = 0;
-		int blue = A.length - 1;
-		for (int white = 0; white <= blue; white++) {
-			if (A[white] == 0) {
-				swap(A, red, white);
-				red++;
-			} else if (A[white] == 2) {
-				swap(A, blue, white);
-				blue--;
-				white--; // stay put
+		int p1 = 0, p3 = A.length - 1;
+		for (int p2 = 0; p2 <= p3; p2++) {
+			if (A[p2] == 0) {
+				swap(A, p1, p2);
+				p1++;
+			} else if (A[p2] == 2) {
+				swap(A, p2, p3);
+				p3--;
+				p2--; // stay put
 			}
 		}
 	}
@@ -79,5 +54,21 @@ public class Sort_Colors {
 		int tmp = A[i];
 		A[i] = A[j];
 		A[j] = tmp;
+	}
+
+	/**
+	 * Counting sort, 2 passes
+	 */
+	public void sortColors(int[] A) {
+		int[] counts = new int[3];
+		for (int a : A)
+			counts[a]++;
+		for (int color = 0, i = 0; color < 3; color++) {
+			while (i < A.length && color < counts.length && counts[color] > 0) {
+				A[i] = color;
+				counts[color]--;
+				i++;
+			}
+		}
 	}
 }

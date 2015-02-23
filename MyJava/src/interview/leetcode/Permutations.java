@@ -33,18 +33,18 @@ public class Permutations {
 		return lists;
 	}
 
-	public static void perm(List<List<Integer>> perms, int[] num, int start) {
-		if (start == num.length) {
+	public static void perm(List<List<Integer>> perms, int[] num, int pos) {
+		if (pos == num.length) {
 			List<Integer> list = new ArrayList<Integer>();
 			for (int i : num)
 				list.add(i);
 			perms.add(list);
 		}
-		// swap 'start' and its element after it
-		for (int i = start; i < num.length; i++) {
-			swap(num, i, start);
-			perm(perms, num, start + 1);
-			swap(num, start, i);
+		// put element to the head from 'pos' to end
+		for (int i = pos; i < num.length; i++) {
+			swap(num, i, pos); // insert pos to i by swapping them
+			perm(perms, num, pos + 1);
+			swap(num, pos, i); // swap back
 		}
 	}
 

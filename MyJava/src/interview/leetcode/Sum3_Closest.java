@@ -24,34 +24,33 @@ public class Sum3_Closest {
 
 	/**
 	 * Thoughts
-	 * 
 	 * This problem is similar with 3 Sum. This kind of problem can be solve by
 	 * using similar approach, i.e., two pointers from both left and right.
 	 * 
 	 * O(n^2)
 	 * 
-	 * @return
 	 */
 	public static int threeSumClosest(int[] num, int target) {
 		Arrays.sort(num);
-		int closest = 0;
-		int minDiff = Integer.MAX_VALUE;
-		for(int i=0; i<num.length; i++){
-			int j = i+1;
-			int k = num.length-1;
-			while(j<k){
-				int sum = num[i] + num[j] + num[k];
-				int diff = Math.abs(target-sum);
-				if(diff<minDiff){
-					minDiff = diff;
-					closest = sum;
+		int minDiff = Integer.MAX_VALUE, bestSum = 0;
+		for (int i = 0; i < num.length - 2; i++) {
+			int l = i + 1, r = num.length - 1, first = num[i];
+			while (l < r) {
+				int sum = first + num[l] + num[r];
+				if (Math.abs(sum - target) < minDiff) {
+					bestSum = sum;
+					minDiff = Math.abs(sum - target);
 				}
-				if(sum==target)	return sum;
-				if(sum>target)	k--;
-				else	j++;
+
+				if (sum == target)
+					return target;
+				else if (sum > target)
+					r--;
+				else
+					l++;
 			}
 		}
-		return closest;
+		return bestSum;
 	}
 
 }

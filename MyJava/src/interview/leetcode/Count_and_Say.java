@@ -58,23 +58,24 @@ public class Count_and_Say {
 	 * Second time practice
 	 */
 	public static String countAndSay2(int n) {
-		StringBuilder sb = new StringBuilder();
-		sb.append('1');
-		for (int i = 1; i < n; i++) {
-			int len = sb.length();
+		if (n < 1)
+			return "";
+		StringBuilder sb = new StringBuilder("1");
+		while (n > 1) {
 			int count = 1;
-			StringBuilder newstr = new StringBuilder();
-			for (int j = 0; j < len; j++) {
-				if (j != len - 1 && sb.charAt(j) == sb.charAt(j + 1))
-					count++; // count
-				else { // say
-					newstr.append(count).append(sb.charAt(j));
+			StringBuilder buffer = new StringBuilder();
+			for (int i = 0; i < sb.length(); i++) {
+				if (i == sb.length() - 1 || sb.charAt(i) != sb.charAt(i + 1)) {
+					buffer.append(count);
+					buffer.append(sb.charAt(i));
 					count = 1;
-				}
+				} else
+					count++;
 			}
-			System.out.println(i + ", " + newstr.length());
-			sb = newstr;
+			sb = buffer;
+			n--;
 		}
+
 		return sb.toString();
 	}
 }

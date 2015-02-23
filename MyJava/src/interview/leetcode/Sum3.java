@@ -37,9 +37,39 @@ public class Sum3 {
 
 	}
 
-	
-	
-	
+	/**
+	 * Third time
+	 */
+	public List<List<Integer>> threeSum3(int[] num) {
+		Arrays.sort(num);
+		List<List<Integer>> res = new ArrayList<>();
+		for (int i = 0; i < num.length - 2; i++) {
+			if (i > 0 && num[i] == num[i - 1]) // remove dups
+				continue;
+			int l = i + 1, r = num.length - 1;
+			while (l < r) {
+				int sum = num[l] + num[r] + num[i];
+				if (sum == 0) {
+					List<Integer> set = new ArrayList<>();
+					set.add(num[i]);
+					set.add(num[l]);
+					set.add(num[r]);
+					res.add(set);
+					do {
+						r--; // remove dups
+					} while (l < r && num[r] == num[r + 1]);
+					do {
+						l++; // remove dups
+					} while (l < r && num[l] == num[l - 1]);
+				} else if (sum >= 0) {
+					r--;
+				} else
+					l++;
+			}
+		}
+		return res;
+	}
+
 	/**
 	 * Two pointers
 	 * 
@@ -83,9 +113,7 @@ public class Sum3 {
 	}
 
 	/**
-	 * Same solution, second time wrritten
-	 * 
-	 * 
+	 * Same solution, second time written
 	 */
 	public List<List<Integer>> threeSum2(int[] num) {
 		Arrays.sort(num);

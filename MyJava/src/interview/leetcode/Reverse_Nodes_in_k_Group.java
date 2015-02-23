@@ -37,7 +37,7 @@ public class Reverse_Nodes_in_k_Group {
 
 		ListNode head1 = new ListNode(1);
 		head1.next = new ListNode(2);
-		ListNode res1 = obj.reverseKGroup2(head1, 1);
+		ListNode res1 = obj.reverseKGroup2(head1, 2);
 		printList(res1);
 	}
 

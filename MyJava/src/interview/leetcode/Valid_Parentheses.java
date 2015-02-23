@@ -23,6 +23,8 @@ public class Valid_Parentheses {
 		System.out.println(isValid("([)]")); // false
 		System.out.println(isValid("()[]{}")); // true
 		System.out.println(isValid("([])")); // true
+		StringBuilder sb = new StringBuilder();
+		sb.deleteCharAt(0);
 	}
 
 	/**

@@ -51,6 +51,32 @@ public class Merge_Intervals {
 		return res;
 	}
 
+	/**
+	 * Second time
+	 */
+	public List<Interval> merge2(List<Interval> intervals) {
+		Collections.sort(intervals, new Comparator<Interval>() {
+			@Override
+			public int compare(Interval o1, Interval o2) {
+				return o1.start - o2.start;
+			}
+		});
+
+		List<Interval> res = new ArrayList<>();
+		for (Interval curr : intervals) {
+			if (res.size() == 0)
+				res.add(curr);
+			else {
+				Interval last = res.get(res.size() - 1);
+				if (last.end < curr.start)
+					res.add(curr);
+				else if (curr.end > last.end)
+					last.end = curr.end;
+			}
+		}
+		return res;
+	}
+
 	public static class Interval {
 		int start;
 		int end;

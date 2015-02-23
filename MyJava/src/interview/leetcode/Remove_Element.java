@@ -14,17 +14,29 @@ package interview.leetcode;
 public class Remove_Element {
 
 	public static void main(String[] args) {
-		
+
 	}
 
 	public static int removeElement(int[] A, int elem) {
 		int count = 0;
-		for(int i=0; i<A.length; i++){
-			if(A[i]!=elem){
+		for (int i = 0; i < A.length; i++) {
+			if (A[i] != elem) {
 				A[count] = A[i];
 				count++;
 			}
 		}
 		return count;
+	}
+
+	/**
+	 * Second time
+	 */
+	public int removeElement2(int[] A, int elem) {
+		int length = 0;
+		for (int i = 0; i < A.length; i++) {
+			if (A[i] != elem)
+				A[length++] = A[i];
+		}
+		return length;
 	}
 }

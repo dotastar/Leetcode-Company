@@ -36,18 +36,16 @@ public class First_Missing_Positive {
 	public static int firstMissingPositive(int[] A) {
 		if (A.length == 0)
 			return 1;
-		int i = 0;
-		while (i < A.length) {
-			if (A[i] < 0 || A[i] >= A.length || A[i] == A[A[i]] || A[i] == i)
+		for (int i = 0; i < A.length;) {
+			if (A[i] != i && A[i] >= 0 && A[i] < A.length && A[A[i]] != A[i]) {
+				swap(A, A[i], i);
+			} else
 				i++;
-			else
-				swap(A, i, A[i]); // stay where it is
 		}
-
-		for (int j = 1; j < A.length; j++) {
-			if (A[j] != j)
-				return j;
-		}
+		for (int i = 1; i < A.length; i++) {
+			if (A[i] != i)
+				return i;
+		} 
 		// because we put A[i] in i position, so we ignored A[0],
 		// but A[0] could be the value A.length, if it is the case,
 		// then A.length+1 should be returned

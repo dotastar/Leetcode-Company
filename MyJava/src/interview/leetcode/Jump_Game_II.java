@@ -1,6 +1,5 @@
 package interview.leetcode;
 
-import java.util.Arrays;
 
 /**
  * Given an array of non-negative integers, you are initially positioned at the
@@ -41,11 +40,33 @@ public class Jump_Game_II {
 	}
 
 	/**
+	 * Greedy
+	 * Because it is guaranteed that the end can be reached, so we jump only
+	 * when there is running out of steps, and jump to the point which can have
+	 * the maxReach point, though we don't know where exactly it is, but we
+	 * don't have to know. After jumping, we have 0 + maxReach-i more steps.
+	 */
+	public static int jump_improved(int[] A) {
+		if (A.length < 2)
+			return 0;
+		int maxJump = A[0], restSteps = A[0], jumps = 0;
+		for (int i = 1; i < A.length; i++) {
+			if (i > maxJump)
+				return -1;
+			if (i + A[i] > maxJump) // update max position it can reach
+				maxJump = i + A[i];
+			restSteps--;
+			if (restSteps == 0 || i == A.length - 1) { // have to jump
+				restSteps = maxJump - i;
+				jumps++;
+			}
+		}
+		return jumps;
+	}
+
+	/**
 	 * Dynamic Programming dp[i]: minimal steps of jump from i to the end Time:
 	 * O(n^2)
-	 * 
-	 * @param A
-	 * @return
 	 */
 	public static int jump(int[] A) {
 		int[] dp = new int[A.length];
@@ -66,35 +87,4 @@ public class Jump_Game_II {
 		return dp[0];
 	}
 
-	/**
-	 * Because it is guranteed that the end can be reached, so we jump only when
-	 * there is running out of steps, and jump to the point which can have the
-	 * maxReach point, though we don't know where exactly it is, but we don't
-	 * have to know. After jumping, we have 0 + maxReach-i more steps.
-	 * 
-	 * @param A
-	 * @return
-	 */
-	public static int jump_improved(int[] A) {
-		if (A.length <= 1)
-			return 0;
-		int jumps = 1;
-		int maxReach = A[0];
-		int steps = A[0];
-		System.out.println("Input:"+Arrays.toString(A));
-		for (int i = 1; i < A.length; i++) {
-			System.out.println("step:"+steps+"\tjumps:"+jumps+"\tmaxReach:"+maxReach);
-			if (i == A.length - 1)
-				return jumps;
-			if (i + A[i] > maxReach)
-				maxReach = i + A[i];
-			steps--;
-			if (steps == 0) { // need more steps, jump
-				steps = maxReach - i;
-				jumps++;
-			}
-		}
-		return jumps;
-	}
-	
 }

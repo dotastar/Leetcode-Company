@@ -87,17 +87,22 @@ public class Sort_List {
 
 	public static ListNode merge(ListNode l1, ListNode l2) {
 		ListNode prehead = new ListNode(0);
-		ListNode curr = prehead;
-		while (l1 != null || l2 != null) {
-			if (l2 == null || (l1 != null && l1.val < l2.val)) {
-				curr.next = l1;
+		ListNode prev = prehead;
+		while (l1 != null && l2 != null) {
+			if (l1.val < l2.val) {
+				prev.next = l1;
 				l1 = l1.next;
 			} else {
-				curr.next = l2;
+				prev.next = l2;
 				l2 = l2.next;
 			}
-			curr = curr.next;
+			prev = prev.next;
 		}
+		if (l1 != null)
+			prev.next = l1;
+		else
+			prev.next = l2;
+
 		return prehead.next;
 	}
 

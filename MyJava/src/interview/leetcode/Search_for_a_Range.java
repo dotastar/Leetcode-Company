@@ -18,7 +18,6 @@ import java.util.Arrays;
 public class Search_for_a_Range {
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 		String s = Arrays.toString(searchRange2(new int[] { 2, 2 }, 2)); // 0,1
 		System.out.println(s);
 
@@ -35,6 +34,74 @@ public class Search_for_a_Range {
 		System.out.println(s);
 		s = Arrays.toString(searchRange2(new int[] { 1, 2, 2, 2, 2, 2, 3 }, 3));// 6,6
 		System.out.println(s);
+	}
+
+	/**
+	 * Use binary search template of search leftmost/rightmost target
+	 * Keys:
+	 * 1.stop condition is l < r-1, it stops when l and r are neighboring
+	 * 2.while binary searching, set l or r = mid, not mid+1/mid-1
+	 * 3.need to do post-processing, it can be A[l] or A[r]
+	 */
+	public int[] searchRange3(int[] A, int target) {
+		int[] res = { -1, -1 };
+		int l = 0, r = A.length - 1;
+		while (l < r - 1) { // search left border
+			int mid = l + (r - l) / 2;
+			if (A[mid] >= target)
+				r = mid;
+			else
+				l = mid;
+		}
+		if (A[l] == target || A[r] == target)
+			res[0] = A[l] == target ? l : r;
+		else
+			return res; // no answer find
+
+		r = A.length - 1;
+		while (l < r - 1) { // search right border
+			int mid = l + (r - l) / 2;
+			if (A[mid] > target)
+				r = mid;
+			else
+				l = mid;
+		}
+		res[1] = A[r] == target ? r : l;
+		return res;
+	}
+
+	/**
+	 * Binary search the target, once find it, binary search its left and right
+	 * edge, an edge number is defined as the number is equal to the target and
+	 * its neighbor number is greater/less than itself
+	 * 
+	 * Time: O(lgn)
+	 */
+	public static int[] searchRange2(int[] A, int target) {
+		int[] res = { -1, -1 };
+		int l = 0, r = A.length - 1;
+		while (l <= r) { // Search for the index of the leftmost target
+			int mid = l + (r - l) / 2;
+			if (target <= A[mid])
+				r = mid - 1;
+			else
+				l = mid + 1;
+		}
+		// l could be exceeded A when target > A[n-1], l = A.length
+		res[0] = l < A.length && A[l] == target ? l : -1;
+
+		r = A.length - 1; // don't need to reset l
+		while (l <= r) { // Search for the index of the rightmost target
+			int mid = l + (r - l) / 2;
+			if (target >= A[mid])
+				l = mid + 1;
+			else
+				r = mid - 1;
+		}
+		// r could be exceeded A when target < A[0], r = -1
+		res[1] = r >= 0 && A[r] == target ? r : -1;
+
+		return res;
 	}
 
 	/**
@@ -66,66 +133,5 @@ public class Search_for_a_Range {
 
 		return new int[] { -1, -1 };
 	}
-	
-	
 
-	/**
-	 * Binary search the target, once find it, binary search its left and right
-	 * edge, an edge number is defined as the number is equal to the target and
-	 * its neighbor number is greater/less than itself
-	 * 
-	 * Time: O(lgn)
-	 */
-	public static int[] searchRange2(int[] A, int target) {
-		int l = 0;
-		int r = A.length - 1;
-		int targetIdx = -1;
-		while (l <= r) {
-			int mid = (l + r) / 2;
-			if (A[mid] == target) {
-				targetIdx = mid;
-				break;
-			} else if (A[mid] < target)
-				l = mid + 1;
-			else
-				r = mid - 1;
-		}
-		
-		if(targetIdx<0)
-			return new int[]{-1,-1};
-		
-		// search for the insert position of left edge
-		l = 0;
-		r = targetIdx;	//notice here
-		while (l <= r) {
-			int mid = (l + r) / 2;
-			if (A[mid] < target && A[mid + 1] == target) {
-				l = mid+1; // find the edge
-				break;
-			} else if (A[mid] < target)
-				l = mid + 1;
-			else
-				r = mid - 1; // A[lmid]==target
-		}
-
-		int leftEdge = l;	//notice here should be l
-
-		// search for the insert position of right edge
-		l = targetIdx;	//notice here
-		r = A.length - 1;
-		while (l <= r) {
-			int mid = (l + r) / 2;
-			if (A[mid] > target && A[mid - 1] == target) {
-				r = mid-1;
-				break;
-			} else if (A[mid] > target)
-				r = mid - 1;
-			else
-				l = mid + 1;
-		}
-
-		int rightEdge = r;	//notice here should be r
-
-		return new int[] { leftEdge, rightEdge };
-	}
 }

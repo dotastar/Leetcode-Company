@@ -35,48 +35,59 @@ public class Merge_Sorted_Array {
 	}
 
 	/**
+	 * Second time
+	 */
+	public void merge3(int A[], int m, int B[], int n) {
+		m--;
+		n--;
+		while (n >= 0) {
+			if (m < 0) {
+				A[n] = B[n--];
+			} else {
+				if (B[n] > A[m])
+					A[m + n + 1] = B[n--];
+				else
+					A[m + n + 1] = A[m--];
+			}
+		}
+	}
+
+	public void merge4(int A[], int m, int B[], int n) {
+		m--;
+		n--;
+		for (int i = m + n + 1; i >= 0; i--) {
+			if (n < 0)
+				break;
+			if (m < 0 || B[n] > A[m]) {
+				A[i] = B[n--];
+			} else {
+				A[i] = A[m--];
+			}
+		}
+	}
+
+	/**
 	 * The key to solve this problem is moving element of A and B backwards.
 	 */
 	public static void merge(int A[], int m, int B[], int n) {
-		while(m>0 && n>0){
-			A[m+n-1] =A[m-1]>B[n-1]?A[--m]:B[--n];
+		while (m > 0 && n > 0) {
+			A[m + n - 1] = A[m - 1] > B[n - 1] ? A[--m] : B[--n];
 		}
-		
-		while(--n>=0){
+
+		while (--n >= 0) {
 			A[n] = B[n];
 		}
 	}
-	
-	
-	/**
-	 * Explained Version of above function - merge
-	 */
-	public static void merge1(int A[], int m, int B[], int n) {
-		while(m>0 && n>0){
-			if(A[m+n-1] > B[n-1]){
-				A[m+n-1] = A[m-1];
-				m--;
-			}else{
-				A[m+n-1] = B[n-1];
-				n--;
-			}
-		}
-		
-		while(n>0){
-			A[m+n-1] = B[n-1];
-			n--;
-		}
-	}
-	
+
 	/**
 	 * Change while to for loop version
 	 */
-	public static void merge2(int A[], int m, int B[], int n){
-		for(int i = m+n-1; i>=0; i--){
-			if(n-1<0 || (m-1>=0 && A[m-1]>B[n-1]))
-				A[m+n-1] =A[--m];
+	public static void merge2(int A[], int m, int B[], int n) {
+		for (int i = m + n - 1; i >= 0; i--) {
+			if (n - 1 < 0 || (m - 1 >= 0 && A[m - 1] > B[n - 1]))
+				A[m + n - 1] = A[--m];
 			else
-				A[m+n-1] =B[--n];
+				A[m + n - 1] = B[--n];
 		}
 	}
 }

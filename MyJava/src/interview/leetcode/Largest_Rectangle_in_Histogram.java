@@ -59,26 +59,28 @@ public class Largest_Rectangle_in_Histogram {
 	}
 
 	/**
+	 * A very important observation:
+	 * Scanning histogram from left to right, if left to right is in increasing
+	 * order, then the maximum area between left to right only need one
+	 * traversal by backward traverse from right to left to calculate area.
+	 */
+
+	/**
 	 * Naive, brute force solution area = (r-l) * min(height)
 	 * 
 	 * O(n^2) Time, Time out
 	 */
 	public static int largestRectangleArea(int[] height) {
-		int max = 0;
-		for (int r = 0; r < height.length; r++) { // right end
-			int currMax = height[r];
-			int minHeight = height[r];
-			for (int l = r - 1; l >= 0; l--) {
-				if (height[l] < minHeight)
-					minHeight = height[l];
-				int area = minHeight * (r - l + 1);
-				if (area > currMax)
-					currMax = area;
+		int maxArea = 0;
+		for (int end = 0; end < height.length; end++) {
+			int h = height[end];
+			for (int i = end; i >= 0; i--) {
+				h = Math.min(height[i], h);
+				int currArea = (end - i + 1) * h;
+				maxArea = Math.max(currArea, maxArea);
 			}
-			if (currMax > max)
-				max = currMax;
 		}
-		return max;
+		return maxArea;
 	}
 
 	/**
@@ -93,25 +95,23 @@ public class Largest_Rectangle_in_Histogram {
 	 * 
 	 * 2.there is height[r] = 0 case, should be noticed.
 	 * 
-	 * 3.the comparsion order is r+1 compare to r, not r compare to r-1, there
-	 * are severl advantages of this.
+	 * 3.the comparison order is r+1 compare to r, not r compare to r-1, there
+	 * are several advantages of this.
 	 * 
 	 */
 	public static int largestRectangleArea_Imroved(int[] height) {
-		int len = height.length;
-		int max = 0;
-		for (int r = 0; r < len; r++) {
-			if (r != len - 1 && height[r] <= height[r + 1])
+		int maxArea = 0;
+		for (int end = 0; end < height.length; end++) {
+			if (end != height.length - 1 && height[end + 1] >= height[end])
 				continue;
-
-			int h = height[r];
-			for (int l = r; l >= 0; l--) {
-				h = height[l] < h ? height[l] : h;
-				int area = h * (r - l + 1);
-				max = area > max ? area : max;
+			int h = height[end];
+			for (int i = end; i >= 0; i--) {
+				h = Math.min(height[i], h);
+				int currArea = (end - i + 1) * h;
+				maxArea = Math.max(currArea, maxArea);
 			}
 		}
-		return max;
+		return maxArea;
 	}
 
 	/**
@@ -185,6 +185,50 @@ public class Largest_Rectangle_in_Histogram {
 			int area = width * height[idx];
 			if (area > max)
 				max = area;
+		}
+		return max;
+	}
+
+	/**
+	 * Second time of above solution
+	 */
+	public int largestRectangleArea3(int[] height) {
+		int maxArea = 0;
+		Stack<Integer> stk = new Stack<Integer>();
+		for (int r = 0; r < height.length; r++) {
+			int newH = height[r], h = Integer.MAX_VALUE;
+			while (!stk.isEmpty() && newH < height[stk.peek()]) {
+				int l = stk.pop();
+				int width = stk.isEmpty() ? r : r - (stk.peek() + 1);
+				h = Math.min(h, height[l]);
+				maxArea = Math.max(maxArea, width * h);
+			}
+			stk.push(r);
+		}
+		while (!stk.isEmpty()) {
+			int l = stk.pop();
+			int width = stk.isEmpty() ? height.length : height.length - (stk.peek() + 1);
+			maxArea = Math.max(maxArea, width * height[l]);
+		}
+		return maxArea;
+	}
+
+	/**
+	 * Best solution
+	 * Use Stack, Time: O(n)
+	 * Combine the above two whiles together
+	 */
+	public int largestRectangleArea_Best(int[] height) {
+		int max = 0;
+		Stack<Integer> stk = new Stack<Integer>();
+		for (int i = 0; i <= height.length; i++) {
+			while (!stk.isEmpty() && (i == height.length || height[i] < height[stk.peek()])) {
+				int curr = stk.pop();
+				int width = stk.isEmpty() ? i : i - stk.peek() - 1;
+				int area = width * height[curr];
+				max = area > max ? area : max;
+			}
+			stk.push(i);
 		}
 		return max;
 	}

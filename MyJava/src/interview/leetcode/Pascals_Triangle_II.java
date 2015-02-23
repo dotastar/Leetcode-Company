@@ -1,5 +1,6 @@
 package interview.leetcode;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -28,11 +29,28 @@ public class Pascals_Triangle_II {
 		Integer[] row = new Integer[rowIndex + 1];
 		row[0] = 1;
 		for (int i = 1; i <= rowIndex; i++) {
-			// notice, reversely traverse, to maintain the old value unchanged
+			// Notice! Reversely traverse, to maintain the old value unchanged
 			for (int j = i - 1; j >= 1; j--)
 				row[j] = row[j] + row[j - 1]; // row[i-1][j] + row[i-1][j-1]
 			row[i] = 1;
 		}
 		return Arrays.asList(row);
+	}
+
+	/**
+	 * Second time
+	 */
+	public List<Integer> getRow2(int rowIndex) {
+		List<Integer> row = new ArrayList<>();
+		row.add(1);
+		for (int i = 0; i < rowIndex; i++) {
+			List<Integer> newrow = new ArrayList<>();
+			newrow.add(1);
+			for (int j = 1; j < row.size(); j++)
+				newrow.add(row.get(j) + row.get(j - 1));
+			newrow.add(1);
+			row = newrow;
+		}
+		return row;
 	}
 }

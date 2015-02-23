@@ -39,17 +39,17 @@ public class Balanced_Binary_Tree {
 	}
 
 	public static boolean isBalanced(TreeNode root) {
-		return getHeight(root) >= 0;
+		return getHeightDiff(root) >= 0;
 	}
 
 	/**
 	 * Get Height Difference between left and right of subtree
 	 */
-	public static int getHeight(TreeNode node) {
+	public static int getHeightDiff(TreeNode node) {
 		if (node == null)
 			return 0;
-		int left = getHeight(node.left);
-		int right = getHeight(node.right);
+		int left = getHeightDiff(node.left);
+		int right = getHeightDiff(node.right);
 
 		if (left == -1 || right == -1)
 			return -1;
@@ -79,6 +79,35 @@ public class Balanced_Binary_Tree {
 			return -1;
 		else
 			return left > right ? left + 1 : right + 1;
+	}
+
+	/**
+	 * Naive solution
+	 * Time: O(nlogn)
+	 * Each level need O(n) time and there are total O(logn) levels.
+	 */
+	public boolean isBalanced_naive(TreeNode root) {
+		if (root == null)
+			return true;
+		int leftH = getHeight(root.left);
+		int rightH = getHeight(root.right);
+		// current left subtree and right subtree height difference is greater
+		// than one, left subtree and right subtree are also balanced.
+		if (Math.abs(leftH - rightH) > 1)
+			return false;
+		else
+			return isBalanced(root.left) && isBalanced(root.right);
+	}
+
+	/**
+	 * Time: O(n) (traverse all the nodes)
+	 */
+	private int getHeight(TreeNode root) {
+		if (root == null)
+			return 0;
+		int left = getHeight(root.left);
+		int right = getHeight(root.right);
+		return left > right ? left + 1 : right + 1;
 	}
 
 	public static class TreeNode {

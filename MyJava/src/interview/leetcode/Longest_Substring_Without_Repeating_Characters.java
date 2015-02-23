@@ -1,6 +1,8 @@
 package interview.leetcode;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Longest_Substring_Without_Repeating_Characters {
 
@@ -32,6 +34,28 @@ public class Longest_Substring_Without_Repeating_Characters {
 	}
 
 	/**
+	 * Two pointers, sliding window
+	 */
+	public int lengthOfLongestSubstring2(String s) {
+		Map<Character, Integer> map = new HashMap<>();
+		int max = 0;
+		for (int l = 0, r = 0; r < s.length(); r++) {
+			char sr = s.charAt(r);
+			if (map.containsKey(sr)) {
+				// sliding window until l pass the repeating character
+				int end = map.get(sr); // index of repeating character
+				while (l <= end)
+					map.remove(s.charAt(l++));
+			}
+
+			map.put(sr, r);
+			int length = r - l + 1;
+			max = length > max ? length : max;
+		}
+		return max;
+	}
+
+	/**
 	 * Naive Dynamic Programming Version
 	 * Status dp[i] is the longest length of the substring
 	 * end at i
@@ -48,8 +72,6 @@ public class Longest_Substring_Without_Repeating_Characters {
 	 * maxLen = max(maxLen, dp[i-1]+1), maxLen is the
 	 * global max length of Non-repeat Longest subString
 	 * 
-	 * @param str
-	 * @return
 	 */
 	public static int dp(String str) {
 		int len = str.length();

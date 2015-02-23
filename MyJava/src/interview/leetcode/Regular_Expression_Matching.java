@@ -35,7 +35,7 @@ public class Regular_Expression_Matching {
 
 		"a".substring(1);
 		assert o.isMatch("a", "ab*") == true;
-		assert o.isMatch("aa", "a*") == true;
+		assert o.isMatch3("aa", "a*") == true;
 		assert o.isMatch("aab", "aab") == true;
 		assert o.isMatch("aab", ".*") == true;
 		assert o.isMatch("aab", "c*a*b") == true;
@@ -47,7 +47,7 @@ public class Regular_Expression_Matching {
 		assert o.isMatch("aab", "a*c*bb") == false;
 
 	}
-	
+
 	/**
 	 * Third recursion solution, avoid using substring() method, because in Java
 	 * 1.7, it becomes a linear time method.
@@ -55,28 +55,28 @@ public class Regular_Expression_Matching {
 	 * This is about 300ms faster than above two in LeetCode.
 	 */
 	public boolean isMatch3(String s, String p) {
-		return helper(s, p, 0, 0);
+		return match(s, p, 0, 0);
 	}
 
-	private boolean helper(String s, String p, int i, int j) {
+	private boolean match(String s, String p, int i, int j) {
 		if (j == p.length())
-			return i == s.length();
+			return s.length() == i;
 
+		char pj = p.charAt(j);
 		if (j == p.length() - 1 || p.charAt(j + 1) != '*') {
-			if (i == s.length() || (s.charAt(i) != p.charAt(j) && p.charAt(j) != '.'))
-				return false;
+			if (i < s.length() && (pj == s.charAt(i) || pj == '.'))
+				return match(s, p, i + 1, j + 1);
 			else
-				return helper(s, p, i + 1, j + 1);
+				return false;
 		}
-		// p.charAt(j+1)=='*'
-		while (i < s.length() && (p.charAt(j) == '.' || s.charAt(i) == p.charAt(j))) {
-			if (helper(s, p, i, j + 2))
+		// p[j+1] == '*'
+		while (i < s.length() && (pj == s.charAt(i) || pj == '.')) {
+			if (match(s, p, i, j + 2))
 				return true;
 			i++;
 		}
-		return helper(s, p, i, j + 2);
+		return match(s, p, i, j + 2);
 	}
-	
 
 	/**
 	 * Brute Force
@@ -98,7 +98,8 @@ public class Regular_Expression_Matching {
 			return s.length() == 0;
 
 		if (p.length() == 1 || p.charAt(1) != '*') { // second is not a '*'
-			if (s.length() >= 1 && (p.charAt(0) == '.' || p.charAt(0) == s.charAt(0)))
+			if (s.length() >= 1
+					&& (p.charAt(0) == '.' || p.charAt(0) == s.charAt(0)))
 				return isMatch1(s.substring(1), p.substring(1));
 		} else {
 			int len = s.length();
@@ -144,22 +145,21 @@ public class Regular_Expression_Matching {
 	}
 
 	/**
-	 * DP solution  -- [Unfinished]
+	 * DP solution -- [Unfinished]
 	 * 
 	 * dp[i][j] = s[0...i-1] and p[0...j-1] is match?
 	 * 
 	 * if p[j] != '*', dp[i][j] = dp[i][j+1] = s[i-1]==p[j-1] || p[j-1]=='.'
 	 * 
-	 * else, p[j] == '*', dp[i][j] = 
+	 * else, p[j] == '*', dp[i][j] =
 	 * 
 	 */
-	public boolean isMatch_DP(String s, String p){
+	public boolean isMatch_DP(String s, String p) {
 		s = s.trim();
 		int slen = s.length();
 		int plen = p.length();
-		boolean[][] dp = new boolean[slen+1][plen+1];
-		
-		
+		boolean[][] dp = new boolean[slen + 1][plen + 1];
+
 		return dp[slen][plen];
 	}
 }

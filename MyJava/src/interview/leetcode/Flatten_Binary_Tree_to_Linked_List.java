@@ -9,6 +9,7 @@ import java.util.Stack;
  * 
  * For example, Given
  * 
+ * 
          1
         / \
        2   5
@@ -27,7 +28,6 @@ import java.util.Stack;
            5
             \
              6
- * 
  * Hints:
  * 
  * If you notice carefully in the flattened tree, each node's
@@ -42,7 +42,30 @@ public class Flatten_Binary_Tree_to_Linked_List {
 		Flatten_Binary_Tree_to_Linked_List o = new Flatten_Binary_Tree_to_Linked_List();
 		TreeNode root = new TreeNode(1);
 		root.left = new TreeNode(2);
-		o.flatten3(root);
+		o.flatten_Iter1(root);
+	}
+
+	/**
+	 * Very clear and concise
+	 * Iteratively preorder traversal, set the current to the next
+	 * 
+	 * Notice: make sure the Stack contains only non-null elements
+	 */
+	public void flatten_Iter1(TreeNode root) {
+		if (root == null)
+			return;
+		Stack<TreeNode> stk = new Stack<TreeNode>();
+		stk.push(root);
+		while (!stk.isEmpty()) {
+			TreeNode curr = stk.pop();
+			if (curr.right != null)
+				stk.push(curr.right);
+			if (curr.left != null)
+				stk.push(curr.left);
+
+			curr.left = null;
+			curr.right = stk.isEmpty() ? null : stk.peek();
+		}
 	}
 
 	/**
@@ -51,7 +74,7 @@ public class Flatten_Binary_Tree_to_Linked_List {
 	 * Go down through the left, when right is not null, push right to stack.
 	 * This is more cache efficient than the below solution - flatten3
 	 */
-	public void flatten4(TreeNode root) {
+	public void flatten_Iter3(TreeNode root) {
 		Stack<TreeNode> stk = new Stack<TreeNode>();
 		TreeNode p = root;
 		while (p != null) {
@@ -64,27 +87,6 @@ public class Flatten_Binary_Tree_to_Linked_List {
 				p.right = stk.pop();
 
 			p = p.right; // traverse next
-		}
-	}
-
-	/**
-	 * Time Limit Exceeded
-	 * Although TLE, it is very clear and concise
-	 * Preorder traversal, set the current to the next
-	 */
-	public void flatten3(TreeNode root) {
-		if (root == null)
-			return;
-		Stack<TreeNode> stk = new Stack<TreeNode>();
-		stk.push(root);
-		while (!stk.isEmpty()) {
-			TreeNode curr = stk.pop();
-			if (curr.right != null)
-				stk.push(curr.right);
-			if (curr.left != null)
-				stk.push(curr.left);
-
-			curr.right = stk.isEmpty() ? null : stk.peek();
 		}
 	}
 
@@ -110,6 +112,28 @@ public class Flatten_Binary_Tree_to_Linked_List {
 				prev = curr;
 			}
 		}
+	}
+
+	/**
+	 * Recursion solution2, preorder traversal
+	 */
+	TreeNode prev;
+
+	public void flatten_Recur(TreeNode root) {
+		preorder(root);
+	}
+
+	private void preorder(TreeNode node) {
+		if (node == null)
+			return;
+		TreeNode left = node.left, right = node.right;
+		if (prev != null) {
+			prev.left = null;
+			prev.right = node;
+		}
+		prev = node;
+		preorder(left);
+		preorder(right);
 	}
 
 	/**

@@ -28,7 +28,7 @@ public class Restore_IP_Addresses {
 
 		System.out.println(o.restoreIpAddresses2("172162541").toString());
 	}
-	
+
 	/**
 	 * Constraints:
 	 * 1.two and three digits number can't start with '0'.
@@ -37,7 +37,7 @@ public class Restore_IP_Addresses {
 	 * Pruning tips:
 	 * 1.use partNo to count the no. of part of ip now is in partitioning,
 	 * so the recursion depth can't be deeper than 4;
-	 * 2.compare the length of rest of the string with the max/min number of 
+	 * 2.compare the length of rest of the string with the max/min number of
 	 * chars can partition can also help pruning.
 	 */
 
@@ -53,15 +53,15 @@ public class Restore_IP_Addresses {
 	 */
 	public List<String> restoreIpAddresses(String s) {
 		List<String> res = new ArrayList<>();
-		partition(res, new StringBuilder(), s, 0, 0);
+		partition(res, new StringBuilder(), s, 0, 4);
 		return res;
 	}
 
-	private void partition(List<String> res, StringBuilder sb, String s, int start, int partNo) {
+	private void partition(List<String> res, StringBuilder sb, String s, int start, int parts) {
 		int rest = s.length() - start;
-		// no chars || finish 4 parts || rest are not enough || rest are too many
-		if (rest == 0 || partNo == 4 || rest < (4 - partNo) || rest > (4 - partNo) * 3) {
-			if (sb.length() > 0 && rest == 0 && partNo == 4)
+		// no chars || parts left || rest are not enough || rest are too many
+		if (rest == 0 || parts == 0 || rest < parts || rest > parts * 3) {
+			if (sb.length() > 0 && rest == 0 && parts == 0)
 				res.add(sb.substring(1));
 			return;
 		}
@@ -72,20 +72,21 @@ public class Restore_IP_Addresses {
 		// i is offset from start, append one by one instead of substring
 		for (int i = 0; i < 3 && start + i < s.length(); i++) {
 			// two and three digits number can't start with '0'
-			if (i > 0 && first == '0')	
+			if (i > 0 && first == '0')
 				continue;
 			// three digits number should less than or equals to 255
 			if (i == 2 && (Integer.valueOf(s.substring(start, start + 3)) > 255))
 				continue;
 			sb.append(s.charAt(start + i));
-			partition(res, sb, s, start + i + 1, partNo + 1);
+			partition(res, sb, s, start + i + 1, parts - 1);
 		}
 		sb.setLength(originalLen);
 	}
 
 	/**
 	 * Second time practice
-	 * Use char array to avoid do substring, more lightweight, but the logic is too complicate
+	 * Use char array to avoid do substring, more lightweight, but the logic is
+	 * too complicate
 	 */
 	public List<String> restoreIpAddresses2(String s) {
 		List<String> res = new ArrayList<>();
@@ -93,7 +94,8 @@ public class Restore_IP_Addresses {
 		return res;
 	}
 
-	private void partition(List<String> res, StringBuilder sb, char[] s, int start, int partNo) {
+	private void partition(List<String> res, StringBuilder sb, char[] s,
+			int start, int partNo) {
 		int rest = s.length - start;
 		// used all the chars || finish 4 parts || rest chars are not enough ||
 		// rest chars are too many
@@ -108,7 +110,8 @@ public class Restore_IP_Addresses {
 		sb.append('.');
 		char first = s[start];
 		for (int i = 0; i < 3 && start + i < s.length; i++) {
-			if (i == 0 || (first != '0' && (i == 1 || first == '1' || (first == '2' && (s[start + 1] < '5' || (s[start + 1] == '5' && s[start + 2] <= '5')))))) {
+			if (i == 0
+					|| (first != '0' && (i == 1 || first == '1' || (first == '2' && (s[start + 1] < '5' || (s[start + 1] == '5' && s[start + 2] <= '5')))))) {
 				sb.append(s[start + i]);
 				partition(res, sb, s, start + 1 + i, partNo + 1);
 			}

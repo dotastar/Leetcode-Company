@@ -27,20 +27,17 @@ public class Valid_Palindrome {
 	 * Use Character.isLetterOrDigit() to deal with corner cases
 	 */
 	public static boolean isPalindrome(String s) {
-		int l = 0;
-		int r = s.length() - 1;
-		s = s.toLowerCase();
-		while (l < r) {
-			while (l < r && !Character.isLetterOrDigit(s.charAt(l)))
-				l++;
-			while (l < r && !Character.isLetterOrDigit(s.charAt(r)))
-				r--;
-			if (s.charAt(l) != s.charAt(r))
-				return false;
-			l++;
-			r--;
-		}
-		return true;
+        s = s.trim().toLowerCase();
+        int l=0, r=s.length()-1;
+        while(l<r){
+            while(l<r && !Character.isLetterOrDigit(s.charAt(l)))
+                l++;
+            while(l<r && !Character.isLetterOrDigit(s.charAt(r)))
+                r--;
+            if(s.charAt(l++)!=s.charAt(r--))
+                return false;
+        }
+        return true;
 	}
 
 	/**

@@ -77,17 +77,16 @@ public class String_to_Integer_atoi {
 		// 214748363
 		System.out.println(atoi("-2147483649"));
 		System.out.println(atoi("    10522545459"));
-		
+
 	}
-    
+
 	/**
 	 * Be careful corner cases:
 	 * 1.positive, negative sign should be taken into consideration
 	 * 2.spaces at the beginning and the end should be ignored
-	 * 3.zeros at the beginning should be ignored
-	 * 4.other characters could appear at any position should be ignored and
+	 * 3.other characters could appear at any position should be ignored and
 	 * stop converting immediately
-	 * 5.deal with overflow cases
+	 * 4.deal with overflow cases
 	 */
 
 	/**
@@ -103,17 +102,14 @@ public class String_to_Integer_atoi {
 			neg = str.charAt(i) == '-' ? true : false;
 			i++;
 		}
-		while (i < str.length() && str.charAt(i) == 0)
-			i++;
-
 		int res = 0;
 		for (; i < str.length(); i++) {
 			int digit = str.charAt(i) - '0';
 			if (digit < 0 || digit > 9)
 				break;
 			// use > instead of >=, this can include both positive and negative
-			if(res > (Integer.MAX_VALUE - digit) / 10)
-                return neg ? Integer.MIN_VALUE : Integer.MAX_VALUE;
+			if (res > (Integer.MAX_VALUE - digit) / 10)
+				return neg ? Integer.MIN_VALUE : Integer.MAX_VALUE;
 			res = res * 10 + digit;
 		}
 

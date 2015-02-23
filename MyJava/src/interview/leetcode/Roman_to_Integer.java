@@ -12,6 +12,7 @@ import java.util.Map;
 public class Roman_to_Integer {
 
 	public static void main(String[] args) {
+		System.out.println(-5/2);
 		String num7 = "DCXXI";
 		System.out.println(romanToInt4(num7));
 		
@@ -28,6 +29,7 @@ public class Roman_to_Integer {
 		System.out.println(romanToInt(num4));
 		System.out.println(romanToInt(num5));
 		System.out.println(romanToInt(num6));
+		
 	}
 	
 	

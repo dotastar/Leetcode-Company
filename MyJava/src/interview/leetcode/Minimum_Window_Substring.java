@@ -34,56 +34,85 @@ public class Minimum_Window_Substring {
 	}
 
 	/**
-	 * Second time practice, maintaining a window, expand and shorten the window
+	 * Use two pointers l,r to maintain a window
+	 * 
+	 * keep advancing r to expand the window until the window satisfies the
+	 * constraint, then keep advancing l to narrow the window until the
+	 * almost not satisfies the constraint
+	 * 
+	 * Time O(n)
 	 */
-	public String minWindow2(String S, String T) {
-		if (T.length() == 0 || T.length() > S.length())
-			return "";
-		Map<Character, Integer> dict = new HashMap<Character, Integer>();
-		for (int i = 0; i < T.length(); i++) {
-			char c = T.charAt(i);
-			if (dict.containsKey(c))
-				dict.put(c, dict.get(c) + 1);
-			else
-				dict.put(c, 1);
-		}
+	public String minWindow_Improved(String S, String T) {
+		int[] dict = new int[128], visited = new int[128];
+		for (int i = 0; i < T.length(); i++)
+			dict[T.charAt(i)]++;
 
-		int matched = T.length();
-		int minLen = Integer.MAX_VALUE;
-		int start = -1;
-		for (int l = 0, r = 0; r < S.length(); r++) {
-			char cr = S.charAt(r);
-			if (dict.containsKey(cr)) { // matched a char at right
-				dict.put(cr, dict.get(cr) - 1);
-				if (dict.get(cr) >= 0)
-					matched--;
-				assert isCountMatched(dict, matched);
-				if (matched == 0) { // matched all T, try moving window left
-					while (matched == 0) {
-						char cl = S.charAt(l);
-						if (dict.containsKey(cl)) {
-							dict.put(cl, dict.get(cl) + 1);
-							if(dict.get(cl)>0)
-								matched++;
-						}
-						l++;
-					} // just broke the balance, S.charAt(l-1) contains in T
-					int len = r - (l - 1) + 1;
-					start = len < minLen ? l - 1 : start;
-					minLen = len < minLen ? len : minLen;
-					assert isRightWindow(S, l - 1, r, T);
+		int end = 0, start = 0, visitCnt = 0;
+		for (int r = 0, l = 0; r < S.length(); r++) {
+			char si = S.charAt(r);
+			if (dict[si] > 0) {
+				visited[si]++;
+				if (visited[si] <= dict[si])
+					visitCnt++;
+			}
+			if (visitCnt < T.length())
+				continue;
+			// now l to r has covered all T, slide the window to right
+			while (visitCnt == T.length()) {
+				char cleft = S.charAt(l);
+				if (dict[cleft] > 0) {
+					if (visited[cleft] <= dict[cleft])
+						visitCnt--;
+					visited[cleft]--;
 				}
+				l++;
+			} // shorten the window until the balanced is broke
+			if (end == 0 || (r - (l - 1) + 1 < (end - start))) {
+				end = r + 1;
+				start = l - 1;
 			}
 		}
-
-		assert start + minLen <= S.length();
-		return start == -1 ? "" : S.substring(start, start + minLen);
+		return S.substring(start, end);
 	}
 	
 	/**
+	 * Second time practice, maintaining a window, expand and shorten the window
+	 */
+	public String minWindow2(String S, String T) {
+		int[] dict = new int[128], visited = new int[128];
+		for (int i = 0; i < T.length(); i++)
+			dict[T.charAt(i)]++;
+		int min = 0, left = 0;
+		int total = T.length();
+		for (int l = 0, r = 0; r < S.length(); r++) {
+			char cr = S.charAt(r);
+			if (dict[cr] > 0) {
+				visited[cr]++;
+				if (visited[cr] <= dict[cr])
+					total--;
+				if (total == 0) { // shrink the window
+					while (total == 0) {
+						char cl = S.charAt(l++);
+						if (dict[cl] > 0) {
+							visited[cl]--;
+							if (visited[cl] < dict[cl])
+								total++;
+						}
+					}
+					if (min == 0 || r - l + 2 < min) {
+						min = r - l + 2;
+						left = l - 1;
+					}
+				}
+			}
+		}
+		return S.substring(left, left + min);
+	}
+
+	/**
 	 * For assertion
 	 */
-	private boolean isRightWindow(String S, int l, int r, String T) {
+	public boolean isRightWindow(String S, int l, int r, String T) {
 		if (l < 0 || r >= S.length() || l > r)
 			return false;
 		Map<Character, Integer> dict = new HashMap<Character, Integer>();
@@ -108,64 +137,10 @@ public class Minimum_Window_Substring {
 	private boolean isCountMatched(Map<Character, Integer> dict, int matched) {
 		int total = 0;
 		for (Integer count : dict.values()) {
-			if(count>=0)
+			if (count >= 0)
 				total += count;
 		}
 		return total == matched;
-	}
-
-	/**
-	 * Use two pointers l,r to maintain a window
-	 * 
-	 * keep advancing r to expand the window until the window satisfies the
-	 * constraint, then keep advancing l to narrow the window until the
-	 * almost not satisfies the constraint
-	 * 
-	 * Time O(n)
-	 */
-	public String minWindow_Improved(String S, String T) {
-		int slen = S.length();
-		int tlen = T.length();
-		if (tlen > slen)
-			return "";
-
-		int[] s_exists = new int[128];
-		int[] t_needs = new int[128];
-		for (int i = 0; i < tlen; i++)
-			t_needs[T.charAt(i)]++;
-
-		int count = 0;
-		int min = slen; // min length
-		int minStart = -1;
-		int minEnd = slen; // for substring
-		for (int l = 0, r = 0; r < slen; r++) {
-			char cr = S.charAt(r);
-			if (t_needs[cr] == 0) // skip char that is not in T
-				continue;
-
-			s_exists[cr]++;
-			if (s_exists[cr] <= t_needs[cr])
-				count++;
-
-			if (count == tlen) { // if window constraint is satisfied
-				// advance l index as far right as possible to shorten it,
-				// stop when advancing breaks window constraint.
-				char cl = S.charAt(l);
-				while (t_needs[cl] == 0 || s_exists[cl] > t_needs[cl]) {
-					if (s_exists[cl] > t_needs[cl])
-						s_exists[cl]--; // delete old
-					l++; // advance
-					cl = S.charAt(l);
-				}
-
-				if (r - l < min) {
-					min = r - l;
-					minStart = l;
-					minEnd = r + 1;
-				}
-			}
-		}
-		return minStart == -1 ? "" : S.substring(minStart, minEnd);
 	}
 
 	/**

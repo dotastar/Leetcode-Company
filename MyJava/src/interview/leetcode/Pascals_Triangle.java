@@ -47,4 +47,23 @@ public class Pascals_Triangle {
 		}
 		return res;
 	}
+
+	/**
+	 * Second time
+	 */
+	public List<List<Integer>> generate2(int numRows) {
+		List<List<Integer>> res = new ArrayList<>();
+		for (int i = 0; i < numRows; i++) {
+			List<Integer> row = new ArrayList<>();
+			row.add(1);
+			if (!res.isEmpty()) {
+				List<Integer> prevRow = res.get(res.size() - 1);
+				for (int j = 1; j < prevRow.size(); j++)
+					row.add(prevRow.get(j) + prevRow.get(j - 1));
+				row.add(1);
+			}
+			res.add(row);
+		}
+		return res;
+	}
 }
