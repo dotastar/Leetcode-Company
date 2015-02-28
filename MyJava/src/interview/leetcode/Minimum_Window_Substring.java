@@ -34,6 +34,43 @@ public class Minimum_Window_Substring {
 	}
 
 	/**
+	 * Second time practice, maintaining a window, expand and shorten the window
+	 */
+	public String minWindow2(String S, String T) {
+		int[] dict = new int[128], visited = new int[128];
+		for (int i = 0; i < T.length(); i++)
+			dict[T.charAt(i)]++;
+
+		int min = 0, left = 0;
+		int total = T.length();
+		for (int l = 0, r = 0; r < S.length(); r++) {
+			char sr = S.charAt(r);
+			if (dict[sr] > 0) {
+				visited[sr]++; // update the window
+				if (visited[sr] <= dict[sr])
+					total--;
+
+				if (total == 0) { // shorten the window
+					while (total == 0) {
+						char sl = S.charAt(l++);
+						if (dict[sl] > 0) {
+							visited[sl]--;
+							if (visited[sl] < dict[sl])
+								total++;
+						}
+					} // break the ties out of the loop
+					int length = r - (l - 1) + 1; // (l-1, r) is the min window
+					if (min == 0 || length < min) {
+						min = length;
+						left = l - 1;
+					}
+				}
+			}
+		}
+		return S.substring(left, left + min);
+	}
+
+	/**
 	 * Use two pointers l,r to maintain a window
 	 * 
 	 * keep advancing r to expand the window until the window satisfies the
@@ -73,40 +110,6 @@ public class Minimum_Window_Substring {
 			}
 		}
 		return S.substring(start, end);
-	}
-	
-	/**
-	 * Second time practice, maintaining a window, expand and shorten the window
-	 */
-	public String minWindow2(String S, String T) {
-		int[] dict = new int[128], visited = new int[128];
-		for (int i = 0; i < T.length(); i++)
-			dict[T.charAt(i)]++;
-		int min = 0, left = 0;
-		int total = T.length();
-		for (int l = 0, r = 0; r < S.length(); r++) {
-			char cr = S.charAt(r);
-			if (dict[cr] > 0) {
-				visited[cr]++;
-				if (visited[cr] <= dict[cr])
-					total--;
-				if (total == 0) { // shrink the window
-					while (total == 0) {
-						char cl = S.charAt(l++);
-						if (dict[cl] > 0) {
-							visited[cl]--;
-							if (visited[cl] < dict[cl])
-								total++;
-						}
-					}
-					if (min == 0 || r - l + 2 < min) {
-						min = r - l + 2;
-						left = l - 1;
-					}
-				}
-			}
-		}
-		return S.substring(left, left + min);
 	}
 
 	/**

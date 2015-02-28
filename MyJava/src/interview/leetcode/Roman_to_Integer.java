@@ -14,7 +14,7 @@ public class Roman_to_Integer {
 	public static void main(String[] args) {
 		System.out.println(-5/2);
 		String num7 = "DCXXI";
-		System.out.println(romanToInt4(num7));
+		System.out.println(romanToInt3(num7));
 		
 		String num1 = "VIII"; // 8
 		String num2 = "XCIX"; // 99
@@ -32,38 +32,43 @@ public class Roman_to_Integer {
 		
 	}
 	
-	
 	/**
-	 * Solution 4
+	 * Best solution
+	 * One key observation: E.g."DCIX", 
+	 * Start from left to right, the value is in decreasing order 
+	 * unless it's something like IX, IV, XC, 
+	 * if we meet cases like "IX", we just need to minus its value(previous) twice,
+	 * minus once because we added it once previously, 
+	 * the second minus is for the real value like IX.  
+	 */
+    public int romanToInt4(String s) {
+        if(s.length()==0)
+            return 0;
+        Map<Character, Integer> dict = new HashMap<>();
+        dict.put('I',1);
+        dict.put('V',5);
+        dict.put('X',10);
+        dict.put('L',50);
+        dict.put('C',100);
+        dict.put('D',500);
+        dict.put('M',1000);
+        int res = dict.get(s.charAt(0));
+        for(int i=1; i<s.length(); i++){
+            char si = s.charAt(i), si_1 = s.charAt(i-1);
+            if(dict.get(si_1) < dict.get(si))
+                res -= 2*dict.get(si_1);
+            res += dict.get(si);
+        }
+        return res;    
+    }
+    
+	/**
+	 * Solution 2
 	 */
 	private final static int[] Values = { 1, 4, 5, 9, 10, 40, 50, 90, 100, 400, 500, 900, 1000 };
 	private final static String[] Romans = { "I", "IV", "V", "IX", "X", "XL", "L", "XC", "C", "CD", "D", "CM", "M" };
-    
-    public static int romanToInt4(String s) {
-        int res = 0;
-        for(int i=0, j=Romans.length-1; i<s.length() && j>=0; i++){
-            char c = s.charAt(i);
-            while(j>0){
-                String roman = Romans[j];
-                if(roman.charAt(0)==c){
-                    if(roman.length()==1)
-                        break;
-                    if(i!=s.length()-1 && roman.length()==2 && roman.charAt(1)==s.charAt(i+1)){
-                        i++;
-                        break;       
-                    }
-                }
-                j--;
-            }
-            res += Values[j];
-        }
-        return res;
-    }
-    
-    /**
-     * The same of solution 4
-     */
-    public static int romanToInt5(String s) {
+    	
+    public static int romanToInt3(String s) {
     	int res = 0;
         for(int i=0, j=Values.length-1; i<s.length() && j>=0; ){
             char c = s.charAt(i);
@@ -78,77 +83,32 @@ public class Roman_to_Integer {
         }
         return res;
     }
-
-	/**
-	 * A more compact way to write it
-	 * 
-	 */
-	public static int romanToInt2(String s) {
-		// X IX X IV III
-		char[] romans = { 'I', 'V', 'X', 'L', 'C', 'D', 'M' };
-		int[] numerals = { 1, 5, 10, 50, 100, 500, 1000 };
-		int len = s.length();
-		int j = romans.length - 1;
-		int res = 0;
-		for (int i = 0; i < len; i++) {
-			while (j >= 0 && s.charAt(i) != romans[j])
-				j--;
-			if (i == len - 1)	//the last char
-				res += numerals[j];
-			else {
-				if (j < romans.length - 1 && s.charAt(i + 1) == romans[j + 1]) {
-					res += numerals[j + 1] - numerals[j]; // could be IV, XL, CD
-					i++;
-				} else if (j < romans.length - 2
-						&& s.charAt(i + 1) == romans[j + 2]) {
-					res += numerals[j + 2] - numerals[j]; // could be IX, XC, CM
-					i++;
-				} else
-					res += numerals[j];
-			}
-		}
-		return res;
-	}
-
-	/**
-	 * Third time
-	 */
-    private static final Map<String, Integer> map = getMap();
     
-    public int romanToInt3(String s) {
+    /**
+     * The same as solution 2
+     */
+    public int romanToInt2(String s) {
+    	String[] romans = {"I","IV","V","IX","X","XL","L","XC","C","CD","D","CM","M"};
+        int[] values = {1,4,5,9,10,40,50,90,100,400,500,900,1000};
+        assert romans.length==values.length;
         int res = 0;
-        for(int i=0; i<s.length(); i++){
-            String curr = Character.toString(s.charAt(i));
-            int val = map.get(curr);
-            if(i!=s.length()-1){
-                String nextChar = Character.toString(s.charAt(i+1));
-                int next = map.get(nextChar);
-                if(val<next){
-                    val = map.get(curr+nextChar);
+        for(int i=0, j=romans.length-1; i<s.length(); ){
+            char si = s.charAt(i);
+            String roman = romans[j];
+            if(si==roman.charAt(0)){
+                if(roman.length()==1){
+                    res += values[j];
                     i++;
-                }
-            }
-            res += val;
+                }else if(i+1<s.length() && s.charAt(i+1)==roman.charAt(1)){
+                    res += values[j];
+                    i+=2;
+                    j--;
+                }else
+                    j--;
+            }else
+                j--;
         }
-        return res;
-    }
-    
-    private static Map<String, Integer> getMap(){
-        Map<String, Integer> map = new HashMap<>();
-        map.put("I", 1);
-        map.put("IV", 4);
-        map.put("V", 5);
-        map.put("IX", 9);
-        map.put("X", 10);
-        map.put("XL", 40);
-        map.put("L", 50);
-        map.put("XC", 90);
-        map.put("C", 100);
-        map.put("CD", 400);
-        map.put("D", 500);
-        map.put("CM", 900);
-        map.put("M", 1000);
-        return map;
+        return res;    
     }
     
     /**

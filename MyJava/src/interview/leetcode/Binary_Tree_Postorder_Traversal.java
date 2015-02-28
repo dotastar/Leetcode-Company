@@ -9,7 +9,7 @@ import java.util.Stack;
  * 
  * For example: Given binary tree {1,#,2,3}, return [3,2,1].
  * 
- * Note:Recursive solution is trivial, could you do it iteratively?
+ * Note: Recursive solution is trivial, could you do it iteratively?
  * 
  * @author yazhoucao
  * 
@@ -43,9 +43,6 @@ public class Binary_Tree_Postorder_Traversal {
 	 * The key to to iterative postorder traversal is the following:
 	 * Find the relation between the previously visited node and the current
 	 * node.Use a stack to track nodes
-	 * 
-	 * @param root
-	 * @return
 	 */
 	public static List<Integer> postorderTraversal_Iter(TreeNode root) {
 		List<Integer> res = new ArrayList<Integer>();

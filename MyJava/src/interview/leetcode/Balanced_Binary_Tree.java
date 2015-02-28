@@ -38,40 +38,27 @@ public class Balanced_Binary_Tree {
 		System.out.println(isBalanced(root));
 	}
 
-	public static boolean isBalanced(TreeNode root) {
-		return getHeightDiff(root) >= 0;
-	}
-
 	/**
-	 * Get Height Difference between left and right of subtree
+	 * Time: O(n)
 	 */
-	public static int getHeightDiff(TreeNode node) {
-		if (node == null)
-			return 0;
-		int left = getHeightDiff(node.left);
-		int right = getHeightDiff(node.right);
-
-		if (left == -1 || right == -1)
-			return -1;
-
-		if (Math.abs(left - right) > 1)
-			return -1;
-
-		return 1 + Math.max(left, right);
+	public static boolean isBalanced(TreeNode root) {
+		return getHeightCalcDiff(root) >= 0;
 	}
 
 	/**
-	 * Second time practice
+	 * Time: O(n)
+	 * Get Height and calculate current height difference between left and right
+	 * of subtree
 	 * if it's not balanced, return -1;
 	 * otherwise return the height of the node.
 	 */
-	public static int height(TreeNode node) {
+	public static int getHeightCalcDiff(TreeNode node) {
 		if (node == null)
 			return 0;
-		int left = height(node.left);
+		int left = getHeightCalcDiff(node.left);
 		if (left < 0)
 			return left;
-		int right = height(node.right);
+		int right = getHeightCalcDiff(node.right);
 		if (right < 0)
 			return right;
 

@@ -31,8 +31,38 @@ public class Recover_Binary_Search_Tree {
 	}
 
 	/**
+	 * Same solution, just change to iterative inorder BST traversal
+	 * 
+	 */
+	public static void recoverTree2(TreeNode root) {
+		Stack<TreeNode> stk = new Stack<>();
+		TreeNode p = root, prev = null, first = null, second = null;
+		while (!stk.isEmpty() || p != null) {
+			if (p != null) {
+				stk.push(p);
+				p = p.left;
+			} else {
+				p = stk.pop();
+				// visit p
+				if (prev != null && prev.val > p.val) {
+					if (first == null)
+						first = prev;
+					second = p;
+				}
+				prev = p;
+				p = p.right;
+			}
+		}
+		if (first != null) {
+			int temp = first.val;
+			first.val = second.val;
+			second.val = temp;
+		}
+	}
+
+	/**
 	 * Make use of the property of inorder traversing BST will get an ascending
-	 * order sequence of keys
+	 * order sequence of keys. (Recursive)
 	 * 
 	 * 1,2,3,4,5,6,7 //normal case
 	 * 
@@ -54,7 +84,6 @@ public class Recover_Binary_Search_Tree {
 
 	/**
 	 * Time: O(n), Space: O(lg(n))
-	 * 
 	 */
 	public static void inorder(TreeNode node) {
 		if (node == null)
@@ -72,36 +101,7 @@ public class Recover_Binary_Search_Tree {
 		inorder(node.right);
 	}
 
-	/**
-	 * Same solution, just change to iterative inorder BST traversal
-	 * 
-	 */
-	public static void recoverTree2(TreeNode root) {
-		Stack<TreeNode> stk = new Stack<TreeNode>();
-		TreeNode p = root;
-
-		TreeNode first = null;
-		TreeNode second = null;
-		TreeNode prev = new TreeNode(Integer.MIN_VALUE);
-		while (!stk.isEmpty() || p != null) {
-			if (p != null) {
-				stk.push(p);
-				p = p.left;
-			} else {
-				p = stk.pop();
-				if (p.val <= prev.val) {// father <= lastVal
-					if (first == null)
-						first = prev;
-					second = p;
-				}
-				prev = p;
-				p = p.right;
-			}
-		}
-		swap(first, second);
-	}
-
-	public static void swap(TreeNode n1, TreeNode n2) {
+	private static void swap(TreeNode n1, TreeNode n2) {
 		int tmp = n1.val;
 		n1.val = n2.val;
 		n2.val = tmp;

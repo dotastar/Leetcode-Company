@@ -29,36 +29,40 @@ public class Sort_List {
 	}
 
 	/**
-	 * Selection sort
-	 * Time: O(n^2)
+	 * MergeSort in one function
 	 */
-	public ListNode sortList_Insertion(ListNode head) {
-		ListNode dummy = new ListNode(0);
-		ListNode tail = dummy;
-		ListNode prehead = new ListNode(0);
-		prehead.next = head;
-		while (prehead.next != null) {
-			ListNode prev = prehead;
-			ListNode curr = prehead.next;
-			ListNode smallest = curr;
-			while (curr.next != null) {
-				if (curr.val < curr.next.val)
-					smallest = prev;
-				curr = curr.next;
-				prev = prev.next;
-			}
-			ListNode deleted = delete(smallest);
-			tail.next = deleted;
-			tail = tail.next;
+	public ListNode sortList2(ListNode head) {
+		if (head == null || head.next == null)
+			return head;
+		// if has two or more nodes, break list in half
+		ListNode mid = head, fast = head.next;
+		while (fast != null && fast.next != null) {
+			fast = fast.next.next;
+			mid = mid.next;
 		}
-		return dummy.next;
-	}
+		ListNode l1 = head, l2 = mid.next;
+		mid.next = null; // break l1 and l2
+		l2 = sortList2(l2);
+		l1 = sortList2(l1);
 
-	private ListNode delete(ListNode prev) {
-		ListNode deleted = prev.next;
-		if (deleted != null)
-			prev.next = deleted.next;
-		return deleted;
+		// merge l1, l2
+		ListNode prehead = new ListNode(0);
+		ListNode curr = prehead;
+		while (l1 != null && l2 != null) {
+			if (l1.val < l2.val) {
+				curr.next = l1;
+				l1 = l1.next;
+			} else {
+				curr.next = l2;
+				l2 = l2.next;
+			}
+			curr = curr.next;
+		}
+		if (l1 != null)
+			curr.next = l1;
+		else if (l2 != null)
+			curr.next = l2;
+		return prehead.next;
 	}
 
 	/**
@@ -104,6 +108,39 @@ public class Sort_List {
 			prev.next = l2;
 
 		return prehead.next;
+	}
+
+	/**
+	 * Selection sort
+	 * Time: O(n^2)
+	 */
+	public ListNode sortList_Insertion(ListNode head) {
+		ListNode dummy = new ListNode(0);
+		ListNode tail = dummy;
+		ListNode prehead = new ListNode(0);
+		prehead.next = head;
+		while (prehead.next != null) {
+			ListNode prev = prehead;
+			ListNode curr = prehead.next;
+			ListNode smallest = curr;
+			while (curr.next != null) {
+				if (curr.val < curr.next.val)
+					smallest = prev;
+				curr = curr.next;
+				prev = prev.next;
+			}
+			ListNode deleted = delete(smallest);
+			tail.next = deleted;
+			tail = tail.next;
+		}
+		return dummy.next;
+	}
+
+	private ListNode delete(ListNode prev) {
+		ListNode deleted = prev.next;
+		if (deleted != null)
+			prev.next = deleted.next;
+		return deleted;
 	}
 
 	public static class ListNode {
