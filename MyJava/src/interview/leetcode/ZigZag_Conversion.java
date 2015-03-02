@@ -26,14 +26,14 @@ public class ZigZag_Conversion {
 
 	/**
 	 * Second time
-	 * Calculate the distance of the next char of the same row. 
+	 * Calculate the distance of the next char of the same row.
 	 */
 	public String convert2(String s, int nRows) {
 		if (nRows == 1)
 			return s;
 		StringBuilder sb = new StringBuilder();
 		final int step = 2 * nRows - 2; // distance between normal chars
-		int zigzagDist = step; // distance between normal char and zigzag char 
+		int zigzagDist = step; // distance between normal char and zigzag char
 		for (int i = 0; i < nRows; i++) {
 			for (int j = i; j < s.length(); j += step) {
 				sb.append(s.charAt(j)); // append normal column
@@ -48,32 +48,32 @@ public class ZigZag_Conversion {
 
 	/**
 	 * Time: O(n), Space:O(n), n = s.length()
-	 * There are two kinds of node, one is the common node consists of each 
+	 * There are two kinds of node, one is the common node consists of each
 	 * vertical column, the other consists of the zigzag path, in the middle of
 	 * every two vertical column.
-	 * 1      7
-	 * 2    6 8
-	 * 3  5   9
-	 * 4      10
+	 * 1 7
+	 * 2 6 8
+	 * 3 5 9
+	 * 4 10
 	 * 
 	 * Two key points:
 	 * 1.the distance between each column node is: step = 2 * nRows - 2;
-	 * 2.the distance between each column node and it's zigzag node is: 
-	 * zigzag = j + step - 2 * i; (and the node in the first and last row don't have
+	 * 2.the distance between each column node and it's zigzag node is:
+	 * zigzag = j + step - 2 * i; (and the node in the first and last row don't
+	 * have
 	 * zigzag node)
 	 */
 	public static String convert(String s, int nRows) {
 		if (nRows <= 1)
 			return s;
-		int len = s.length();
-		int step = 2 * nRows - 2;
 		StringBuilder sb = new StringBuilder();
-		for (int i = 0; i < nRows; i++) {
-			for (int j = i; j < len; j += step) {
-				sb.append(s.charAt(j));
-				int zigzag = j + step - 2 * i;
-				if (i != 0 && i != nRows - 1 && zigzag < len)
-					sb.append(s.charAt(zigzag));
+		int step = nRows * 2 - 2;
+		for (int row = 0; row < nRows; row++) {
+			int zigzagStep = step - 2 * row;
+			for (int i = row; i < s.length(); i += step) {
+				sb.append(s.charAt(i));
+				if (row > 0 && row < nRows - 1 && i + zigzagStep < s.length())
+					sb.append(s.charAt(i + zigzagStep));
 			}
 		}
 		return sb.toString();

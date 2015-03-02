@@ -1,6 +1,6 @@
 package general.datastructure;
 
-public class Queue_Array<T> {
+public class Queue_Array<T> implements MyQueue<T> {
 	private T[] arr;
 	private int head, tail; // tail is not the last stored element,
 							// is the next available slot (last+1).
@@ -12,20 +12,24 @@ public class Queue_Array<T> {
 		tail = 0;
 	}
 
-	public void enqueue(T t) {
-		if (size() >= arr.length-2)
+	public void offer(T t) {
+		if (size() >= arr.length - 2)
 			resize(arr.length * 2);
 		arr[tail] = t;
 		tail = tail == arr.length - 1 ? 0 : tail + 1;
 	}
 
-	public T dequeue() {
+	public T poll() {
 		if (size() < arr.length / 4)
 			resize(arr.length / 2);
 		T res = arr[head];
 		arr[head] = null;
 		head = head == arr.length - 1 ? 0 : head + 1;
 		return res;
+	}
+
+	public T peek() {
+		return arr[head];
 	}
 
 	public int size() {
@@ -49,5 +53,10 @@ public class Queue_Array<T> {
 		tail = size();
 		head = 0;
 		arr = newarr;
+	}
+
+	@Override
+	public boolean isEmpty() {
+		return size() == 0;
 	}
 }

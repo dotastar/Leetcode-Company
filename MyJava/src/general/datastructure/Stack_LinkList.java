@@ -1,6 +1,6 @@
 package general.datastructure;
 
-public class Stack_LinkList<T extends Comparable<T>> {
+public class Stack_LinkList<T extends Comparable<T>> implements MyStack<T>{
 	private Node<T> top;
 	private int size;
 

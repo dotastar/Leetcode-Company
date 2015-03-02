@@ -1,4 +1,4 @@
-package general.princeton.algorithms;
+package general.datastructure;
 
 import java.util.Comparator;
 import java.util.Iterator;
@@ -81,7 +81,7 @@ public class BinaryHeap<T extends Comparable<T>> {
 		this.pq = newheap.pq;
 	}
 
-	public void insert(T elem) {
+	public void offer(T elem) {
 		if (elem == null)
 			return;
 		if (size == capacity)
@@ -92,7 +92,7 @@ public class BinaryHeap<T extends Comparable<T>> {
 		assert checkHeapOrder();
 	}
 
-	public T pop() {
+	public T poll() {
 		if (isEmpty())
 			throw new NoSuchElementException("Priority queue underflow");
 		T res = pq[1];
@@ -146,7 +146,7 @@ public class BinaryHeap<T extends Comparable<T>> {
 		public T next() {
 			if (!hasNext())
 				throw new NoSuchElementException();
-			return copy.pop();
+			return copy.poll();
 		}
 	}
 

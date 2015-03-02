@@ -1,9 +1,9 @@
 package general.datastructure;
 
-public interface MyQueue<T> {
-	public void offer(T ele);
+public interface MyStack<T> {
+	public void push(T t);
 
-	public T poll();
+	public T pop();
 
 	public T peek();
 

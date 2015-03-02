@@ -1,4 +1,4 @@
-package general.princeton.algorithms;
+package general.datastructure;
 
 import java.util.Comparator;
 
@@ -16,6 +16,6 @@ public class MaxHeap<T extends Comparable<T>> extends BinaryHeap<T> {
 	}
 
 	public T max() {
-		return pop();
+		return poll();
 	}
 }

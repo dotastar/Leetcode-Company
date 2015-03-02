@@ -1,4 +1,4 @@
-package general.princeton.algorithms;
+package general.datastructure;
 
 import java.util.Arrays;
 

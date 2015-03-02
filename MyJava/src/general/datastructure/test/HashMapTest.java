@@ -1,9 +1,12 @@
-package general.princeton.algorithms;
+package general.datastructure.test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import general.datastructure.HashMap_Chaining;
+import general.datastructure.HashMap_Probing;
+import general.datastructure.SymbolTable;
 
 import java.util.HashSet;
 import java.util.Random;

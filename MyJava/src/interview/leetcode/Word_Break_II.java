@@ -47,7 +47,7 @@ public class Word_Break_II {
 		String[] data1 = { "a" };
 		for (String d : data1)
 			dict1.add(d);
-		System.out.println(obj.wordBreak(s3, dict3));
+		System.out.println(obj.wordBreak2(s3, dict3));
 
 		String s = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
 				+ "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"

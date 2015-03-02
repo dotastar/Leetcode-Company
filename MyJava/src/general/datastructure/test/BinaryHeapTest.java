@@ -1,6 +1,9 @@
-package general.princeton.algorithms;
+package general.datastructure.test;
 
 import static org.junit.Assert.assertTrue;
+import general.datastructure.BinaryHeap;
+import general.datastructure.MaxHeap;
+import general.datastructure.MinHeap;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -47,43 +50,43 @@ public class BinaryHeapTest {
 	@Test
 	public void testInsert_Normal_Max_Int() {
 		BinaryHeap<Integer> h = createHeap("max");
-		h.insert(1);
+		h.offer(1);
 		assertTrue(h.peek() == 1);
-		h.insert(3);
+		h.offer(3);
 		assertTrue(h.peek() == 3);
-		h.insert(0);
+		h.offer(0);
 		assertTrue(h.peek() == 3);
-		h.insert(-1);
+		h.offer(-1);
 		assertTrue(h.peek() == 3);
-		h.insert(4);
+		h.offer(4);
 		assertTrue(h.peek() == 4);
 	}
 
 	@Test
 	public void testInsert_Normal_Max_Char() {
 		BinaryHeap<Character> h = createHeap("max");
-		h.insert('o');
+		h.offer('o');
 		assertTrue(h.peek() == 'o');
-		h.insert('p');
+		h.offer('p');
 		assertTrue(h.peek() == 'p');
-		h.insert('q');
+		h.offer('q');
 		assertTrue(h.peek() == 'q');
-		h.insert('b');
+		h.offer('b');
 		assertTrue(h.peek() == 'q');
-		h.insert('x');
+		h.offer('x');
 		assertTrue(h.peek() == 'x');
 	}
 	
 	@Test
 	public void testInsert_Normal_Min_Int() {
 		BinaryHeap<Integer> h = createHeap("min");
-		h.insert(1);
+		h.offer(1);
 		assertTrue(h.peek() == 1);
-		h.insert(3);
+		h.offer(3);
 		assertTrue(h.peek() == 1);
-		h.insert(0);
+		h.offer(0);
 		assertTrue(h.peek() == 0);
-		h.insert(-1);
+		h.offer(-1);
 		assertTrue(h.peek() == -1);
 	}
 	
@@ -91,15 +94,15 @@ public class BinaryHeapTest {
 	@Test
 	public void testInsert_Normal_Min_Char() {
 		BinaryHeap<Character> h = createHeap("min");
-		h.insert('o');
+		h.offer('o');
 		assertTrue(h.peek() == 'o');
-		h.insert('p');
+		h.offer('p');
 		assertTrue(h.peek() == 'o');
-		h.insert('q');
+		h.offer('q');
 		assertTrue(h.peek() == 'o');
-		h.insert('b');
+		h.offer('b');
 		assertTrue(h.peek() == 'b');
-		h.insert('x');
+		h.offer('x');
 		assertTrue(h.peek() == 'b');
 	}
 	
@@ -108,47 +111,47 @@ public class BinaryHeapTest {
 	public void testInsert_Resize() {
 		BinaryHeap<Integer> h = createHeap(type, 10);
 		for(int i=0; i<10; i++)
-			h.insert(i);
+			h.offer(i);
 		assert h.capacity()==10;
-		h.insert(11);
+		h.offer(11);
 		assert h.capacity()==20;
 	}
 
 	@Test
 	public void testInsert_Null() {
 		BinaryHeap<Character> h = createHeap(type);
-		h.insert(null);
+		h.offer(null);
 	}
 	
 
 	@Test(expected=NoSuchElementException.class)
 	public void testPop_Empty() {
 		BinaryHeap<Integer> h = createHeap(type, 0);
-		h.pop();
+		h.poll();
 	}
 
 	@Test
 	public void testPop_InsertAndPop_Min() {
 		BinaryHeap<Integer> h = createHeap("min", 10);
 		for(int i=0; i<10; i++){
-			h.insert(i);
+			h.offer(i);
 			assert h.peek()==0;
 		}
 		
 		for(int i=0; i<10; i++)	
-			assertTrue(h.pop()==i);
+			assertTrue(h.poll()==i);
 	}
 	
 	@Test
 	public void testPop_InsertAndPop_Max() {
 		BinaryHeap<Integer> h = createHeap("max", 10);
 		for(int i=0; i<10; i++){
-			h.insert(i);
+			h.offer(i);
 			assert h.peek()==i;
 		}
 		
 		for(int i=9; i>=0; i--)	
-			assertTrue(h.pop()==i);
+			assertTrue(h.poll()==i);
 	}
 
 	@Test(expected=NoSuchElementException.class)
@@ -160,7 +163,7 @@ public class BinaryHeapTest {
 	@Test
 	public void testPeek_NonEmpty() {
 		BinaryHeap<Integer> h = createHeap(type, 5);
-		h.insert(1);
+		h.offer(1);
 		assert (h.peek() == 1);
 	}
 
@@ -185,25 +188,25 @@ public class BinaryHeapTest {
 	@Test
 	public void testSize_Add() {
 		BinaryHeap<Integer> h = createHeap(type, 10);
-		h.insert(1);
-		h.insert(3);
-		h.insert(0);
-		h.insert(-1);
+		h.offer(1);
+		h.offer(3);
+		h.offer(0);
+		h.offer(-1);
 		assertTrue(h.size() == 4);
 	}
 
 	@Test
 	public void testSize_AddDelete() {
 		BinaryHeap<Integer> h = createHeap(type, 10);
-		h.insert(1);
-		h.insert(3);
-		h.insert(0);
-		h.insert(-1);
-		h.pop();
+		h.offer(1);
+		h.offer(3);
+		h.offer(0);
+		h.offer(-1);
+		h.poll();
 		assertTrue(h.size() == 3);
-		h.pop();
+		h.poll();
 		assertTrue(h.size() == 2);
-		h.pop();
+		h.poll();
 		assertTrue(h.size() == 1);
 	}
 
@@ -211,7 +214,7 @@ public class BinaryHeapTest {
 	public void testIterator_Min(){
 		BinaryHeap<Integer> h = createHeap("min");
 		for(int i=0; i<30; i++)
-			h.insert(i);
+			h.offer(i);
 		Iterator<Integer> iter = h.iterator();
 		int i=0;
 		while(iter.hasNext()){
@@ -226,7 +229,7 @@ public class BinaryHeapTest {
 	public void testIterator_Max(){
 		BinaryHeap<Integer> h = createHeap("max");
 		for(int i=0; i<30; i++)
-			h.insert(i);
+			h.offer(i);
 		Iterator<Integer> iter = h.iterator();
 		int i=29;
 		while(iter.hasNext()){

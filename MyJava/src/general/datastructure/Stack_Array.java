@@ -2,7 +2,7 @@ package general.datastructure;
 
 import java.util.Arrays;
 
-public class Stack_Array<T> {
+public class Stack_Array<T> implements MyStack<T> {
 	private static final int DEFAULT_SIZE = 10;
 	private T[] arr;
 	private int size;
@@ -32,7 +32,7 @@ public class Stack_Array<T> {
 	public T peek() {
 		if (size == 0)
 			throw new RuntimeException("Can't peek, empty stack!");
-		return arr[size-1];
+		return arr[size - 1];
 	}
 
 	public boolean isEmpty() {

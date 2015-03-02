@@ -1,4 +1,4 @@
-package general.princeton.algorithms;
+package general.datastructure;
 
 public interface SymbolTable<K, V> {
 	public int size();

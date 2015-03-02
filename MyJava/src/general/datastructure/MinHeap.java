@@ -1,4 +1,4 @@
-package general.princeton.algorithms;
+package general.datastructure;
 
 import java.util.Comparator;
 
@@ -16,6 +16,6 @@ public class MinHeap<T extends Comparable<T>> extends BinaryHeap<T> {
 	}
 
 	public T min() {
-		return pop();
+		return poll();
 	}
 }

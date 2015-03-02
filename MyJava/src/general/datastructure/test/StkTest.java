@@ -1,6 +1,8 @@
-package general.datastructure;
+package general.datastructure.test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
+import general.datastructure.Stack_Array;
+import general.datastructure.Stack_LinkList;
 
 import org.junit.Test;
 import org.junit.runner.JUnitCore;
@@ -17,7 +19,7 @@ public class StkTest {
 		System.out.println(String.format("Finish! Total:%d Failed:%d",
 				res.getRunCount(), res.getFailureCount()));
 	}
-	
+
 	/***************** Stack_LinkList Test *****************/
 
 	@Test
@@ -49,15 +51,14 @@ public class StkTest {
 		Stack_LinkList<Integer> stk = new Stack_LinkList<>();
 		assertTrue(stk.size() == 0);
 		assertTrue(stk.isEmpty());
-		
+
 		stk.push(1);
 		assertTrue(!stk.isEmpty());
 
 		stk.pop();
 		assertTrue(stk.isEmpty());
 	}
-	
-	
+
 	/***************** Stack_Array Test *****************/
 
 	@Test
@@ -89,7 +90,7 @@ public class StkTest {
 		Stack_Array<Integer> stk = new Stack_Array<>();
 		assertTrue(stk.size() == 0);
 		assertTrue(stk.isEmpty());
-		
+
 		stk.push(1);
 		assertTrue(!stk.isEmpty());
 

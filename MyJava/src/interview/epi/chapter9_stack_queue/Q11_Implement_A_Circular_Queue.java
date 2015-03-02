@@ -30,14 +30,14 @@ public class Q11_Implement_A_Circular_Queue {
 	@Test
 	public void test1() {
 		Queue_Array<Integer> q = new Queue_Array<Integer>(8);
-		q.enqueue(1);
-		q.enqueue(2);
-		q.enqueue(3);
-		q.enqueue(4);
-		q.enqueue(5);
-		q.enqueue(6);
-		q.enqueue(7);
-		q.enqueue(8);
+		q.offer(1);
+		q.offer(2);
+		q.offer(3);
+		q.offer(4);
+		q.offer(5);
+		q.offer(6);
+		q.offer(7);
+		q.offer(8);
 		// Now head = 0 and tail = 0
 
 		assertDequeue(q, 1);
@@ -45,17 +45,17 @@ public class Q11_Implement_A_Circular_Queue {
 		assertDequeue(q, 3);
 		// Now head = 3 and tail = 0
 
-		q.enqueue(11);
-		q.enqueue(12);
-		q.enqueue(13);
+		q.offer(11);
+		q.offer(12);
+		q.offer(13);
 		// Ok till here. Now head = 3 and tail = 3
 
-		q.enqueue(14); // now the vector (data) is resized; but the head and
+		q.offer(14); // now the vector (data) is resized; but the head and
 						// tail. (or elements) does not change accordingly.
-		q.enqueue(15);
-		q.enqueue(16);
-		q.enqueue(17);
-		q.enqueue(18);
+		q.offer(15);
+		q.offer(16);
+		q.offer(17);
+		q.offer(18);
 		// The elements starting from head=3 are overwriten!
 
 		assertDequeue(q, 4);
@@ -68,7 +68,7 @@ public class Q11_Implement_A_Circular_Queue {
 	}
 
 	private static <T> void assertDequeue(Queue_Array<T> q, T t) {
-		T dequeue = q.dequeue();
+		T dequeue = q.poll();
 		assertTrue(t.equals(dequeue));
 	}
 
@@ -76,7 +76,7 @@ public class Q11_Implement_A_Circular_Queue {
 	public void test2() { // test size
 		Queue_Array<Integer> q = new Queue_Array<>(10);
 		for (int i = 1; i < 8; i++) {
-			q.enqueue(i);
+			q.offer(i);
 			assertTrue(q.size() == i);
 		}
 	}
@@ -85,11 +85,11 @@ public class Q11_Implement_A_Circular_Queue {
 	public void test3() { // test enqueue, dequeue
 		Queue_Array<Integer> q = new Queue_Array<>(10);
 		for (int i = 0; i < 8; i++)
-			q.enqueue(i);
+			q.offer(i);
 		assertTrue(q.size() == 8);
 		
 		for (int i = 0; i < 3; i++)
-			assertTrue(q.dequeue() == i);
+			assertTrue(q.poll() == i);
 		assertTrue(q.size() == 5);
 	}
 
@@ -97,11 +97,11 @@ public class Q11_Implement_A_Circular_Queue {
 	public void test4() { // test resize
 		Queue_Array<Integer> q = new Queue_Array<>(4);
 		for (int i = 0; i < 16; i++)
-			q.enqueue(i);
+			q.offer(i);
 		assertTrue(q.size() == 16);
 		
 		for(int i=0; i<16; i++)
-			q.dequeue();
+			q.poll();
 		assertTrue(q.size()==0);
 	}
 

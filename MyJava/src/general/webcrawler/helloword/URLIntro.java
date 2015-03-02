@@ -1,6 +1,6 @@
 package general.webcrawler.helloword;
 
-import general.princeton.algorithms.StdOut;
+import general.datastructure.StdOut;
 
 import java.io.BufferedReader;
 import java.io.IOException;
