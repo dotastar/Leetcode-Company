@@ -37,12 +37,11 @@ public class Rotate_Image {
 		}
 	}
 
-    
 	public static void rotate(int[][] matrix) {
 		int len = matrix.length;
 		int last = len - 1; // last element index
 		for (int margin = 0; margin < len / 2; margin++) {
-			for (int i = margin; i < len -1 - margin; i++) {
+			for (int i = margin; i < len - 1 - margin; i++) {
 				int lefttop = matrix[margin][i]; // save left top
 				// left to top
 				matrix[margin][i] = matrix[last - i][margin];
@@ -55,23 +54,20 @@ public class Rotate_Image {
 			}
 		}
 	}
-	
 
 	/**
 	 * Exactly the same solution as above
 	 */
-    public static void rotate2(int[][] matrix) {
-        int last = matrix.length-1;
-        int x = 0;
-        while(x<matrix.length/2){
-            for(int i=x; i<last-x; i++){
-                int tmp = matrix[x][i];
-                matrix[x][i] = matrix[last-i][x];//left to top
-                matrix[last-i][x] = matrix[last-x][last-i];//bottom to left
-                matrix[last-x][last-i] = matrix[i][last-x];//right to bottom
-                matrix[i][last-x] = tmp; //top to right
-            }
-            x++;
-        }
-    }
+	public static void rotate2(int[][] matrix) {
+		int n = matrix.length;
+		for (int i = 0; i < n / 2; i++) { // margin
+			for (int j = i; j < n - 1 - i; j++) { // offset
+				int lefttop = matrix[i][j];
+				matrix[i][j] = matrix[n - 1 - j][i];
+				matrix[n - 1 - j][i] = matrix[n - 1 - i][n - 1 - j];
+				matrix[n - 1 - i][n - 1 - j] = matrix[j][n - 1 - i];
+				matrix[j][n - 1 - i] = lefttop;
+			}
+		}
+	}
 }

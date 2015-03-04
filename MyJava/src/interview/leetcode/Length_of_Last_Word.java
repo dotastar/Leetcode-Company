@@ -32,21 +32,35 @@ public class Length_of_Last_Word {
 
 	}
 
-	public static int lengthOfLastWord(String s) {
-		String[] strarr = s.trim().split(" ");
-		if (strarr.length == 0)
-			return 0;
-		return strarr[strarr.length - 1].length();
+	/**
+	 * Better solution
+	 */
+	public static int lengthOfLastWord2(String s) {
+		int count = 0;
+		for (int i = s.length() - 1; i >= 0; i--) {
+			if (s.charAt(i) != ' ') {
+				count++;
+			} else if (count > 0) // key
+				break;
+		}
+		return count;
 	}
 
-	public static int lengthOfLastWord2(String s) {
-        int count = 0;
-        for(int i=s.length()-1; i>=0; i--){
-            if(s.charAt(i)!=' '){
-                count++;
-            }else if(count>0)
-                break;
-        }
-        return count;
+	/**
+	 * General template solution
+	 */
+	public static int lengthOfLastWord(String s) {
+		int len = 0;
+		for (int i = 0; i < s.length();) {
+			len = 0;
+			while (i < s.length() && s.charAt(i) != ' ') {
+				i++;
+				len++;
+			}
+			while (i < s.length() && s.charAt(i) == ' ')
+				i++;
+		}
+		return len;
 	}
+
 }

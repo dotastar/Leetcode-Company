@@ -23,7 +23,10 @@ import java.util.List;
 public class Spiral_Matrix {
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
+		int[][] mat5 = new int[][] { { 1, 2, 3, 4 }, { 5, 6, 7, 8 },
+				{ 9, 10, 11, 12 }, { 13, 14, 15, 16 } };
+		System.out.println(spiralOrder2(mat5).toString());
+
 		int[][] mat1 = new int[][] { { 2, 3 } };
 		int[][] mat2 = new int[][] { { 2 }, { 3 } };
 		int[][] mat3 = new int[][] { { 1, 2, 3 }, { 4, 5, 6 }, { 7, 8, 9 } };
@@ -33,6 +36,29 @@ public class Spiral_Matrix {
 		System.out.println(spiralOrder(mat2).toString());
 		System.out.println(spiralOrder(mat3).toString());
 		System.out.println(spiralOrder(mat4).toString());
+	}
+
+	/**
+	 * More concise
+	 */
+	public static List<Integer> spiralOrder2(int[][] matrix) {
+		List<Integer> res = new ArrayList<>();
+		int m = matrix.length, n = m == 0 ? 0 : matrix[0].length;
+		for (int x = 0, y = 0; x < m && y < n; x++, y++, m--, n--) {
+			for (int i = y; i < n; i++)
+				res.add(matrix[x][i]);
+			for (int i = x + 1; i < m; i++)
+				res.add(matrix[i][n - 1]); // notice: i = x + 1
+
+			if (m - x == 1 || n - y == 1)
+				continue;
+
+			for (int i = n - 2; i > y; i--)
+				res.add(matrix[m - 1][i]); // notice: i = n - 2
+			for (int i = m - 1; i > x; i--)
+				res.add(matrix[i][y]);
+		}
+		return res;
 	}
 
 	/**

@@ -1,6 +1,9 @@
 package general.algorithms;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
+
+import java.util.Arrays;
+import java.util.Random;
 
 import org.junit.Test;
 import org.junit.runner.JUnitCore;
@@ -18,6 +21,78 @@ public class Sortings {
 		System.out.println("Total Tests: " + res.getRunCount());
 		System.out.println("Failures : " + res.getFailureCount());
 
+	}
+
+	/************************** Quick Sort **************************/
+	public static class QuickSort {
+		private QuickSort() {
+		}
+
+		private static Random ran = new Random();
+
+		/**
+		 * QuickSort Array
+		 * Time: average O(nlog), worst O(n^2)
+		 * Unstable
+		 */
+		public static void quickSort(int[] A) {
+			quickSort(A, 0, A.length - 1);
+		}
+
+		private static void quickSort(int[] A, int l, int r) {
+			if (l >= r)
+				return;
+			int pivot = l + ran.nextInt(r - l);
+			int mid = partition(A, l, r, pivot);
+			quickSort(A, l, mid - 1);
+			quickSort(A, mid + 1, r);
+		}
+
+		private static int partition(int[] A, int l, int r, int pivot) {
+			assert l < r;
+			int pivotVal = A[pivot];
+			swap(A, l, pivot);
+			int i = l + 1;
+			while (i <= r) {
+				if (A[i] < pivotVal)
+					i++;
+				else
+					swap(A, i, r--);
+			}
+			swap(A, i - 1, l);
+			return i - 1;
+		}
+
+		/**
+		 * QuickSort Linked List
+		 */
+		public static ListNode quickSortList(ListNode head) {
+			if (head == null || head.next == null)
+				return head;
+			ListNode pivot = head; // use head as pivot
+			// partition list
+			ListNode l1 = new ListNode(0), l2 = new ListNode(0);
+			ListNode curr1 = l1, curr2 = l2;
+			while (head.next != null) {
+				if (head.next.val < pivot.val) {
+					curr1.next = head.next;
+					curr1 = curr1.next;
+				} else {
+					curr2.next = head.next;
+					curr2 = curr2.next;
+				}
+				head = head.next;
+			}
+			// append pivot to the end of l1
+			curr1.next = pivot;
+			pivot.next = null;
+			curr2.next = null;
+
+			l1 = quickSortList(l1.next);
+			l2 = quickSortList(l2.next);
+			pivot.next = l2;
+			return l1;
+		}
 	}
 
 	/************************** Merge Sort **************************/
@@ -55,9 +130,54 @@ public class Sortings {
 			}
 			assert isSorted(A, l, r);
 		}
+
+		/**
+		 * MergeSort Linked List
+		 */
+		public ListNode mergeSortList(ListNode head) {
+			if (head == null || head.next == null)
+				return head;
+			// break list in half
+			ListNode mid = head, fast = head.next;
+			while (fast != null && fast.next != null) {
+				fast = fast.next.next;
+				mid = mid.next;
+			}
+			ListNode l1 = head, l2 = mid.next;
+			mid.next = null; // break l1 and l2
+			l2 = mergeSortList(l2);
+			l1 = mergeSortList(l1);
+
+			// merge l1, l2
+			ListNode prehead = new ListNode(0);
+			ListNode curr = prehead;
+			while (l1 != null && l2 != null) {
+				if (l1.val < l2.val) {
+					curr.next = l1;
+					l1 = l1.next;
+				} else {
+					curr.next = l2;
+					l2 = l2.next;
+				}
+				curr = curr.next;
+			}
+			if (l1 != null)
+				curr.next = l1;
+			else if (l2 != null)
+				curr.next = l2;
+			return prehead.next;
+		}
 	}
 
 	/************************** Unit Test **************************/
+	@Test
+	public void testQuickSort1() {
+		int[] A = { 5, 91, 2, 13, 25, 2, 33, 8, 16, 9, 68, 11, 3 };
+		QuickSort.quickSort(A);
+		System.out.println(Arrays.toString(A));
+		assertTrue(isSorted(A));
+	}
+
 	@Test
 	public void testMergeSort1() {
 		int[] A = { 5, 91, 2, 13, 25, 2, 33, 8, 16, 9, 68, 11, 3 };
@@ -79,4 +199,22 @@ public class Sortings {
 		return true;
 	}
 
+	/************************** Utilities **************************/
+	private static void swap(int[] A, int i, int j) {
+		if (i != j) {
+			int temp = A[i];
+			A[i] = A[j];
+			A[j] = temp;
+		}
+	}
+
+	public static class ListNode {
+		int val;
+		ListNode next;
+
+		ListNode(int x) {
+			val = x;
+			next = null;
+		}
+	}
 }

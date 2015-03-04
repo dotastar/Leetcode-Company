@@ -49,7 +49,13 @@ import java.util.List;
 public class Text_Justification {
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
+		Text_Justification o = new Text_Justification();
+		String[] words4 = { "a", "b", "c", "d", "e" };
+		int L4 = 3;
+		List<String> res4 = o.fullJustify3(words4, L4);
+		for (String line : res4)
+			System.out.println(line + "\tsize:" + line.length());
+
 		String[] words0 = { "" };
 		int L0 = 0;
 		List<String> res0 = fullJustify2(words0, L0);
@@ -76,6 +82,50 @@ public class Text_Justification {
 		for (String line : res2)
 			System.out.println(line + "\tsize:" + line.length());
 
+	}
+
+	public List<String> fullJustify3(String[] words, int L) {
+		List<String> res = new ArrayList<>();
+		int restSpaces = L; // notice below: i <= words.length
+		for (int r = 0, l = 0; r <= words.length; r++) {
+			if (r == words.length || words[r].length() > restSpaces) {
+				StringBuilder sb = new StringBuilder();
+				restSpaces++; // remove the last space
+				int slots = r - l - 1;
+				if (r == words.length || slots == 0) {
+					for (int j = l; j < r; j++) {
+						sb.append(words[j]);
+						if (sb.length() < L)
+							sb.append(' ');
+					}
+					appendSpaces(sb, L - sb.length());
+				} else {
+					int each = restSpaces / slots + 1;
+					int extra = restSpaces % slots;
+					for (int j = l; j < r; j++) {
+						sb.append(words[j]);
+						if (j == r - 1)
+							continue;
+						if (j - l < extra)
+							appendSpaces(sb, each + 1);
+						else
+							appendSpaces(sb, each);
+					}
+				}
+				res.add(sb.toString());
+				restSpaces = L;
+				l = r;
+			}
+			if (r < words.length)
+				restSpaces -= words[r].length() + 1; // add a word and a space
+		}
+		return res;
+	}
+
+	private void appendSpaces(StringBuilder sb, int n) {
+		for (int i = 0; i < n; i++) {
+			sb.append(' ');
+		}
 	}
 
 	/**

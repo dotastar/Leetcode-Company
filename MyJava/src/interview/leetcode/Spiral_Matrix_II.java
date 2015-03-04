@@ -21,7 +21,6 @@ import java.util.Arrays;
 public class Spiral_Matrix_II {
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 		int[][] mat = generateMatrix(5);
 		for (int i = 0; i < mat.length; i++)
 			System.out.println(Arrays.toString(mat[i]));
@@ -34,25 +33,20 @@ public class Spiral_Matrix_II {
 	 */
 	public int[][] generateMatrix2(int n) {
 		int[][] mat = new int[n][n];
-		int x = 0;
-		int y = 0;
 		int num = 1;
-		while (n > 1) {
-			for (int i = 0; i < n - 1; i++)
+		for (int i = 0; i < n / 2; i++) {
+			int x = i, y = i;
+			while (y < n - 1 - i)
 				mat[x][y++] = num++;
-			for (int i = 0; i < n - 1; i++)
+			while (x < n - 1 - i)
 				mat[x++][y] = num++;
-			for (int i = 0; i < n - 1; i++)
+			while (y > i)
 				mat[x][y--] = num++;
-			for (int i = 0; i < n - 1; i++)
+			while (x > i)
 				mat[x--][y] = num++;
-			x++;
-			y++;
-			n -= 2;
 		}
-		if (n == 1)
-			mat[x][y] = num;
-
+		if (n % 2 == 1)
+			mat[n / 2][n / 2] = num;
 		return mat;
 	}
 
