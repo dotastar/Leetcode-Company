@@ -90,6 +90,32 @@ public class Subsets {
 	}
 
 	/**
+	 * Recursion, DFS
+	 */
+	public List<List<Integer>> subsets1(int[] S) {
+		Arrays.sort(S);
+		List<List<Integer>> res = new ArrayList<>();
+		generate(S, 0, res, new Stack<Integer>());
+		return res;
+	}
+
+	/**
+	 * Two states:
+	 * 1.choose S[idx], 2.not choose S[idx]
+	 */
+	private void generate(int[] S, int idx, List<List<Integer>> res,
+			Stack<Integer> set) {
+		if (idx == S.length) {
+			res.add(new ArrayList<Integer>(set));
+			return;
+		}
+		set.push(S[idx]);
+		generate(S, idx + 1, res, set);
+		set.pop();
+		generate(S, idx + 1, res, set);
+	}
+
+	/**
 	 * Second time practice, recursion
 	 */
 	public List<List<Integer>> subsets2(int[] S) {

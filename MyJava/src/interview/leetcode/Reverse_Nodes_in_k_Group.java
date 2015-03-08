@@ -27,12 +27,12 @@ public class Reverse_Nodes_in_k_Group {
 		Reverse_Nodes_in_k_Group obj = new Reverse_Nodes_in_k_Group();
 		ListNode head = new ListNode(1);
 		head.next = new ListNode(2);
-		head.next.next = new ListNode(3);
-		head.next.next.next = new ListNode(4);
-		head.next.next.next.next = new ListNode(5);
-		head.next.next.next.next.next = new ListNode(6);
+		// head.next.next = new ListNode(3);
+		// head.next.next.next = new ListNode(4);
+		// head.next.next.next.next = new ListNode(5);
+		// head.next.next.next.next.next = new ListNode(6);
 
-		ListNode res = obj.reverseKGroup2(head, 3);
+		ListNode res = obj.reverseKGroup3(head, 2);
 		printList(res);
 
 		ListNode head1 = new ListNode(1);
@@ -41,6 +41,34 @@ public class Reverse_Nodes_in_k_Group {
 		printList(res1);
 	}
 
+	/**
+	 * Recursive fashion
+	 */
+	public ListNode reverseKGroup3(ListNode head, int k) {
+		if (head == null || head.next == null || k == 1)
+			return head;
+		ListNode end = head;
+		for (int i = 1; i < k; i++) { // traverse k nodes
+			end = end.next;
+			if (end == null) // there are less than k nodes
+				return head;
+		}
+		ListNode nxt = end.next; // the (k+1)th node
+		ListNode prev = null, curr = head;
+		while (curr != nxt) { // reversing
+			ListNode nxtCurr = curr.next;
+			curr.next = prev;
+			prev = curr;
+			curr = nxtCurr;
+		}
+		// reverse next k nodes, connect new tail(current) with new head(next)
+		head.next = reverseKGroup3(nxt, k);
+		return prev; // return the new head
+	}
+
+	/**
+	 * Iterative fashion, write code in one function
+	 */
 	public ListNode reverseKGroup2(ListNode head, int k) {
 		ListNode prehead = new ListNode(0);
 		prehead.next = head;
@@ -67,6 +95,7 @@ public class Reverse_Nodes_in_k_Group {
 	}
 
 	/**
+	 * Iterative fashion, use reverse() as a subroutine
 	 * Time : 2n = O(n)
 	 */
 	public ListNode reverseKGroup(ListNode head, int k) {
