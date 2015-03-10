@@ -23,7 +23,7 @@ public class JsoupFindAllLinks {
 		Elements links = doc.select("a[href]");
 		Elements media = doc.select("[src]");
 		Elements imports = doc.select("link[href]");
-	
+
 		print("\nMedia: (%d)", media.size());
 		for (Element src : media) {
 			if (src.tagName().equals("img"))
@@ -34,12 +34,12 @@ public class JsoupFindAllLinks {
 				print(" * %s: <%s>", src.tagName(), src.attr("abs:src"));
 		}
 
-		print("\nImports: (%d)", imports.size());
+		print("\nImports: (%d)", imports.size()); // doc.select("link[href]");
 		for (Element link : imports) {
 			print(" * %s <%s> (%s)", link.tagName(), link.attr("abs:href"), link.attr("rel"));
 		}
 
-		print("\nLinks: (%d)", links.size());
+		print("\nLinks: (%d)", links.size()); // doc.select("a[href]");
 		for (Element link : links) {
 			print(" * a: <%s>  (%s)", link.attr("abs:href"), trim(link.text(), 35));
 		}
