@@ -1,5 +1,6 @@
 package interview.leetcode;
 
+import java.util.Arrays;
 
 /**
  * Given an array of non-negative integers, you are initially positioned at the
@@ -65,26 +66,27 @@ public class Jump_Game_II {
 	}
 
 	/**
-	 * Dynamic Programming dp[i]: minimal steps of jump from i to the end Time:
-	 * O(n^2)
-	 */
+	 * Dynamic Programming dp[i]: minimal steps of jump from i to the end
+	 * Time: O(n^2)
+	 * 
+	 * M[i] means the minimum jumps needed to reach end form i,
+	 * -1 means it can't reach the end
+	 * Base case M[n-1] = 0
+	 * Induction rule: M[i] = min(M[j]) + 1, if M[j] >= 0, i < j <= i + A[i]
+	 **/
 	public static int jump(int[] A) {
-		int[] dp = new int[A.length];
+		int[] M = new int[A.length];
+		Arrays.fill(M, -1);
+		M[A.length - 1] = 0;
 		for (int i = A.length - 2; i >= 0; i--) {
-			int onestep = A.length - 1 - i;
-			if (A[i] >= onestep) {
-				dp[i] = 1;
-			} else {
-				// find the minimal jump point that i can jump to
-				int min = dp[i + 1];
-				for (int j = i + 1; j <= i + A[i]; j++) {
-					if (dp[j] < min)
-						min = dp[j];
-				}
-				dp[i] = min + 1;
+			// deal with out of bound
+			int j = i + A[i] > A.length - 1 ? A.length - 1 : i + A[i];
+			for (; j > i; j--) {
+				if (M[j] >= 0)
+					M[i] = M[i] < 0 ? M[j] + 1 : Math.min(M[i], M[j] + 1);
 			}
 		}
-		return dp[0];
+		return M[0];
 	}
 
 }

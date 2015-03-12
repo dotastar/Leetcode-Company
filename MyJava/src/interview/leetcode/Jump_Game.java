@@ -31,27 +31,24 @@ public class Jump_Game {
 	/**
 	 * DP O(n^2), timeout
 	 * 
-	 * @param A
-	 * @return
+	 * M[i] means if it can reach the end start from i
+	 * Base case M[n-1] = true;
+	 * Induction rule M[i] = if for any j that M[j] == true, i+1 <= j <= i+A[i]]
 	 */
 	public static boolean canJump(int[] A) {
-		int len = A.length;
-		if (len <= 1)
+		if (A.length <= 1)
 			return true;
-		boolean[] dp = new boolean[len];
-		dp[len - 1] = true;
-
-		for (int i = len - 2; i >= 0; i--) {
-			// max index i can jump to
-			int maxIdx = i + A[i] >= len ? len - 1 : i + A[i];
-			for (int j = i + 1; j <= maxIdx; j++) {
-				if (dp[j]) {
-					dp[i] = true;
+		boolean[] reachable = new boolean[A.length]; // M[i]
+		reachable[A.length - 1] = true;
+		for (int i = A.length - 2; i >= 0; i--) {
+			for (int j = i + 1; j <= i + A[i]; j++) {
+				if (reachable[j]) {
+					reachable[i] = true;
 					break;
 				}
 			}
 		}
-		return dp[0];
+		return reachable[0];
 	}
 
 	/**
@@ -68,8 +65,6 @@ public class Jump_Game {
 	 * we reach the end, it means that we can’t move forward so that we should
 	 * return false.
 	 * 
-	 * @param A
-	 * @return
 	 */
 	public static boolean canJump2(int[] A) {
 		int steps = A[0];
