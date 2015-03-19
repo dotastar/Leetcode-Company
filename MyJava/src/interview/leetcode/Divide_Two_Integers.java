@@ -74,6 +74,12 @@ public class Divide_Two_Integers {
 	}
 
 	/**
+	 * And number (the result of p/q) can be represented by:
+	 * p / q = 2^0 * (1/0) + 2^1 * (1/0) + 2^2 * (1/0) + ... + 2^i * (1/0)
+	 * p = (2^0)*q + (2^1)*q + (2^2)*q + ... (2^n)*q
+	 */
+
+	/**
 	 * A more concise version, combined below two solution
 	 * 
 	 * Several problems need to be careful:

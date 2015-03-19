@@ -21,22 +21,35 @@ public class Unique_Binary_Search_Trees {
 		for(int i=1; i<7; i++)
 			System.out.println(i+" nodes:  "+numTrees(i));
 	}
+
+	/**
+     * M[i]: how many unique binary search trees when there are i nodes
+     * Base case: M[0] = 1, M[1] = 1
+     * Induction rule: M[i] =  root at 0th node  + ... + root at (i - 1)th node, 0 <= i <= n
+     *                          /           \             /       \
+     *                       M[0]    *     M[i-1]       M[i-1] * M[0]
+	 *
+	 *	E.g, n = 3
+	 * 	 1          2            3
+	 *  / \        / \          / \
+	 * 0  M[2]   M[1] M[1]    M[2] M[0]
+	 */
 	
 	/**
 	 * Second time
 	 */
     public int numTrees2(int n) {
-        int[] nums = new int[n+1];
-        nums[0] = 1;
+        int[] M = new int[n+1];
+        M[0] = 1;
         for(int num=1; num<=n; num++){
             int count = 0;
             for(int i=1; i<=num; i++){  // root is i
                 // num of left subtree * num of right subtree
-                count += nums[i-1] * nums[num-i];    
+                count += M[i-1] * M[num-i];    
             }
-            nums[num] = count;
+            M[num] = count;
         }
-        return nums[n];
+        return M[n];
     }
 	
 	/**
@@ -60,8 +73,8 @@ public class Unique_Binary_Search_Trees {
     public static int numTrees(int n) {
     	int[] a = new int[n+1];
     	a[0] = 1;
-    	for(int i=1; i<n+1; i++){
-    		for(int j=0; j<i; j++){
+    	for (int i=1; i<n+1; i++) {
+    		for (int j=0; j<i; j++) {
     			a[i] += a[j]*a[i-j-1];
     		}
     	}

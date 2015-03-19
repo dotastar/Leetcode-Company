@@ -8,8 +8,10 @@ import java.util.Arrays;
  * 
  * For example, Given n = 3,
  * 
- * You should return the following matrix: [ [ 1, 2, 3 ], [ 8, 9, 4 ], [ 7, 6, 5
- * ] ]
+ * You should return the following matrix: [
+ * [ 1, 2, 3 ],
+ * [ 8, 9, 4 ],
+ * [ 7, 6, 5 ] ]
  * 
  * 1 2 3 4 12 13 14 5 11 16 15 6 10 9 8 7
  * 

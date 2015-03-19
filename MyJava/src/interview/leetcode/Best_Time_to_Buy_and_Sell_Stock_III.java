@@ -79,8 +79,7 @@ public class Best_Time_to_Buy_and_Sell_Stock_III {
 			int prft = prices[i] - prices[i - 1];
 			for (int j = 1; j <= k; j++) {
 				// Notice the term "local[i-1][j]+prft", is j, not j-1!
-				local[i][j] = max(global[i - 1][j - 1] + max(prft, 0),
-						local[i - 1][j] + prft);
+				local[i][j] = max(global[i - 1][j - 1] + max(prft, 0), local[i - 1][j] + prft);
 				global[i][j] = max(global[i - 1][j], local[i][j]);
 			}
 		}
