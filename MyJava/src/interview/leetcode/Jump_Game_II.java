@@ -41,6 +41,25 @@ public class Jump_Game_II {
 	}
 
 	/**
+	 * Same greedy, neater
+	 */
+	public int minJump(int[] A) {
+		int start = 0, end = 0, jumps = 0;
+		while (end < A.length - 1) {
+			jumps++;
+			int farthest = end;
+			for (int i = start; i <= end; i++) {
+				if (A[i] + i > farthest) {
+					farthest = A[i] + i;
+				}
+			}
+			start = end + 1;
+			end = farthest;
+		}
+		return jumps;
+	}
+
+	/**
 	 * Greedy
 	 * Because it is guaranteed that the end can be reached, so we jump only
 	 * when there is running out of steps, and jump to the point which can have

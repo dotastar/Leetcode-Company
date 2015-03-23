@@ -11,16 +11,13 @@ package interview.company.twitter;
 public class ContiguousPalindromicSubstring {
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 
 	}
 
- 
-	
 	/**
 	 * Manacher's algorithm
 	 */
-	public boolean containsPalindrome(String s){
+	public boolean containsPalindrome(String s) {
 		return true;
 	}
 }

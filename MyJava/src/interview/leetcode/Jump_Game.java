@@ -52,7 +52,7 @@ public class Jump_Game {
 	}
 
 	/**
-	 * Linear Time Solution
+	 * Linear Time Solution, greedy
 	 * 
 	 * In Jump Game, we can save the farthest position we can reach when we go
 	 * through the array. Every time we move, we will decrease the step. When we
@@ -79,6 +79,17 @@ public class Jump_Game {
 				steps = A[i];
 				reach = i + A[i];
 			}
+		}
+		return true;
+	}
+
+	public boolean canJump1(int[] A) {
+		int maxReach = 0;
+		for (int i = 0; i < A.length - 1; i++) {
+			if (maxReach < i + A[i])
+				maxReach = i + A[i];
+			if (maxReach == i)
+				return false;
 		}
 		return true;
 	}

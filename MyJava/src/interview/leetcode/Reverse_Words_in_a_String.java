@@ -1,6 +1,5 @@
 package interview.leetcode;
 
-import java.util.Stack;
 
 /**
  * Given an input string, reverse the string word by word.
@@ -16,12 +15,37 @@ public class Reverse_Words_in_a_String {
 	public static void main(String[] args) {
 		String s1 = "the sky is blue 1";
 		String s2 = "  the sky     is  blue   2  ";
-		String s3 = "";
+		String s3 = "a  b";
 		String s4 = " ";
-		System.out.println(solution1_split(s1));
-		System.out.println(solution1_split(s2));
-		System.out.println(solution1_split(s3));
-		System.out.println(solution1_split(s4));
+		System.out.println(reverseWords1(s1));
+		System.out.println(reverseWords1(s2));
+		System.out.println(reverseWords(s3));
+		System.out.println(reverseWords1(s4));
+	}
+
+	/**
+	 * First pass to split the string by spaces into an array of words, then
+	 * second pass to extract the words in reversed order.
+	 * 
+	 * Did not use built-in String's split()
+	 */
+	public static String reverseWords(String s) {
+		s = s.trim();
+		StringBuilder sb = new StringBuilder();
+		for (int l = 0, r = 0; r < s.length();) {
+			while (r < s.length() && s.charAt(r) != ' ')
+				r++;
+			// append backward
+			for (int i = r - 1; i >= l; i--)
+				sb.append(s.charAt(i));
+			while (r < s.length() && s.charAt(r) == ' ')
+				r++;
+			l = r;
+			if (r < s.length())
+				sb.append(' ');
+		}
+		// reverse the whole String
+		return sb.reverse().toString();
 	}
 
 	/**
@@ -29,7 +53,7 @@ public class Reverse_Words_in_a_String {
 	 * 
 	 * Time: O(n), Space: O(n).
 	 */
-	public static String solution1_split(String s) {
+	public static String reverseWords1(String s) {
 		if (s == null)
 			return s;
 		String[] words = s.trim().split(" ");
@@ -42,29 +66,4 @@ public class Reverse_Words_in_a_String {
 		return sb.toString().trim();
 	}
 
-	/**
-	 * Naive solution, without any libraries' help, use stack to reverse the
-	 * order of each word.
-	 * 
-	 * Time: O(n), Space: O(k), k is the length of the longest word.
-	 */
-	public String reverseWords(String s) {
-		s = s.trim();
-		StringBuilder sb = new StringBuilder();
-		Stack<Character> stk = new Stack<Character>();
-		for (int i = s.length() - 1; i >= 0; i--) {
-			char c = s.charAt(i);
-			if (c == ' ') {
-				if (s.charAt(i - 1) == ' ')
-					continue; // ignore multiple continuous spaces
-				while (!stk.isEmpty())
-					sb.append(stk.pop()); // reversely append
-				sb.append(' ');
-			} else
-				stk.push(c);
-		}
-		while (!stk.isEmpty())
-			sb.append(stk.pop());
-		return sb.toString();
-	}
 }
