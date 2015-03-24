@@ -15,10 +15,24 @@ package interview.leetcode;
 public class Palindrome_Partitioning_II {
 
 	public static void main(String[] args) {
-		System.out.println(minCut("ab")); // 1
-		System.out.println(minCut("aa")); // 0
-		System.out.println(minCut("abb")); // 1
-		System.out.println(minCut("aab")); // 1
+		System.out.println(minCut2("ab")); // 1
+		System.out.println(minCut2("aa")); // 0
+		System.out.println(minCut2("abb")); // 1
+		System.out.println(minCut2("aab")); // 1
+	}
+
+	public static int minCut2(String S) {
+		int length = S.length();
+		int[][] M = new int[length][length + 1];
+		for (int i = length - 2; i >= 0; i--) {
+			for (int len = 2; i + len <= length; len++) {
+				int j = i + len - 1;
+				M[i][j] = M[i][j - 1] + 1;
+				if (S.charAt(i) == S.charAt(j))
+					M[i][j] = Math.min(M[i + 1][j - 1], M[i][j]);
+			}
+		}
+		return M[0][length - 1];
 	}
 
 	/**
