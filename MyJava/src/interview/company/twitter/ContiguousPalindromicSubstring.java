@@ -11,8 +11,9 @@ package interview.company.twitter;
 public class ContiguousPalindromicSubstring {
 
 	public static void main(String[] args) {
-		
+
 	}
+
 
 	/**
 	 * Manacher's algorithm

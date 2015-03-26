@@ -24,21 +24,77 @@ public class Clone_Graph {
 	}
 
 	/**
+	 * Naive solution
+	 * Time: O(n) = 3n, 3 BFS traversals
+	 * 1.create copy and insert it in the tail of current node
+	 * 2.copy the neighbor pointers
+	 * 3.break the new copied graph from the old graph.
+	 */
+	public UndirectedGraphNode cloneGraph2(UndirectedGraphNode start) {
+		if (start == null)
+			return null;
+		Set<UndirectedGraphNode> visited = new HashSet<>();
+		Queue<UndirectedGraphNode> q = new LinkedList<>();
+		// copy node value
+		q.add(start);
+		while (!q.isEmpty()) {
+			UndirectedGraphNode node = q.poll();
+			if (!visited.add(node))
+				continue;
+			for (UndirectedGraphNode neighb : node.neighbors)
+				q.add(neighb);
+			UndirectedGraphNode copy = new UndirectedGraphNode(node.label);
+			node.neighbors.add(copy);
+		}
+
+		// copy neighbors pointer
+		visited.clear();
+		q.add(start);
+		while (!q.isEmpty()) {
+			UndirectedGraphNode node = q.poll();
+			if (!visited.add(node))
+				continue;
+			List<UndirectedGraphNode> neighbors = node.neighbors;
+			UndirectedGraphNode copy = neighbors.get(neighbors.size() - 1);
+			for (int i = 0; i < neighbors.size() - 1; i++) {
+				UndirectedGraphNode neigh = neighbors.get(i);
+				copy.neighbors
+						.add(neigh.neighbors.get(neigh.neighbors.size() - 1));
+				q.add(neigh);
+			}
+		}
+
+		// break copied the graph
+		UndirectedGraphNode res = start.neighbors
+				.get(start.neighbors.size() - 1);
+		visited.clear();
+		q.add(start);
+		while (!q.isEmpty()) {
+			UndirectedGraphNode node = q.poll();
+			if (!visited.add(node))
+				continue;
+			List<UndirectedGraphNode> neighbors = node.neighbors;
+			neighbors.remove(neighbors.size() - 1);
+			for (UndirectedGraphNode neighb : neighbors)
+				q.add(neighb);
+		}
+		return res;
+	}
+
+	/**
 	 * Time O(n)
 	 * 
 	 * Space 2n = O(n)
 	 * 
-	 * @param node
-	 * @return
 	 */
 	public UndirectedGraphNode cloneGraph(UndirectedGraphNode node) {
 		if (node == null)
 			return null;
 		Map<UndirectedGraphNode, UndirectedGraphNode> map = new HashMap<UndirectedGraphNode, UndirectedGraphNode>();
 		Queue<UndirectedGraphNode> q = new LinkedList<UndirectedGraphNode>();
-		q.add(node); // BFS
-		while (!q.isEmpty()) { // set corresponding relation from old to new
-								// copy
+		// BFS, set corresponding relation from old to new copy
+		q.add(node);
+		while (!q.isEmpty()) {
 			UndirectedGraphNode nd = q.poll();
 			if (map.containsKey(nd))
 				continue;
@@ -68,7 +124,7 @@ public class Clone_Graph {
 	/**
 	 * Space Improved.
 	 * 
-	 * Basicly is combine the above two while loop into one, do them together.
+	 * Basically is combine the above two while loop into one, do them together.
 	 * 
 	 * BFS traverse all nodes, add correspondence for every neighbor of the node
 	 * it meets. If the neighbor is in the map, it means its correspondence
@@ -78,29 +134,32 @@ public class Clone_Graph {
 	 * 
 	 * Time O(n) Space n = O(n)
 	 * 
-	 * @param node
-	 * @return
 	 */
 	public UndirectedGraphNode cloneGraph_Improve(UndirectedGraphNode node) {
-        if(node==null) return null;
-        Queue<UndirectedGraphNode> q = new LinkedList<UndirectedGraphNode>();
-        Map<UndirectedGraphNode, UndirectedGraphNode> visited = new HashMap<UndirectedGraphNode, UndirectedGraphNode>();
-        visited.put(node, new UndirectedGraphNode(node.label)); // must create first copy
-        q.add(node); // BFS, it makes sure all the nodes that took from q have a correspondence already created
-        while(!q.isEmpty()){
-            UndirectedGraphNode curr = q.poll();
-            UndirectedGraphNode cp = visited.get(curr); //it won't be null
-            for(UndirectedGraphNode neighbor : curr.neighbors){
-                if(!visited.containsKey(neighbor)){
-                    q.add(neighbor);    //this make sure that BFS ends
-                    UndirectedGraphNode cpNeibor = new UndirectedGraphNode(neighbor.label);
-                    visited.put(neighbor, cpNeibor);
-                }
-                cp.neighbors.add(visited.get(neighbor));
-            }
-            
-        }
-        return visited.get(node);
+		if (node == null)
+			return null;
+		Queue<UndirectedGraphNode> q = new LinkedList<UndirectedGraphNode>();
+		Map<UndirectedGraphNode, UndirectedGraphNode> visited = new HashMap<UndirectedGraphNode, UndirectedGraphNode>();
+		// must create first copy
+		visited.put(node, new UndirectedGraphNode(node.label));
+		// BFS, it makes sure all the nodes that took from q have a
+		// correspondence already created
+		q.add(node);
+		while (!q.isEmpty()) {
+			UndirectedGraphNode curr = q.poll();
+			UndirectedGraphNode cp = visited.get(curr); // it won't be null
+			for (UndirectedGraphNode neighbor : curr.neighbors) {
+				if (!visited.containsKey(neighbor)) {
+					q.add(neighbor); // this make sure that BFS ends
+					UndirectedGraphNode cpNeibor = new UndirectedGraphNode(
+							neighbor.label);
+					visited.put(neighbor, cpNeibor);
+				}
+				cp.neighbors.add(visited.get(neighbor));
+			}
+
+		}
+		return visited.get(node);
 	}
 
 	public static class UndirectedGraphNode {

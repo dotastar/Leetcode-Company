@@ -26,6 +26,33 @@ public class Longest_Valid_Parentheses {
 	}
 
 	/**
+	 * Use a Stack to store the index of each Char, case analysis:
+	 * 0.If stk.isEmpty, push
+	 * 1.Current char is '(', push
+	 * 2.Current char is ')':
+	 * 		peek the stack, if top is '(', pop it out, calculate length
+	 * 						else is ')', push current in
+	 **/
+	public int longestValidParentheses2(String S) {
+		Stack<Integer> stk = new Stack<>();
+		int maxLength = 0;
+		for (int i = 0; i < S.length(); i++) {
+			if (stk.isEmpty() || S.charAt(i) == '(')
+				stk.push(i);
+			else { // current is ')'
+				if (S.charAt(stk.peek()) == '(') {
+					stk.pop();
+					// calculate current length
+					int length = stk.isEmpty() ? i + 1 : i - stk.peek();
+					maxLength = Math.max(length, maxLength);
+				} else
+					stk.push(i);
+			}
+		}
+		return maxLength;
+	}
+
+	/**
 	 * Traverse the String, use stack to store the index of '('
 	 * 
 	 * Time O(n)
@@ -47,7 +74,7 @@ public class Longest_Valid_Parentheses {
 				leftIdxs.push(i);
 			} else { // is ')'
 				if (leftIdxs.isEmpty()) {// 1)is an extra right parenthese
-					extraRight = i;	//update separate point
+					extraRight = i; // update separate point
 				} else { // 2). more than one '(' in stack
 					leftIdxs.pop();
 					int currValid;
@@ -64,30 +91,5 @@ public class Longest_Valid_Parentheses {
 		}
 		return max;
 	}
-	
-	
-	/**
-	 * Same, second time practice
-	 */
-    public int longestValidParentheses2(String s) {
-        int len = s.length();
-        int start = 0;
-        int max = 0;
-        Stack<Integer> idx = new Stack<Integer>();
-        for(int i=0; i<len; i++){
-            if(s.charAt(i)=='('){
-                idx.push(i);
-            }else{
-                if(idx.isEmpty()){
-                    start = i+1;
-                }else{
-                    idx.pop();
-                    int left = idx.isEmpty()?start:idx.peek()+1;
-                    int length = i-left+1;
-                    max = length>max?length:max;
-                }
-            }
-        }
-        return max;
-    }
+
 }
