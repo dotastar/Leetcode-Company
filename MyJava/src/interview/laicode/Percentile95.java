@@ -7,8 +7,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.PriorityQueue;
-import java.util.SortedMap;
 import java.util.TreeMap;
 
 import org.junit.Test;
@@ -85,26 +85,27 @@ public class Percentile95 {
 	}
 
 	/**
-	 * Time: O(klogk + n), k is the unique number of url length.
-	 **/
+	 * Time: O(nlogk), k is the unique number of url length.
+	 * Use a TreeMap<Integer, Pair> to aggregate the count
+	 * Keep popping until the 5% is out
+	 */
 	public int percentile95(List<Integer> lengths) {
-		SortedMap<Integer, Integer> cntMap = new TreeMap<Integer, Integer>();
+		TreeMap<Integer, Integer> lengthCnt = new TreeMap<>();
 		for (Integer len : lengths) {
-			if (cntMap.containsKey(len)) {
-				cntMap.put(len, cntMap.get(len) + 1);
+			if (lengthCnt.containsKey(len)) {
+				lengthCnt.put(len, lengthCnt.get(len) + 1);
 			} else
-				cntMap.put(len, 1);
+				lengthCnt.put(len, 1);
 		}
-		double threshold = lengths.size() * 0.05;
+
+		double threshold = 0.05d * lengths.size();
 		double currSize = 0;
-		while (!cntMap.isEmpty()) {
-			int maxKey = cntMap.lastKey();
-			currSize += cntMap.get(maxKey);
-			cntMap.remove(maxKey);
-			if (currSize > threshold)
-				return maxKey;
+		Entry<Integer, Integer> currLength = null;
+		while (currSize <= threshold) {
+			currLength = lengthCnt.pollLastEntry();
+			currSize += currLength.getValue();
 		}
-		return 0; // empty input
+		return currLength == null ? 0 : currLength.getKey();
 	}
 
 	@Test

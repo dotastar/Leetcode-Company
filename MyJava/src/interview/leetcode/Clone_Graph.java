@@ -147,15 +147,13 @@ public class Clone_Graph {
 		q.add(node);
 		while (!q.isEmpty()) {
 			UndirectedGraphNode curr = q.poll();
-			UndirectedGraphNode cp = visited.get(curr); // it won't be null
+			UndirectedGraphNode copy = visited.get(curr); // it won't be null
 			for (UndirectedGraphNode neighbor : curr.neighbors) {
 				if (!visited.containsKey(neighbor)) {
 					q.add(neighbor); // this make sure that BFS ends
-					UndirectedGraphNode cpNeibor = new UndirectedGraphNode(
-							neighbor.label);
-					visited.put(neighbor, cpNeibor);
+					visited.put(neighbor, new UndirectedGraphNode(neighbor.label));
 				}
-				cp.neighbors.add(visited.get(neighbor));
+				copy.neighbors.add(visited.get(neighbor));
 			}
 
 		}

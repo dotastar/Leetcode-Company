@@ -24,209 +24,115 @@ public class LRU_Cache {
 		// 3,[set(1,1),set(2,2),set(3,3),set(4,4),get(4),
 		// get(3),get(2),get(1),set(5,5),get(1),get(2),get(3),get(4),get(5)]
 		// Expected: [4,3,2,-1,-1,2,3,-1,5]
-		
+
 		LRUCache cache = new LRUCache(3);
 		cache.set(1, 1); // 1
 		cache.set(2, 2); // 2,1
 		cache.set(3, 3); // 3,2,1
 		cache.set(4, 4); // 4,3,2
-		assert cache.get(4) == 4;  // 4,3,2
+		assert cache.get(4) == 4; // 4,3,2
 		assert cache.get(3) == 3; // 3,4,2
 		assert cache.get(2) == 2; // 2,3,4
 		assert cache.get(1) == -1;
 		cache.set(5, 5); // 5, 2, 3
 		assert cache.get(1) == -1;
-		assert cache.get(2) == 2; //2 5 3
-		assert cache.get(3) == 3; //3 2 5
+		assert cache.get(2) == 2; // 2 5 3
+		assert cache.get(3) == 3; // 3 2 5
 		assert cache.get(4) == -1;
-		assert cache.get(5) == 5; //5 3 2
-		
+		assert cache.get(5) == 5; // 5 3 2
+
 		System.out.println("Test success!");
 	}
 
 	/**
 	 * HashMap + Double linked list
-	 * Use prehead, so we don't have to deal with the case when head is null.
-	 * @author yazhoucao
-	 */
-	public static class LRUCache2 {
-		private Map<Integer, LinkedNode> map;
-		private int capacity;
-		private LinkedNode prehead;
-		private LinkedNode tail;
-
-		public LRUCache2(int capacity) {
-			map = new HashMap<Integer, LinkedNode>();
-			this.capacity = capacity;
-			prehead = new LinkedNode(-999, -999);
-			tail = prehead;
-		}
-
-		public int get(int key) {
-			if (map.containsKey(key)) {
-				LinkedNode node = map.get(key);
-				switchToHead(node);
-				return node.val;
-			} else
-				return -1;
-		}
-
-		public void set(int key, int value) {
-			LinkedNode node;
-			if (map.containsKey(key)) { // modified
-				node = map.get(key);
-				node.val = value;
-				switchToHead(node);
-			} else { // insert
-				node = new LinkedNode(key, value);
-				map.put(key, node);
-				insertToHead(node);
-
-				if (map.size() > capacity) { // exceed the capacity
-					map.remove(tail.key); // delete
-					tail = tail.prev;
-				}
-			}
-		}
-
-		private void switchToHead(LinkedNode node) {
-			if (node == null || node.prev.equals(prehead))
-				return; // it is head already
-
-			if (node.equals(tail))
-				tail = tail.prev;
-
-			node.prev.next = node.next; // link previous to next
-			if (node.next != null) // link next to previous
-				node.next.prev = node.prev;
-
-			insertToHead(node); // move current to the head
-		}
-
-		private void insertToHead(LinkedNode node) {
-			if (node == null)
-				return;
-			if (prehead.next != null) // link old head to current
-				prehead.next.prev = node;
-			else
-				tail = node;	//first time insert
-
-			node.next = prehead.next;
-			node.prev = prehead;
-			prehead.next = node;
-		}
-
-	}
-
-	public static class LinkedNode {
-		int key;
-		int val;
-		LinkedNode prev;
-		LinkedNode next;
-
-		public LinkedNode(int key, int value) {
-			this.key = key;
-			this.val = value;
-		}
-
-		public String toString() {
-			return Integer.toString(val);
-		}
-	}
-	
-	
-	/**
-	 * Second time practice, same solution
-	 * 
-	 * @author yazhoucao
-	 *
+	 * Create two dummy node head and tail, so we don't have to deal with the
+	 * case when head/tail is null.
 	 */
 	public static class LRUCache {
-	    private Map<Integer, Node> cache;
-	    private Node head;
-	    private Node tail;
-	    int capacity;
-	    
-	    public LRUCache(int capacity) {
-	        this.capacity = capacity;
-	        cache = new HashMap<Integer, Node>(capacity);
-	    }
-	    
-	    public int get(int key) {
-	        Node node = cache.get(key);
-	        if(node==null)
-	            return -1;
-	        switchToHead(node);
-	        printState();
-	        return node.val;
-	    }
-	    
-	    public void set(int key, int value) {
-	        if(cache.containsKey(key)){  //update
-	            Node node = cache.get(key);
-	            node.val = value;
-	            switchToHead(node);
-	        }else{  //insert
-	            Node node = new Node(key, value);
-	            cache.put(key, node);
-	            if(cache.size()<=capacity){  //insert directly
-	                if(head==null){
-	                    head = node;
-	                    tail = node;
-	                }else
-	                    insertToHead(node);
-	            }else{  //delete first then insert
-	            	cache.remove(tail.key);
-	                tail = tail.prev;
-	                if(tail!=null)
-	                	tail.next = null;
-	                insertToHead(node);
-	            }
-	            assert cache.get(key)!=null;
-	        }
-	        printState();
-	    }
-	    
-	    private void insertToHead(Node node){
-	        if(node==null)
-	            return;
-	        node.next = head; //node->head
-	        head.prev = node; //node<-head
-	        head = node;
-	    }
-	    
-	    private void switchToHead(Node node){
-	        if(node==null || node.equals(head))
-	            return;
-	        Node prev = node.prev;
-	        prev.next = node.next;  //prev->next
-	        if(node.next!=null)
-	            node.next.prev = prev; //prev<-next
-	        else    
-	            tail = prev;    //node must be the tail, update tail
-	        node.next = head;   //node->head
-	        head.prev = node;   //node<-head
-	        head = node;
-	    }
-	    
-	    public void printState(){
-	    	Node p = head;
-	    	while(!p.equals(tail)){
-	    		System.out.print(p.val+"->");
-	    		p = p.next;
-	    	}
-	    	System.out.println(p.val);
-	    }
-	    
-	    public static class Node{
-	        int key;
-	    	int val;
-	        Node next, prev;
-	        
-	        public Node(int key, int val){
-	        	this.key = key;
-	            this.val = val;
-	        }
-	    }
+
+		private Map<Integer, ListNode> cache;
+		private ListNode head;
+		private ListNode tail;
+		private final int capacity;
+
+		public LRUCache(int capacity) {
+			this.capacity = capacity;
+			cache = new HashMap<>();
+			head = new ListNode(-1, -1);
+			tail = new ListNode(-1, -1);
+			head.next = tail;
+			tail.prev = head;
+		}
+
+		/**
+		 * 1.check if key exists
+		 * 2.if exists, get the value
+		 * 3.move the node to the head
+		 * 4.return value
+		 */
+		public int get(int key) {
+			if (!cache.containsKey(key))
+				return -1;
+			ListNode value = cache.get(key);
+			deleteNodeFromList(value);
+			insertToHead(value);
+			return value.val;
+		}
+
+		/**
+		 * 1.check if key exists
+		 * 2.if exists, update the value in HashMap, move the node to the head
+		 * 3.else, check if exceeds the capacity, if yes, delete the tail node,
+		 * then, put the key, value into HashMap, insert the node after head
+		 */
+		public void set(int key, int value) {
+			ListNode valueNode = cache.get(key);
+			if (valueNode == null) { // insert
+				if (cache.size() == capacity) {
+					ListNode leastUsed = tail.prev;
+					deleteNodeFromList(leastUsed);
+					cache.remove(leastUsed.key);
+				}
+				valueNode = new ListNode(key, value);
+				cache.put(key, valueNode);
+			} else { // update
+				valueNode.val = value;
+				deleteNodeFromList(valueNode);
+			}
+			insertToHead(valueNode);
+		}
+
+		private void deleteNodeFromList(ListNode node) {
+			// delete it from original list
+			node.prev.next = node.next;
+			node.next.prev = node.prev;
+		}
+
+		private void insertToHead(ListNode node) {
+			// connect with head.next
+			node.next = head.next;
+			head.next.prev = node;
+			// connect with head
+			node.prev = head;
+			head.next = node;
+		}
+
+		public static class ListNode {
+			int key;
+			int val;
+			ListNode prev;
+			ListNode next;
+
+			public ListNode(int key, int value) {
+				this.key = key;
+				this.val = value;
+			}
+
+			public String toString() {
+				return "{ " + String.valueOf(key) + ", " + String.valueOf(val)
+						+ " }";
+			}
+		}
 	}
 }

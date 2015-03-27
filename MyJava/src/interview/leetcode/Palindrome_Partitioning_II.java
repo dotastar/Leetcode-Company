@@ -21,14 +21,27 @@ public class Palindrome_Partitioning_II {
 		System.out.println(minCut2("aab")); // 1
 	}
 
-	/**
-	 * DP
-	 * M[i] = minimum cuts of substring S[0, i] (inclusive)
-	 * Base case:
-	 * M[0] = 0, M[i] = M[i - 1] + 1
-	 * Induction rule:
-	 * M[i] = min(M[j - 1] + 1) if S[j, i] is Palindrome, 0 < j < i
-	 **/
+    /**
+     * DP
+     * M[i] = the number of min cuts needed for substring(0, i) (inclusive)
+     * 
+     * Base case: 
+     * M[0] = 0, 
+     * M[i] = M[i - 1] + 1
+     * 
+     * Induction rule
+     * M[i] = 0 if substring(0, i) is palindrome
+     *      = min(M[j]) + 1, if substring(j + 1, i) is a palindrome, for j > 0 && j < i
+     * 
+     * 
+     * isPalin[i][j] = substring(i, j) is palindrome or not
+     * 
+     * Base case: isPalin[i][i+1] = true;
+     * 
+     * Induction rule:
+     * isPalin[j][i]  = (s[i] == s[j] && (i - j <= 2 || isPalin[j+1][i-1]))
+     * 
+     */ 
 	public static int minCut2(String S) {
 		if (S.length() == 0)
 			return 0;
@@ -40,10 +53,7 @@ public class Palindrome_Partitioning_II {
 			for (int j = i - 1; j >= 0; j--) {
 				if (S.charAt(j) == S.charAt(i) && (i - j <= 2 || isPalin[j + 1][i - 1])) {
 					isPalin[j][i] = true;
-					if (j == 0)
-						M[i] = 0;
-					else
-						M[i] = Math.min(M[i], M[j - 1] + 1);
+					M[i] = j == 0 ? 0 : Math.min(M[i], M[j - 1] + 1);
 				}
 			}
 		}
