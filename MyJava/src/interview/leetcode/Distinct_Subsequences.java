@@ -1,6 +1,5 @@
 package interview.leetcode;
 
-
 /**
  * Given a string S and a string T, count the number of distinct subsequences of
  * T in S.
@@ -72,8 +71,9 @@ public class Distinct_Subsequences {
 	 * If S.charAt(i) == T.charAt(j), W(i, j) = W(i-1,j) + W(i-1, j-1)
 	 * Otherwise, W(i, j) = W(i-1,j).
 	 * 
-	 * Explanation: if S[i] != T[j], then whether deleting S[i] will have no
-	 * difference, so W(i,j) = W(i-1,j)
+	 * Explanation:
+	 * if S[i] != T[j], then whether deleting S[i] will have no difference,
+	 * so W(i,j) = W(i-1,j)
 	 * 
 	 * if S[i] = T[j], then delete S[i] will have a difference, which we can
 	 * choose to delete S[i] and keep matching S[0 ~ i-1] and T[0~j] or to match
@@ -86,17 +86,17 @@ public class Distinct_Subsequences {
 	 * Time : O(mn), Space: O(mn)
 	 */
 	public int numDistinct_DP(String S, String T) {
-        int lenS = S.length();
-        int lenT = T.length();
-        int[][] dp = new int[lenS+1][lenT+1];
-        for(int i=0; i<=lenS; i++)
-            dp[i][0] = 1;
-        for(int i=1; i<=lenS; i++){
-            for(int j=1; j<=lenT; j++){
-                dp[i][j]=S.charAt(i-1)==T.charAt(j-1)?dp[i-1][j]+dp[i-1][j-1]:dp[i-1][j];
-            }
-        }
-        return dp[lenS][lenT];
+		int lenS = S.length(), lenT = T.length();
+		int[][] dp = new int[lenS + 1][lenT + 1];
+		for (int i = 0; i <= lenS; i++)
+			dp[i][0] = 1;
+		for (int i = 1; i <= lenS; i++) {
+			for (int j = 1; j <= lenT; j++) {
+				dp[i][j] = S.charAt(i - 1) == T.charAt(j - 1) ? dp[i - 1][j]
+						+ dp[i - 1][j - 1] : dp[i - 1][j];
+			}
+		}
+		return dp[lenS][lenT];
 	}
 
 	/**
@@ -112,18 +112,20 @@ public class Distinct_Subsequences {
 	 * use it to calculate W of row i
 	 */
 	public int numDistinct_DP_Improved(String S, String T) {
-        int lenS = S.length();
-        int lenT = T.length();
-        if(lenS<lenT)   return 0;
-        int[] dp = new int[lenT+1];
-        
-        for(int i=1; i<=lenS; i++){
-            dp[0] = 1;
-            for(int j=lenT; j>=1; j--){
-                dp[j]=S.charAt(i-1)==T.charAt(j-1)?dp[j]+dp[j-1]:dp[j];
-            }
-        }
+		int lenS = S.length();
+		int lenT = T.length();
+		if (lenS < lenT)
+			return 0;
+		int[] dp = new int[lenT + 1];
 
-        return dp[lenT];
+		for (int i = 1; i <= lenS; i++) {
+			dp[0] = 1;
+			for (int j = lenT; j >= 1; j--) {
+				dp[j] = S.charAt(i - 1) == T.charAt(j - 1) ? dp[j] + dp[j - 1]
+						: dp[j];
+			}
+		}
+
+		return dp[lenT];
 	}
 }

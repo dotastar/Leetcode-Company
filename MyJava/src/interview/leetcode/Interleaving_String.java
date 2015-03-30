@@ -21,67 +21,69 @@ public class Interleaving_String {
 
 		System.out.println(isInterleave_DP("aabcc", "dbbca", "aadbbcbcac"));
 		System.out.println(isInterleave_DP("aabcc", "dbbca", "aadbbbaccc"));
-		
-		
+
 		System.out.println(isInterleave_DP_Improved("a", "", "c"));
 	}
 
 	/**
-	 * Dynamic Programming, Time: O(mn), Space: O(mn)
+	 * Dynamic programming
+	 * M[i][j]: s1[0, i) and s2[0, j) is interleaving String of s3[0, i+j-1)
 	 * 
-	 * dp[i][j] : length i of s1 and length j of s2 can interleave length i+j of
-	 * s3
+	 * Base case: M[0][0] = true
 	 * 
-	 * dp[i][j] = ((dp[i - 1][j] && c1 == c3) || (dp[i][j - 1] && c2 == c3));
+	 * Induction rule:
+	 * M[i][j] = M[i-1][j] && s1[i-1] == s3[i+j-2] or M[i][j-1] && s2[j-1] == s3[i+j-2]
 	 * 
-	 * @return
+	 * E.g. 
+	 * a a d b b b a c c c
+	 * 
+	 * # 0 a a b c c
+	 * 0 1 1 1 0 0 0
+	 * d 0 0 1 1 0 0
+	 * b 0 0 1 1 0 0
+	 * b 0 0 1 1 0 0
+	 * c 0 0 0 0 0 0
+	 * a 0 0 0 0 0 0
+	 * 
 	 */
 	public static boolean isInterleave_DP(String s1, String s2, String s3) {
-		int len1 = s1.length();
-		int len2 = s2.length();
-		if (len1 + len2 != s3.length())
+		if (s1.length() + s2.length() != s3.length())
 			return false;
-		boolean[][] dp = new boolean[len1 + 1][len2 + 1];
-		dp[0][0] = true;
-		for (int i = 1; i <= len1; i++)
-			dp[i][0] = dp[i-1][0] && s1.charAt(i - 1) == s3.charAt(i - 1);
-		for (int i = 1; i <= len2; i++)
-			dp[0][i] = dp[0][i-1] && s2.charAt(i - 1) == s3.charAt(i - 1);
+		boolean[][] M = new boolean[s1.length() + 1][s2.length() + 1];
+		M[0][0] = true;
+		for (int i = 1; i <= s1.length() && s1.charAt(i - 1) == s3.charAt(i - 1); i++)
+			M[i][0] = true;
+		for (int i = 1; i <= s2.length() && s2.charAt(i - 1) == s3.charAt(i - 1); i++)
+			M[0][i] = true;
 
-		for (int i = 1; i <= len1; i++) {
-			for (int j = 1; j <= len2; j++) {
-				char c = s3.charAt(i+j-1);
-                dp[i][j] = (c==s1.charAt(i-1) && dp[i-1][j]) || (c==s2.charAt(j-1) && dp[i][j-1]);
+		for (int i = 1; i <= s1.length(); i++) {
+			for (int j = 1; j <= s2.length(); j++) {
+				M[i][j] = (M[i - 1][j] && s1.charAt(i - 1) == s3.charAt(i + j - 1))
+						|| (M[i][j - 1] && s2.charAt(j - 1) == s3.charAt(i + j - 1));
 			}
 		}
-		return dp[len1][len2];
+		return M[s1.length()][s2.length()];
 	}
 
 	/**
-	 * Dynamic Programming, space improved, Time: O(mn), Space: O(min(m, n))
+	 * Dynamic Programming, space improved 
+	 * Time: O(mn), 
+	 * Space: O(min(m, n))
 	 */
 	public static boolean isInterleave_DP_Improved(String s1, String s2, String s3) {
-		int len1 = s1.length();
-		int len2 = s2.length();
-		int len3 = s3.length();
-		if (len1 + len2 != len3)
-			return false;
-		
-		boolean[] dp = new boolean[len2 + 1];
-		dp[0] = true;
-		
-		for (int i = 1; i <= len2; i++)
-			dp[i] = dp[i-1] && s2.charAt(i - 1) == s3.charAt(i - 1);
-		
-		for (int i = 1; i <= len1; i++) {
-			//dp[i][0] = dp[i-1][0] && ....
-			dp[0] = dp[0] && s1.charAt(i-1)==s3.charAt(i-1);
-			for (int j = 1; j <= len2; j++) {
-				char c = s3.charAt(i + j - 1);
-				dp[j] = (c == s1.charAt(i-1) && dp[j]) || (c == s2.charAt(j - 1) && dp[j - 1]);
-			}
-		}
-		return dp[len2];
+        if (s1.length() + s2.length() != s3.length())
+            return false;
+        boolean[] M = new boolean[s2.length() + 1];
+        M[0] = true;
+        for (int i = 1; i <= s2.length() && s2.charAt(i-1) == s3.charAt(i-1); i++)
+            M[i] = true;
+        for (int i = 1; i <= s1.length(); i++) {
+            M[0] = (M[0] && s1.charAt(i - 1) == s3.charAt(i - 1));
+            for (int j = 1; j <= s2.length(); j++) {
+                M[j] = (M[j] && s1.charAt(i - 1) == s3.charAt(i+j-1))  || (M[j - 1] && s2.charAt(j - 1) == s3.charAt(i+j-1));
+            }
+        }
+        return M[s2.length()];
 	}
 
 	/**
@@ -91,9 +93,7 @@ public class Interleaving_String {
 	 * 
 	 */
 	public static boolean isInterleave(String s1, String s2, String s3) {
-		int len1 = s1.length();
-		int len2 = s2.length();
-		int len3 = s3.length();
+		int len1 = s1.length(), len2 = s2.length(), len3 = s3.length();
 		if (len1 + len2 != len3)
 			return false;
 		else if (0 == len3)

@@ -20,16 +20,53 @@ package interview.leetcode;
 public class Decode_Ways {
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		System.out.println(numDecodings("")); // 0
-		System.out.println(numDecodings("8")); // 1
-		System.out.println(numDecodings("12")); // 2
-		System.out.println(numDecodings("112233")); // 8
-		System.out.println(numDecodings("110")); // [1,2,1] -> 1
-		System.out.println(numDecodings("101")); // [1,1,1] -> 1
-		System.out.println(numDecodings("230")); // [1,2,0] -> 0
-		System.out.println(numDecodings("1010")); // [1,1,1,1,1] -> 1
-		System.out.println(numDecodings("10000")); // [1,1,1,0,0,0,0,0,0] -> 0
+		Decode_Ways o = new Decode_Ways();
+		assert o.numDecodings("") == 0; // 0
+		assert o.numDecodings("8") == 1; // 1
+		assert o.numDecodings("12") == 2; // 2
+		assert o.numDecodings("112233") == 8; // 8
+
+		assert o.numDecodings("110") == 1;// [1,2,1] -> 1
+		assert o.numDecodings("101") == 1; // [1,1,1] -> 1
+		assert o.numDecodings("230") == 0;// [1,2,0] -> 0
+		assert o.numDecodings("1010") == 1; // [1,1,1,1,1] -> 1
+		assert o.numDecodings("10000") == 0; // [1,1,1,0,0,0,0,0,0] -> 0
+
+		String big = "2316696554441358783946227776659488274288912326529233762652836862767154854761414596651257174516398495";
+		System.out.println(o.numDecodings(big));
+	}
+
+    /**
+     * Dynamic Programming
+     * M[i]: the number of decode ways of substring[0, i-1] (inclusive i)
+     * Base case: M[0] = 0, M[1] = 1
+     * Induction rule:
+     * if (s[i] == 0) {
+     *      if (s[i - 1, i] > 26), 
+     *          return 0, can't be decoded
+     *      else,
+     *          M[i] = 0
+     * } else 
+     *      M[i] =  if (digits2 <= 26 && s.charAt(i - 2) != '0'), M[i - 1] + M[i- 2]
+     *              else M[i - 1]
+     */ 
+	public int numDecodings_DP2(String s) {
+		if (s.length() == 0 || s.charAt(0) == '0')
+			return 0;
+		int[] M = new int[s.length() + 1];
+		M[0] = 1;
+		M[1] = 1;
+		for (int i = 2; i <= s.length(); i++) {
+			int digits2 = Integer.valueOf(s.substring(i - 2, i));
+			if (s.charAt(i - 1) == '0') { // current is '0'
+				if (digits2 > 26 || digits2 < 1)
+					return 0; // Error number, can't be decoded
+				else
+					M[i] = M[i - 2]; // 
+			} else
+				M[i] = digits2 <= 26 && s.charAt(i - 2) != '0' ? M[i - 1] + M[i - 2] : M[i - 1];
+		}
+		return M[s.length()];
 	}
 
 	/**
@@ -48,7 +85,7 @@ public class Decode_Ways {
 	 * the sum whether is valid(<=26) if yes then dp[i] = dp[i-2]
 	 * 
 	 */
-	public static int numDecodings(String s) {
+	public int numDecodings_DP(String s) {
 		if (s.length() == 0 || s.charAt(0) == '0')
 			return 0;
 		int dp[] = new int[s.length() + 1];
@@ -83,7 +120,7 @@ public class Decode_Ways {
 	 */
 	public int numDecodings_Improved(String s) {
 		int len = s.length();
-		if (len ==0 || s.charAt(0)=='0')
+		if (len == 0 || s.charAt(0) == '0')
 			return 0;
 		int n1 = 1;
 		int n2 = 1;
@@ -105,5 +142,31 @@ public class Decode_Ways {
 			prev = curr;
 		}
 		return n2;
+	}
+
+	/**
+	 * Recursion, Time: O(2^n)
+	 * 
+	 * Corner cases
+	 * a.26, 27, ..., 30, 40, 50, ..., 90
+	 * b.01, 02, 03, ... 09
+	 * c.
+	 */
+	public int numDecodings(String s) {
+		if (s.length() == 0)
+			return 0;
+		return numDecodings(s, 0);
+	}
+
+	private int numDecodings(String s, int i) {
+		if (i >= s.length())
+			return i == s.length() ? 1 : 0;
+		if (s.charAt(i) == '0')
+			return 0;
+		int num = 0;
+		num += numDecodings(s, i + 1);
+		if (i + 1 < s.length() && Integer.valueOf(s.substring(i, i + 2)) <= 26)
+			num += numDecodings(s, i + 2);
+		return num;
 	}
 }
