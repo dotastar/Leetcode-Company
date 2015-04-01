@@ -1,6 +1,8 @@
 package interview.leetcode;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -55,6 +57,39 @@ public class Longest_Consecutive_Sequence {
 			}
 
 			max = length > max ? length : max;
+		}
+		return max;
+	}
+
+	/**
+	 * Save the length of current consecutive sequence, all we need is to
+	 * maintain the updated length in the head and tail of a sequence.
+	 * 
+	 * When we insert a new number, we check if its neighbor exists, if yes we
+	 * get their lengths, add up to the total length, then we can easily find
+	 * the tail and head value of the sequence by the neighbor's length. Then we
+	 * update their lengths.
+	 */
+	public int longestConsecutive2(int[] num) {
+		Map<Integer, Integer> cntMap = new HashMap<>();
+		int max = 0;
+		for (int n : num) {
+			if (!cntMap.containsKey(n)) {
+				int cnt = 1, lower = 0, upper = 0;
+				if (cntMap.containsKey(n - 1)) {
+					lower = cntMap.get(n - 1);
+					cnt += lower;
+				}
+				if (cntMap.containsKey(n + 1)) {
+					upper = cntMap.get(n + 1);
+					cnt += upper;
+				}
+				cntMap.put(n - lower, cnt); // update the head
+				cntMap.put(n + upper, cnt); // update the tail
+				cntMap.put(n, cnt);
+
+				max = Math.max(max, cnt);
+			}
 		}
 		return max;
 	}

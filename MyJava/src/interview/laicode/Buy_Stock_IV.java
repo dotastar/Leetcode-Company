@@ -1,9 +1,6 @@
 package interview.laicode;
 
-import static org.junit.Assert.*;
-
-import java.util.Arrays;
-
+import static org.junit.Assert.assertTrue;
 import interview.AutoTestUtils;
 
 import org.junit.Test;
@@ -61,9 +58,6 @@ public class Buy_Stock_IV {
 				global[i][j] = max(local[i][j], global[i - 1][j]);
 			}
 		}
-		
-		for (int i = 0; i < A.length; i++)
-			System.out.println(Arrays.toString(local[i]) + "\t" + Arrays.toString(global[i]));
 		return global[A.length - 1][k];
 	}
 
