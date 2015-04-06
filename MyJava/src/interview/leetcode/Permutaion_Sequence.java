@@ -62,4 +62,33 @@ public class Permutaion_Sequence {
 		}
 		return sb.toString();
 	}
+
+	/**
+	 * Second time
+	 * 1 2 3 4 .... n
+	 * 
+	 * 1. calculate what the current number should be, number = k / (n-1)!
+	 * 1.a. update k = k % (n-1)! , update fac = fac / n -1
+	 * 2. remove it from the original list
+	 * 3. repeat step 1 until the list is empty
+	 * 
+	 */
+	public String getPermutation2(int n, int k) {
+		StringBuilder sb = new StringBuilder();
+		List<String> numbs = new ArrayList<>();
+		int fac = 1;
+		for (int i = 1; i <= n; i++) {
+			numbs.add(String.valueOf(i));
+			fac *= i;
+		}
+		k--;
+		for (int i = n; i >= 1; i--) {
+			fac /= i;
+			int idx = k / fac;
+			sb.append(numbs.get(idx));
+			k %= fac;
+			numbs.remove(idx);
+		}
+		return sb.toString();
+	}
 }

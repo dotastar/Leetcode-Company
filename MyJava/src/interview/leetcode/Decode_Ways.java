@@ -36,80 +36,38 @@ public class Decode_Ways {
 		System.out.println(o.numDecodings(big));
 	}
 
-    /**
-     * Dynamic Programming
-     * M[i]: the number of decode ways of substring[0, i-1] (inclusive i)
-     * Base case: M[0] = 0, M[1] = 1
-     * Induction rule:
-     * if (s[i] == 0) {
-     *      if (s[i - 1, i] > 26), 
-     *          return 0, can't be decoded
-     *      else,
-     *          M[i] = 0
-     * } else 
-     *      M[i] =  if (digits2 <= 26 && s.charAt(i - 2) != '0'), M[i - 1] + M[i- 2]
-     *              else M[i - 1]
-     */ 
-	public int numDecodings_DP2(String s) {
+	/**
+	 * Dynamic Programming
+	 * M[i] = number of decode ways of s[0, i-1]
+	 * Base case:
+	 * M[0] = 1, M[1] = 1
+	 * Induction rule:
+	 * Two cases
+	 * A.s[i] == '0'
+	 * 1.s[i-1] == '1' or '2', M[i] = M[i-2]
+	 * 2.s[i-1] == '0' or '3' ~ '9', can't be decoded, return 0
+	 * B.s[i] != '0'
+	 * 1.s[i-1] != '0' && s[i-1, i] <= 26, M[i] = M[i-2] + M[i-1]
+	 * 2.else, M[i] = M[i-1]
+	 */
+	public int numDecodings_DP(String s) {
 		if (s.length() == 0 || s.charAt(0) == '0')
 			return 0;
 		int[] M = new int[s.length() + 1];
 		M[0] = 1;
 		M[1] = 1;
 		for (int i = 2; i <= s.length(); i++) {
-			int digits2 = Integer.valueOf(s.substring(i - 2, i));
-			if (s.charAt(i - 1) == '0') { // current is '0'
-				if (digits2 > 26 || digits2 < 1)
-					return 0; // Error number, can't be decoded
-				else
-					M[i] = M[i - 2]; // 
-			} else
-				M[i] = digits2 <= 26 && s.charAt(i - 2) != '0' ? M[i - 1] + M[i - 2] : M[i - 1];
+			char curr = s.charAt(i - 1), prev = s.charAt(i - 2);
+			if (curr == '0') {
+				if (prev > '2' || prev == '0') // can't be decoded
+					return 0;
+				M[i] = M[i - 2];
+			} else {
+				int val = (prev - '0') * 10 + curr - '0';
+				M[i] = prev == '0' || val > 26 ? M[i - 1] : M[i - 1] + M[i - 2];
+			}
 		}
 		return M[s.length()];
-	}
-
-	/**
-	 * DP
-	 * 
-	 * dp[i] : number of decoding ways of string 0 to i-1 (length i)
-	 * 
-	 * there are several restrictions:
-	 * 
-	 * 1.if last and curr are both 0, then it is not a valid encode, return 0.
-	 * 
-	 * 2.if last is 0, and current is not 0, then dp[i] = dp[i-1] (just append
-	 * str[i] to all old combinations)
-	 * 
-	 * 3.if curr==0 and last is not 0, it must be combined with last, then check
-	 * the sum whether is valid(<=26) if yes then dp[i] = dp[i-2]
-	 * 
-	 */
-	public int numDecodings_DP(String s) {
-		if (s.length() == 0 || s.charAt(0) == '0')
-			return 0;
-		int dp[] = new int[s.length() + 1];
-		dp[0] = 1;
-		dp[1] = 1;
-		int last = s.charAt(0) - '0'; // convert to int
-		for (int i = 2; i <= s.length(); i++) {
-			int curr = s.charAt(i - 1) - '0';
-			if (last == 0 && curr == 0)
-				return 0;
-			else if (last == 0)
-				dp[i] = dp[i - 1];
-			else if (curr == 0) {
-				if (last > 2)
-					return 0;
-				dp[i] = dp[i - 2];
-			} else {
-				int sum = last * 10 + curr;
-				dp[i] = sum <= 26 ? dp[i - 1] + dp[i - 2] : dp[i - 1];
-			}
-
-			last = curr;
-		}
-		return dp[dp.length - 1];
 	}
 
 	/**

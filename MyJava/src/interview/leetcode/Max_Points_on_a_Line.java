@@ -125,30 +125,28 @@ public class Max_Points_on_a_Line {
 	 * 3.how to represent the slope when P1.x==P2.x (Double.POSITIVE_INFINITY)
 	 */
 	public static int maxPoints(Point[] points) {
-		int max = 0;
-		Map<Double, Integer> counts = new HashMap<>();
-		for (int i = 0; i < points.length; i++) {
-			counts.clear();
+		int globalMax = 0;
+		Map<Double, Integer> slopeCnt = new HashMap<>();
+		for (int i = 0; i < points.length - 1; i++) {
 			Point pi = points[i];
-			int dup = 0, currMax = 1;
+			int repeat = 1, maxCnt = 0;
 			for (int j = i + 1; j < points.length; j++) {
 				Point pj = points[j];
-				if (pi.x == pj.x && pi.y == pj.y) { // equals
-					dup++;
-					continue;
+				if (pi.x == pj.x && pi.y == pj.y) {
+					repeat++;
+				} else {
+					double slope = slope(pi, pj);
+					Integer cnt = slopeCnt.get(slope);
+					if (cnt == null)
+						cnt = 0;
+					slopeCnt.put(slope, ++cnt);
+					maxCnt = Math.max(cnt, maxCnt);
 				}
-				double k = slope(pi, pj);
-				Integer cnt = counts.get(k);
-				if (cnt == null)
-					cnt = 1;
-				cnt++;
-				counts.put(k, cnt);
-				currMax = cnt > currMax ? cnt : currMax;
 			}
-			currMax += dup;
-			max = currMax > max ? currMax : max;
+			globalMax = Math.max(repeat + maxCnt, globalMax);
+			slopeCnt.clear(); // clear Map for each comparison
 		}
-		return max;
+		return globalMax;
 	}
 
 	public static double slope(Point a, Point b) {

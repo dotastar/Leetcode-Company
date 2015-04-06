@@ -51,66 +51,35 @@ public class Longest_Palindromic_Substring {
 		return true;
 	}
 
-	/************************************ Solution 2A ************************************/
+	/************************************ Solution 2 ************************************/
 	/**
 	 * Dynamic Programming, Time: O(n^2), Space: O(n^2)
+	 * M[j][i] = if s[j, i] is palindrome or not
 	 * 
-	 * dp[l][len]: the substring start at l, length is len(1<=len<=n) is a
-	 * palindrome.
+	 * Base case:
+	 * M[j][i] = 1, when i == j
 	 * 
-	 * dp[l][len-1] = s.charAt(r)==s.charAt(l) && (len<=2 || dp[l+1][len-3]).
+	 * Induction rule:
+	 * M[j][i] = s[i] == s[j] && (i - j <= 2 || M[j+1][i-1])
+	 * 
 	 */
-	public String longestPalindrome_DP1(String s) {
-		int length = s.length();
-		boolean[][] dp = new boolean[length][length];
-		int longest = 1;
-		int start = 0;
-		int end = 0;
-		for (int len = 1; len <= length; len++) {
-			for (int l = 0; l <= length - len; l++) {
-				int r = l + len - 1;
-				dp[l][len - 1] = s.charAt(r) == s.charAt(l) && (len <= 2 || dp[l + 1][len - 3]);
-				if (dp[l][len - 1] && len > longest) {
-					longest = len;
-					start = l;
-					end = r;
-
+	public String longestPalindrome_DP(String s) {
+		boolean[][] M = new boolean[s.length()][s.length()];
+		int max = 1, left = 0;
+		M[0][0] = true;
+		for (int i = 1; i < s.length(); i++) {
+			for (int j = 0; j < i; j++) {
+				if (s.charAt(i) == s.charAt(j) && (i - j <= 2 || M[j + 1][i - 1])) {
+					M[j][i] = true;
+					int length = i - j + 1;
+					if (length > max) {
+						max = length;
+						left = j;
+					}
 				}
 			}
 		}
-		return s.substring(start, end + 1);
-	}
-
-	/************************************ Solution 2B ************************************/
-	/**
-	 * Dynamic Programming, Time: O(n^2), Space: O(n^2)
-	 * This is the direct optimization of solution 1, they have the same
-	 * structure.
-	 * 
-	 * dp[l][r] : the substring start at l(left), end at r(right) is a
-	 * palindrome.
-	 * 
-	 * dp[l][r] = s.charAt(l)==s.charAt(r) && (r-l<=2 || dp[l+1][r-1]).
-	 * 
-	 */
-	public String longestPalindrome_DP2(String s) {
-		int len = s.length();
-		int start = 0;
-		int end = 0;
-		int longest = 1;
-		boolean[][] dp = new boolean[len][len];
-		for (int r = 0; r < len; r++) {
-			for (int l = 0; l <= r; l++) {
-				dp[l][r] = s.charAt(l) == s.charAt(r) && (r - l <= 2 || dp[l + 1][r - 1]);
-				int length = r - l + 1;
-				if (dp[l][r] && length > longest) {
-					start = l;
-					end = r;
-					longest = length;
-				}
-			}
-		}
-		return s.substring(start, end + 1);
+		return s.substring(left, left + max);
 	}
 
 	/************************************ Solution 3 ************************************/
@@ -140,26 +109,25 @@ public class Longest_Palindromic_Substring {
 	}
 
 	/**
-	 * For a given center, return the length of the longest palindrome that based
+	 * For a given center, return the length of the longest palindrome that
+	 * based
 	 * on this center.
 	 */
 	public int longestPalindromeLength(String s, int center, int[] coordinate) {
 		if (coordinate.length < 2)
 			return 0;
 		int len = s.length();
-		int l = center / 2;	 //center%2==1 means that this is not an interval 
-		int r = center % 2 == 1 ? center / 2 + 1 : center / 2; //Important
+		int l = center / 2; // center%2==1 means that this is not an interval
+		int r = center % 2 == 1 ? center / 2 + 1 : center / 2; // Important
 
 		while (l >= 0 && r < len && s.charAt(l) == s.charAt(r)) {
 			l--;
 			r++;
 		}
-		coordinate[0] = ++l;	//back to the correct palindrome
+		coordinate[0] = ++l; // back to the correct palindrome
 		coordinate[1] = --r;
 		return r - l + 1;
 	}
-	
-	
 
 	/************************************ Solution 4 ************************************/
 	/**

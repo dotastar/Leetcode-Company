@@ -4,16 +4,11 @@ import static org.junit.Assert.assertTrue;
 import interview.AutoTestUtils;
 
 import java.util.Arrays;
-import java.util.Deque;
-import java.util.LinkedList;
 
 import org.junit.Test;
 
 /**
- * 
- * 
- * 
- Largest SubMatrix Sum
+ * Largest SubMatrix Sum
  * Hard
  * DP
  * 
@@ -50,33 +45,6 @@ public class Largest_SubMatrix_Sum {
 		AutoTestUtils.runTestClassAndPrint(Largest_SubMatrix_Sum.class);
 	}
 
-	public int largest(int[][] A) {
-		int maxArea = 0;
-		int[] addUp = new int[A[0].length];
-		int[] histogram = new int[A[0].length];
-		for (int i = 0; i < A.length; i++) {
-			for (int j = 0; j < A[0].length; j++) {
-				addUp[j] += A[i][j];
-				histogram[j] = addUp[j] > 0 ? addUp[j] : 0;
-			}
-			maxArea = Math.max(maxArea, largestHistogram(histogram));
-		}
-		return maxArea;
-	}
-
-	private int largestHistogram(int[] A) {
-		Deque<Integer> stk = new LinkedList<>();
-		int maxArea = 0;
-		for (int i = 0; i <= A.length; i++) {
-			while (!stk.isEmpty() && (i == A.length || A[i] < A[stk.peek()])) {
-				int height = A[stk.pollFirst()];
-				int width = stk.isEmpty() ? i : i - stk.peek() - 1;
-				maxArea = Math.max(maxArea, width * height);
-			}
-			stk.addFirst(i);
-		}
-		return maxArea;
-	}
 
 	/**
 	 * DP, Time: (mn)^4 + (mn)^2 = O((mn)^4)
@@ -92,7 +60,7 @@ public class Largest_SubMatrix_Sum {
 	 * The sum of each sub-matrix start at (i, j), end at (row, col):
 	 * sum = M[row][col] - M[row][j-1] - M[i-1][col] + M[i-1][j-1]
 	 */
-	public int largest2(int[][] A) {
+	public int largest(int[][] A) {
 		int m = A.length, n = A.length == 0 ? 0 : A[0].length;
 		int maxSum = Integer.MIN_VALUE;
 		int[][] M = new int[m][n];

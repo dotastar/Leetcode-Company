@@ -36,6 +36,68 @@ public class String_Replace {
 	}
 
 	/**
+	 * 1.find how many times s occurs in input, then we calculate the size
+	 * needed for new String
+	 * 2.compare s and t, if s.length >= t.length, start from left to right,
+	 * else start from right to left
+	 * 3.at every index, first check if the current substring(index, index +
+	 * s.length) is s, if yes, replace with t, else just copy them
+	 */
+	public String replace(String input, String s, String t) {
+		if (input.length() == 0 || s.length() == 0)
+			return input;
+		List<Integer> occurs = new ArrayList<>();
+		for (int i = 0; i < input.length();) {
+			int idx = input.indexOf(s, i);
+			if (idx < 0)
+				break;
+			if (s.length() >= t.length())
+				occurs.add(idx);
+			else
+				occurs.add(idx + s.length() - 1);
+
+			i = idx + s.length();
+		}
+		if (occurs.size() == 0)
+			return input;
+
+		char[] res;
+		if (s.length() < t.length()){
+			int size = input.length() + occurs.size() * (t.length() - s.length());
+			res = new char[size];
+			System.arraycopy(input.toCharArray(), 0, res, 0, input.length());
+		} else
+			res = input.toCharArray();
+		
+		if (s.length() >= t.length()) {
+			int i = 0;
+			int matchIdx = 0;
+			for (int j = 0; j < input.length();) {
+				if (matchIdx < occurs.size() && j == occurs.get(matchIdx)) {
+					for (int k = 0; k < t.length();)
+						res[i++] = t.charAt(k++);
+					j += s.length();
+					matchIdx++;
+				} else
+					res[i++] = res[j++];
+			}
+			return new String(res, 0, i);
+		} else {
+			int matchIdx = occurs.size() - 1;
+			for (int i = res.length - 1, j = input.length() - 1; i >= 0;) {
+				if (matchIdx >= 0 && j == occurs.get(matchIdx)) {
+					for (int k = t.length() - 1; k >= 0;)
+						res[i--] = t.charAt(k--);
+					j -= s.length();
+					matchIdx--;
+				} else
+					res[i--] = res[j--];
+			}
+			return new String(res);
+		}
+	}
+
+	/**
 	 * 
 	 * 1.search for matches of s in input, store those indice
 	 * 2.replacing s with t by those stored indice:
@@ -51,7 +113,7 @@ public class String_Replace {
 	 * ^
 	 * aoao
 	 */
-	public String replace(String input, String s, String t) {
+	public String replace2(String input, String s, String t) {
 		if (input.indexOf(s) < 0)
 			return input;
 		List<Integer> matches = new ArrayList<>();
@@ -84,10 +146,10 @@ public class String_Replace {
 				} else
 					res[iRes++] = input.charAt(iInput++);
 			}
-			
+
 			input = String.valueOf(res, 0, iRes);
 		}
-		
+
 		return input;
 	}
 

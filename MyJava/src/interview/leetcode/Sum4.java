@@ -40,6 +40,10 @@ public class Sum4 {
 	}
 
 	/**
+	 * there is an n^2 * log(n) solution, please see Sum_4 of laicode.
+	 */
+
+	/**
 	 * Solution with a HashSet to avoid duplicates
 	 */
 	public static List<List<Integer>> fourSum(int[] num, int target) {
@@ -82,15 +86,15 @@ public class Sum4 {
 		int len = num.length;
 		for (int i = 0; i < len - 3; i++) {
 			if (i != 0 && num[i] == num[i - 1])
-				continue;	//avoid duplicates
+				continue; // avoid duplicates
 			for (int j = i + 1; j < len - 2; j++) {
 				if (j != i + 1 && num[j] == num[j - 1])
-					continue;	//avoid duplicates
+					continue; // avoid duplicates
 				int l = j + 1;
 				int r = len - 1;
 				while (l < r) {
 					if (l != j + 1 && num[l] == num[l - 1]) {
-						l++;	//avoid duplicates
+						l++; // avoid duplicates
 						continue;
 					}
 

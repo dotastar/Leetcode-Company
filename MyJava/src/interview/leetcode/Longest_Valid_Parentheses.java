@@ -19,10 +19,11 @@ import java.util.Stack;
 public class Longest_Valid_Parentheses {
 
 	public static void main(String[] args) {
-		System.out.println(longestValidParentheses("(()")); // 2
-		System.out.println(longestValidParentheses("()(()"));// 2
-		System.out.println(longestValidParentheses("()((())"));// 4
-		System.out.println(longestValidParentheses("(()()"));// 4
+		Longest_Valid_Parentheses o = new Longest_Valid_Parentheses();
+		System.out.println(o.longestValidParentheses("(()")); // 2
+		System.out.println(o.longestValidParentheses("()(()"));// 2
+		System.out.println(o.longestValidParentheses("()((())"));// 4
+		System.out.println(o.longestValidParentheses("(()()"));// 4
 	}
 
 	/**
@@ -30,8 +31,8 @@ public class Longest_Valid_Parentheses {
 	 * 0.If stk.isEmpty, push
 	 * 1.Current char is '(', push
 	 * 2.Current char is ')':
-	 * 		peek the stack, if top is '(', pop it out, calculate length
-	 * 						else is ')', push current in
+	 * peek the stack, if top is '(', pop it out, calculate length
+	 * else is ')', push current in
 	 **/
 	public int longestValidParentheses2(String S) {
 		Stack<Integer> stk = new Stack<>();
@@ -53,41 +54,26 @@ public class Longest_Valid_Parentheses {
 	}
 
 	/**
-	 * Traverse the String, use stack to store the index of '('
-	 * 
-	 * Time O(n)
-	 * 
-	 * The key is to differentiate the different cases and how to calculate the
-	 * length of each
-	 * 
-	 * @return
+	 * (()()
+	 * ^
+	 * traverse the input s:
+	 * if it's '(', push in
+	 * else is ')', peek the top of stack,
+	 * if it is '(', then they match, pop it out, and calculate length, update
+	 * max
+	 * else, no match, push it in
 	 */
-	public static int longestValidParentheses(String s) {
+	public int longestValidParentheses(String s) {
 		int max = 0;
-		// index of the last extra ')', use it as an separate point to separate
-		// previous valid parenthese group and future group
-		int extraRight = -1;
-		Stack<Integer> leftIdxs = new Stack<Integer>();
-
+		Stack<Integer> stk = new Stack<Integer>();
 		for (int i = 0; i < s.length(); i++) {
-			if (s.charAt(i) == '(') {
-				leftIdxs.push(i);
-			} else { // is ')'
-				if (leftIdxs.isEmpty()) {// 1)is an extra right parenthese
-					extraRight = i; // update separate point
-				} else { // 2). more than one '(' in stack
-					leftIdxs.pop();
-					int currValid;
-					if (leftIdxs.isEmpty()) { // 2.1)nothing in the stack
-						// *** valid is from extraRight to current
-						currValid = i - extraRight;
-					} else {// 2.2)still have '(' in stack
-						// *** valid is from last pushed left to current
-						currValid = i - leftIdxs.peek();
-					}
-					max = currValid > max ? currValid : max;
-				}
-			}
+			char curr = s.charAt(i);
+			if (curr == ')' && !stk.isEmpty() && s.charAt(stk.peek()) == '(') {
+				stk.pop();
+				int length = stk.isEmpty() ? i + 1 : i - stk.peek();
+				max = length > max ? length : max;
+			} else
+				stk.push(i);
 		}
 		return max;
 	}

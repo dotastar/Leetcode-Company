@@ -31,10 +31,10 @@ public class Q15_Compute_The_Greatest_Common_Divisor {
 			return elementaryGCD(x >> 1, y);
 		} else if ((x & 1) != 0 && (y & 1) == 0) { // x is odd, y is even.
 			return elementaryGCD(x, y >> 1);
-		} else if (x > y) { // Both x and y are odd, and x > y.
-			return elementaryGCD(x - y, y);
-		}
-		return elementaryGCD(x, y - x); // Both x and y are odd, and x <= y.
+		} else if (x > y) {
+			return elementaryGCD(x - y, y); // Both x and y are odd, and x > y.
+		} else
+			return elementaryGCD(x, y - x); // Both x and y are odd, and x <= y.
 	}
 
 	/**

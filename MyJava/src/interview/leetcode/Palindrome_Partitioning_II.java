@@ -23,24 +23,18 @@ public class Palindrome_Partitioning_II {
 
     /**
      * DP
-     * M[i] = the number of min cuts needed for substring(0, i) (inclusive)
+     * M[i] = number of min cuts of s[0, i]
+     * isPalin[j][i] = if s[j, i] is palindrome or not
      * 
-     * Base case: 
-     * M[0] = 0, 
-     * M[i] = M[i - 1] + 1
+     * Base case
+     * M[0] = 0, M[i] = M[i - 1] + 1
+     * isPalin[j][i] = true, if i == j
      * 
      * Induction rule
-     * M[i] = 0 if substring(0, i) is palindrome
-     *      = min(M[j]) + 1, if substring(j + 1, i) is a palindrome, for j > 0 && j < i
+     * M[i] = min(M[j] + 1) if s[j+1, i] is palindrome
+     * if s[0, i] is palindrome, M[i] = 0.
      * 
-     * 
-     * isPalin[i][j] = substring(i, j) is palindrome or not
-     * 
-     * Base case: isPalin[i][i+1] = true;
-     * 
-     * Induction rule:
-     * isPalin[j][i]  = (s[i] == s[j] && (i - j <= 2 || isPalin[j+1][i-1]))
-     * 
+     * isPalin[j][i] = s[j] == s[i] && (i - j <= 2 || isPalin[j+1][i-1])
      */ 
 	public static int minCut2(String S) {
 		if (S.length() == 0)
@@ -57,7 +51,7 @@ public class Palindrome_Partitioning_II {
 				}
 			}
 		}
-		return M[S.length() - 1];
+		return M[N - 1];
 	}
 
 	/**

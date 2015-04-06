@@ -32,7 +32,7 @@ public class Interleaving_String {
 	 * Base case: M[0][0] = true
 	 * 
 	 * Induction rule:
-	 * M[i][j] = M[i-1][j] && s1[i-1] == s3[i+j-2] or M[i][j-1] && s2[j-1] == s3[i+j-2]
+	 * M[i][j] = M[i-1][j] && s1[i-1] == s3[i+j-1] or M[i][j-1] && s2[j-1] == s3[i+j-1]
 	 * 
 	 * E.g. 
 	 * a a d b b b a c c c
