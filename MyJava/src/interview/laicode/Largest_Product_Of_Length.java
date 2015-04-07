@@ -59,26 +59,26 @@ public class Largest_Product_Of_Length {
 
 		int[] primes = generatePrimes(26);
 		for (int i = 0; i < dict.length - 1; i++) {
-			long id = 1; // potential overflow
+			long id = 1;
 			String curr = dict[i];
 			for (int j = 0; j < curr.length(); j++)
 				id *= primes[curr.charAt(j) - 'a'];
 			// compare with its right neighbors
 			for (int j = i + 1; j < dict.length; j++) {
 				String right = dict[j];
-				boolean hasCommon = false;
-				for (int k = 0; k < right.length(); k++) {
-					if (id % primes[right.charAt(k) - 'a'] == 0) {
-						hasCommon = true;
-						break;
-					}
-				}
-				if (!hasCommon) {
+				if (!hasCommonLetter(right, id, primes))
 					return curr.length() * right.length();
-				}
 			}
 		}
 		return 0;
+	}
+
+	private boolean hasCommonLetter(String word, long id, int[] primes) {
+		for (int k = 0; k < word.length(); k++) {
+			if (id % primes[word.charAt(k) - 'a'] == 0)
+				return true;
+		}
+		return false;
 	}
 
 	@Test
