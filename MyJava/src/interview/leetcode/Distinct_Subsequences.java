@@ -63,6 +63,40 @@ public class Distinct_Subsequences {
 	}
 
 	/**
+	 * DP second practice
+	 *** 0 A C E
+	 * 0 1
+	 * A 1 1
+	 * B 1 1 0
+	 * C 1 1 1 0
+	 * D 1 1 1 1
+	 * A 1 2 1 1
+	 * 
+	 * M[i][j]: distinct subsequences of S[0, i-1] and T[0, j-1]
+	 * 
+	 * Base case:
+	 * M[i][0] = 1
+	 * 
+	 * Induction rule:
+	 * M[i][j] = M[i-1][j] + M[i-1][j-1], if s[i-1] == t[j-1]
+	 ********* = M[i-1][j], else
+	 */
+	public int numDistinct2(String S, String T) {
+		if (S.length() < T.length())
+			return 0;
+		int[][] M = new int[S.length() + 1][T.length() + 1];
+		for (int i = 0; i <= S.length(); i++)
+			M[i][0] = 1;
+		for (int i = 1; i <= S.length(); i++) {
+			for (int j = 1; j <= i && j <= T.length(); j++) {
+				M[i][j] = S.charAt(i - 1) == T.charAt(j - 1) ? M[i - 1][j]
+						+ M[i - 1][j - 1] : M[i - 1][j];
+			}
+		}
+		return M[S.length()][T.length()];
+	}
+
+	/**
 	 * When you see string problem that is about subsequence or matching,
 	 * dynamic programming method should come to your mind naturally. The key is
 	 * to find the changing condition.

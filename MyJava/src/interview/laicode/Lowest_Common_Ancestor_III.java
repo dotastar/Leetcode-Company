@@ -1,5 +1,9 @@
 package interview.laicode;
 
+import static org.junit.Assert.*;
+import interview.AutoTestUtils;
+
+import org.junit.Test;
 
 /**
  * 
@@ -42,32 +46,78 @@ package interview.laicode;
 public class Lowest_Common_Ancestor_III {
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
+		AutoTestUtils.runTestClassAndPrint(Lowest_Common_Ancestor_III.class);
 	}
 
 	public TreeNode lowestCommonAncestor(TreeNode root, TreeNode one,
 			TreeNode two) {
-		if (searchLCA(root, one, one) != null
-				&& searchLCA(root, two, two) != null)
-			return searchLCA(root, one, two);
+		if (exist(root, one) && exist(root, two))
+			return lca(root, one, two);
 		else
 			return null;
 	}
 
-	public TreeNode searchLCA(TreeNode root, TreeNode one, TreeNode two) {
+	private TreeNode lca(TreeNode root, TreeNode one, TreeNode two) {
 		if (root == null || root == one || root == two)
 			return root;
-
-		TreeNode leftRes = searchLCA(root.left, one, two);
-		TreeNode rightRes = searchLCA(root.right, one, two);
-
-		if (leftRes != null && rightRes != null)
+		TreeNode left = lca(root.left, one, two);
+		TreeNode right = lca(root.right, one, two);
+		if (left != null && right != null)
 			return root;
-		else if (leftRes != null)
-			return leftRes;
+		else if (left != null)
+			return left;
 		else
-			return rightRes;
+			return right;
+	}
+
+	private boolean exist(TreeNode root, TreeNode target) {
+		if (root == null)
+			return false;
+		if (root == target)
+			return true;
+		return exist(root.left, target) || exist(root.right, target);
+	}
+
+	@Test
+	public void test1() {
+		TreeNode root = new TreeNode(1);
+		root.left = new TreeNode(2);
+		root.left.left = new TreeNode(3);
+		root.left.right = new TreeNode(4);
+		root.right = new TreeNode(5);
+		root.left.left.left = new TreeNode(6);
+
+		TreeNode one = root.left.left.left;
+		TreeNode two = new TreeNode(10);
+		assertTrue(lowestCommonAncestor(root, one, two) == null);
+	}
+
+	@Test
+	public void test2() {
+		TreeNode root = new TreeNode(1);
+		root.left = new TreeNode(2);
+		root.left.left = new TreeNode(3);
+		root.left.right = new TreeNode(4);
+		root.right = new TreeNode(5);
+		root.left.left.left = new TreeNode(6);
+
+		TreeNode one = root.left.left.left;
+		TreeNode two = root.right;
+		assertTrue(lowestCommonAncestor(root, one, two) == root);
+	}
+
+	@Test
+	public void test3() {
+		TreeNode root = new TreeNode(1);
+		root.left = new TreeNode(2);
+		root.left.left = new TreeNode(3);
+		root.left.right = new TreeNode(4);
+		root.right = new TreeNode(5);
+		root.left.left.left = new TreeNode(6);
+
+		TreeNode one = root.left.left.left;
+		TreeNode two = root.left;
+		assertTrue(lowestCommonAncestor(root, one, two) == root.left);
 	}
 
 	public static class TreeNode {

@@ -27,6 +27,36 @@ public class Check_If_Binary_Tree_Is_Complete {
 				.runTestClassAndPrint(Check_If_Binary_Tree_Is_Complete.class);
 	}
 
+	/**
+	 * Second practice, more concise, compare in the current level
+	 * 1.BFS traverse the tree
+	 * 2.before check current node, first check null flag, if null flag is set,
+	 * return false
+	 * 3.else check current node, if current node is null, set a null flag
+	 * 
+	 */
+	public boolean isCompleted2(TreeNode root) {
+		if (root == null)
+			return true;
+		Queue<TreeNode> q = new LinkedList<>();
+		q.add(root);
+		boolean isEmpty = false;
+		while (!q.isEmpty()) {
+			int size = q.size();
+			for (int i = 0; i < size; i++) {
+				TreeNode curr = q.poll();
+				if (curr != null) {
+					if (isEmpty)
+						return false;
+					q.add(curr.left);
+					q.add(curr.right);
+				} else
+					isEmpty = true;
+			}
+		}
+		return true;
+	}
+
 	public boolean isCompleted(TreeNode root) {
 		if (root == null)
 			return true;
@@ -35,11 +65,11 @@ public class Check_If_Binary_Tree_Is_Complete {
 		boolean hasEmpty = false;
 		while (!q.isEmpty()) {
 			TreeNode node = q.poll();
-			if (node.left != null){
+			if (node.left != null) {
 				if (hasEmpty)
 					return false;
 				q.add(node.left);
-			}else
+			} else
 				hasEmpty = true;
 
 			if (node.right != null) {

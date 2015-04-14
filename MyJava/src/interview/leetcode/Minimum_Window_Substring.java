@@ -35,6 +35,19 @@ public class Minimum_Window_Substring {
 
 	/**
 	 * Second time practice, maintaining a window, expand and shorten the window
+	 * State: total + 2 Map<Char, Integer>
+	 * ADOBECODEBANC
+	 *          ^
+	 *             ^
+	 * total: 0
+	 * Process:
+	 * 1.keep moving r until total = 0
+	 * 2.when total = 0, keep moving l until it is minimum
+	 * (when total > 0, the balance is broken, the previous l is one possible
+	 * minimum left)
+	 * 3.compare current minimum length with global minimum, and update it if
+	 * current is less.
+	 * 4.repeat step 1 until r reach the end
 	 */
 	public String minWindow2(String S, String T) {
 		int[] dict = new int[128], visited = new int[128];

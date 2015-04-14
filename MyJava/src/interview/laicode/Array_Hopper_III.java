@@ -40,6 +40,25 @@ public class Array_Hopper_III {
 	}
 
 	/**
+	 * Same greedy, neater, more general solution
+	 */
+	public int minJump3(int[] A) {
+		int start = 0, end = 0, jump = 0;
+		while (end < A.length) {
+			jump++;
+			int farthest = 0;
+			for (int i = start; i <= end; i++) {
+				farthest = Math.max(A[i] + i, farthest);
+			}
+			if (farthest == end)
+				return -1;
+			start = end + 1;
+			end = farthest;
+		}
+		return jump;
+	}
+
+	/**
 	 * Greedy algorithm
 	 */
 	public int minJump2(int[] A) {

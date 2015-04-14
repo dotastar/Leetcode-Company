@@ -42,27 +42,27 @@ public class Next_Permutation {
 
 	/**
 	 * Second time
+	 * 3 6 5 4 3 2 2 1
+	 * ^
+	 * 4 2 2 3
+	 * ^
+	 * 1.backward find the first element that is not increasing A[i-1] > A[i],
+	 * if i == 0, ignore step 2, jump to step 3.
+	 * 2.find the smallest element A[j] that greater than A[i-1] within A[i,
+	 * end], swap(i-1, j)
+	 * 3.reverse the array from A[i] to A[A.length - 1]
 	 */
-	public void nextPermutation3(int[] num) {
-		// position to swap,
-		// first number that is not in increasing order starts from the end
-		int swapIdx = num.length - 2;
-		while (swapIdx >= 0 && num[swapIdx] >= num[swapIdx + 1])
-			swapIdx--;
-		if (swapIdx >= 0) {
-			// traverse back to the end, find the smallest number that is
-			// greater than num[swap]
-			int i = swapIdx + 1;
-			while (i < num.length - 1 && num[i + 1] > num[swapIdx])
-				i++;
-			// increase the permutation by as little as possible.
-			swap(num, i, swapIdx);
+	public void nextPermutation3(int[] A) {
+		int i = A.length - 1; // step 1
+		while (i > 0 && A[i - 1] >= A[i])
+			i--;
+		if (i > 0) { // step 2
+			int j = i;
+			while (j < A.length && A[i - 1] < A[j])
+				j++;
+			swap(A, i - 1, j - 1);
 		}
-		// reverse from swap+1 to end
-		int l = swapIdx + 1, r = num.length - 1;
-		while (l < r) {
-			swap(num, l++, r--);
-		}
+		reverse(A, i, A.length - 1); // step 3
 	}
 
 	/**

@@ -65,12 +65,15 @@ public class Reverse_Binary_Tree {
 		AutoTestUtils.runTestClassAndPrint(Reverse_Binary_Tree.class);
 	}
 
+	/**
+	 * Variant of Reverse linked list
+	 */
 	public TreeNode reverse(TreeNode root) {
 		if (root == null || root.left == null)
 			return root;
 		TreeNode newroot = reverse(root.left);
 		root.left.right = root.right;
-	    root.left.left = root;
+		root.left.left = root;
 		root.left = null;
 		root.right = null;
 		return newroot;
@@ -81,11 +84,11 @@ public class Reverse_Binary_Tree {
 		TreeNode root = new TreeNode(1);
 		root.left = new TreeNode(2);
 		root.right = new TreeNode(3);
-		
+
 		TreeNode res = reverse(root);
 		System.out.println(res.toString());
 	}
-	
+
 	@Test
 	public void test2() {
 		TreeNode root = new TreeNode(1);
@@ -93,7 +96,7 @@ public class Reverse_Binary_Tree {
 		root.right = new TreeNode(5);
 		root.left.left = new TreeNode(3);
 		root.left.right = new TreeNode(4);
-		
+
 		TreeNode res = reverse(root);
 		System.out.println(res.toString());
 	}
