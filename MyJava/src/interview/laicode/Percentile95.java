@@ -4,11 +4,8 @@ import static org.junit.Assert.assertTrue;
 import interview.AutoTestUtils;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
-import java.util.PriorityQueue;
 import java.util.TreeMap;
 
 import org.junit.Test;
@@ -44,44 +41,20 @@ public class Percentile95 {
 
 	/**
 	 * Time: O(n)
-	 * Use HashMap to aggregate the count of each length,
-	 * then use Max-Heap to find the percentile.
+	 * Because URL has a maximum length which is 2048 characters, we can use an
+	 * array as HashMap to count the length.
 	 */
 	public int percentile95_Improved(List<Integer> lengths) {
-		Map<Integer, KVPair> cntMap = new HashMap<>();
-		for (Integer len : lengths) {
-			if (cntMap.containsKey(len))
-				cntMap.get(len).value += 1;
-			else
-				cntMap.put(len, new KVPair(len, 1));
-		}
-		// heapify, time: O(k), k is the unique number of lengths
-		PriorityQueue<KVPair> maxHeap = new PriorityQueue<>(cntMap.values());
-		double threshold = lengths.size() * 0.05;
-		double currSize = 0;
-		while (!maxHeap.isEmpty()) {
-			KVPair maxLength = maxHeap.poll();
-			currSize += maxLength.value; // add count
-			if (currSize > threshold)
-				return maxLength.key;
-		}
-		return 0; // empty input
-	}
+		int[] cnts = new int[2048];
+		for (Integer len : lengths)
+			cnts[len]++;
 
-	public static class KVPair implements Comparable<KVPair> {
-		int key;
-		int value;
-
-		public KVPair(int key, int value) {
-			this.key = key;
-			this.value = value;
+		int total = 0;
+		int i = cnts.length;
+		while (total <= 0.05 * lengths.size()) {
+			total += cnts[--i];
 		}
-
-		@Override
-		public int compareTo(KVPair o) {
-			// important, change the default ordering
-			return o.key - this.key; // natural order: decreasing order
-		}
+		return i;
 	}
 
 	/**

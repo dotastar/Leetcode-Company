@@ -1,9 +1,12 @@
 package interview.leetcode;
 
+import interview.AutoTestUtils;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Stack;
+
+import org.junit.Test;
 
 /**
  * Given a collection of candidate numbers (C) and a target number (T), find all
@@ -24,34 +27,39 @@ import java.util.Stack;
 public class Combination_Sum_II {
 
 	public static void main(String[] args) {
+		AutoTestUtils.runTestClassAndPrint(Combination_Sum_II.class);
+	}
+
+	public List<List<Integer>> combinationSum2(int[] num, int target) {
+		Arrays.sort(num);
+		List<List<Integer>> res = new ArrayList<List<Integer>>();
+		combSum(num, 0, target, new ArrayList<Integer>(), res);
+		return res;
+	}
+
+	private void combSum(int[] num, int idx, int sum, List<Integer> comb,
+			List<List<Integer>> res) {
+		if (sum <= 0) {
+			if (sum == 0)
+				res.add(new ArrayList<Integer>(comb));
+			return;
+		}
+
+		for (int i = idx; i < num.length; i++) {
+			if (i > idx && num[i] == num[i - 1])
+				continue;
+			comb.add(num[i]);
+			combSum(num, i + 1, sum - num[i], comb, res);
+			comb.remove(comb.size() - 1);
+		}
+	}
+
+	@Test
+	public void test1() {
 		int[] candidates = new int[] { 1, 2, 2, 2 };
 		int target = 4;
 		List<List<Integer>> res = combinationSum2(candidates, target);
 		for (List<Integer> comb : res)
 			System.out.println(comb.toString());
-	}
-
-	public static List<List<Integer>> combinationSum2(int[] num, int target) {
-		Arrays.sort(num);
-		List<List<Integer>> res = new ArrayList<List<Integer>>();
-		addCombSum(num, 0, target, new Stack<Integer>(), res);
-		return res;
-	}
-
-	public static void addCombSum(int[] num, int start, int sum,
-			Stack<Integer> comb, List<List<Integer>> res) {
-		if (sum == 0) {
-			res.add(new ArrayList<Integer>(comb));
-			return;
-		}
-
-		for (int i = start; i < num.length; i++) {
-			if (num[i] > sum || (i > start && num[i] == num[i - 1]))
-				continue;
-			System.out.println(num[i]);
-			comb.push(num[i]);
-			addCombSum(num, i + 1, sum - num[i], comb, res);
-			comb.pop();
-		}
 	}
 }
