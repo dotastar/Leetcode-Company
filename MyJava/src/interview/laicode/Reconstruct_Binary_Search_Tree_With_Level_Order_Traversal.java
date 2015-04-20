@@ -1,10 +1,12 @@
 package interview.laicode;
 
-import java.util.Stack;
-
-import org.junit.Test;
-
 import interview.laicode.utils.TreeNode;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Stack;
 
 /**
  * Reconstruct Binary Search Tree With Level Order Traversal
@@ -65,73 +67,55 @@ public class Reconstruct_Binary_Search_Tree_With_Level_Order_Traversal {
 	}
 
 	/**
-	 * Time: O(n), n = number of nodes (level.length)
-	 */
-	public TreeNode reconstruct2(int[] level) {
-		return reconstruct(level, 0, Integer.MIN_VALUE, Integer.MAX_VALUE);
-	}
-
-	/**
-	 * Because the nature of level ordered array, the first entry that sits in
-	 * the range will be the next node to construct.
-	 * 5 3 8 1 4 11
-	 * ^
-	 */
-	private TreeNode reconstruct(int[] level, int idx, int min, int max) {
-		// find the first index that within the range(min, max)
-		while (idx < level.length && (level[idx] < min || level[idx] > max))
-			idx++;
-		if (idx >= level.length)
-			return null;
-		// use it for current root
-		TreeNode root = new TreeNode(level[idx]);
-		// update range with root.key
-		root.left = reconstruct(level, idx + 1, min, root.key);
-		root.right = reconstruct(level, idx + 1, root.key, max);
-		return root;
-	}
-
-	/************************** Naive Solution **************************/
-
-	/**
-	 * Naive solution,
-	 * insert node one by one, time: O(n^2) worst case
-	 */
-	public TreeNode reconstruct(int[] level) {
-		if (level.length == 0)
-			return null;
-		TreeNode root = new TreeNode(level[0]);
-		for (int i = 1; i < level.length; i++) {
-			insert(root, level[i]);
-		}
-		return root;
-	}
-
-	/**
-	 * 5 3 8 1 4 11
-	 * ^
-	 * 5
-	 * 3 8
+	 * Time: O(nlogn)
+	 * 1.In-order traversal array gives us the relative position of root node
+	 * and its left/ right children.
+	 * 2.Level-order array gives us the root node which is the first element
+	 * 3.Recursively split the level order list into two sublists, one for
+	 * constructing the left subtree, the other for right subtree.
+	 * 4.At each recursion, we only construct the current root node, which can
+	 * be easily found because it is the first entry of the current list
 	 * 
+	 * 5 3 8 1 4 11
+	 * ^
+	 * 1 3 4 5 8 11
+	 * ^
 	 */
-	private TreeNode insert(TreeNode root, int value) {
-		if (root == null)
-			return new TreeNode(value);
-
-		if (value < root.key)
-			root.left = insert(root.left, value);
-		else if (value > root.key)
-			root.right = insert(root.right, value);
-
-		return root;
+	public TreeNode reconstruct(int[] in, int[] level) {
+		int size = in.length;
+		Map<Integer, Integer> idxMap = new HashMap<>(size);
+		List<Integer> levelValues = new ArrayList<>(size);
+		for (int i = 0; i < in.length; i++) {
+			idxMap.put(in[i], i);
+			levelValues.add(level[i]);
+		}
+		return construct(levelValues, idxMap);
 	}
 
-	@Test
-	public void test1() {
-		int[] pre = { 5, 3, 8, 1, 4, 11 };
-		TreeNode root = reconstruct2(pre);
-		printBST(root);
-		System.out.println();
+	/**
+	 * reconstruct the subtree based on the level order data and inorder index
+	 * map
+	 */
+	private TreeNode construct(List<Integer> level,
+			Map<Integer, Integer> inIdxMap) {
+		if (level.isEmpty())
+			return null;
+		TreeNode root = new TreeNode(level.get(0));
+		int rootIdx = inIdxMap.get(root.key);
+		List<Integer> leftNodes = new ArrayList<Integer>();
+		List<Integer> rightNodes = new ArrayList<Integer>();
+		// splitting the current level-order list
+		for (int i = 1; i < level.size(); i++) {
+			Integer value = level.get(i);
+			if (inIdxMap.get(value) < rootIdx)
+				leftNodes.add(value);
+			else
+				rightNodes.add(value);
+		}
+		// recursively constructing its children
+		root.left = construct(leftNodes, inIdxMap);
+		root.right = construct(rightNodes, inIdxMap);
+		return root;
 	}
 
 	public void printBST(TreeNode root) {

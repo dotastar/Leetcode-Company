@@ -66,15 +66,12 @@ public class Binary_Tree_Path_Sum_To_Target {
 		return exist(root, target, target);
 	}
 
-	public boolean exist(TreeNode root, int sumLeft, int target) {
+	public boolean exist(TreeNode root, int target, int rest) {
 		if (root == null)
 			return false;
-
-		if (sumLeft == root.key || exist(root.left, sumLeft - root.key, target)
-				|| exist(root.right, sumLeft - root.key, target))
-			return true;
-
-		return exist(root.left, target, target)
+		return root.key == rest || exist(root.left, target, rest - root.key)
+				|| exist(root.right, target, rest - root.key)
+				|| exist(root.left, target, target)
 				|| exist(root.right, target, target);
 	}
 

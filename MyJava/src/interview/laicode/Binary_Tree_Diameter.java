@@ -55,30 +55,27 @@ public class Binary_Tree_Diameter {
 
 	}
 
-	private int globalMax;
+	/**
+	 * 1.ask left/right child for its greatest distance from leaf to itself
+	 * 2.compare left and right path distance, update global diameter if it has
+	 * both left and right children
+	 * 3.return the greater path sum to its parent
+	 */
+	int globalDiameter = 0;
 
 	public int diameter(TreeNode root) {
-		globalMax = 0;
-		diameterHelper(root);
-		return globalMax;
+		updateDiameter(root);
+		return globalDiameter;
 	}
 
-	private int diameterHelper(TreeNode root) {
+	public int updateDiameter(TreeNode root) {
 		if (root == null)
 			return 0;
-
-		int leftLen = diameterHelper(root.left);
-		int rightLen = diameterHelper(root.right);
-		int currDiameter = leftLen + rightLen + 1;
-		if (root.left != null && root.right != null && currDiameter > globalMax)
-			globalMax = currDiameter;
-
-		if (root.left == null)
-			return rightLen + 1;
-		else if (root.right == null)
-			return leftLen + 1;
-		else
-			return Math.max(leftLen, rightLen) + 1;
+		int leftPath = updateDiameter(root.left);
+		int rightPath = updateDiameter(root.right);
+		if (root.left != null && root.right != null)
+			globalDiameter = Math.max(leftPath + rightPath + 1, globalDiameter);
+		return Math.max(leftPath, rightPath) + 1;
 	}
 
 	public static class TreeNode {

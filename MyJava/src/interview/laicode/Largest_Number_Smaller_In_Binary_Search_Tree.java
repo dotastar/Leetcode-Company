@@ -69,18 +69,26 @@ public class Largest_Number_Smaller_In_Binary_Search_Tree {
 				.runTestClassAndPrint(Largest_Number_Smaller_In_Binary_Search_Tree.class);
 	}
 
+	/**
+	 * 1.top-down asking for the largest smaller number,
+	 * 2.if target > root, ask right child if there is a greater number than
+	 * current root, if it returns INT_MIN, then current is the largest number
+	 * smaller than target, otherwise return its right child's value.
+	 * 3.else ask left child if there is the largest number that smaller than
+	 * target, return whatever its left child's return value.
+	 * 
+	 */
 	public int largestSmaller(TreeNode root, int target) {
 		if (root == null)
 			return Integer.MIN_VALUE;
-		int res;
-		if (target > root.key) {
-			res = largestSmaller(root.right, target);
-		} else { // target <= root.key
-			res = largestSmaller(root.left, target);
+		if (root.key >= target) {
+			return largestSmaller(root.left, target);
+		} else {
+			int res = largestSmaller(root.right, target);
+			if (res == Integer.MIN_VALUE)
+				res = root.key;
+			return res;
 		}
-		if (res == Integer.MIN_VALUE && root.key < target)
-			res = root.key;
-		return res;
 	}
 
 	@Test
@@ -91,7 +99,7 @@ public class Largest_Number_Smaller_In_Binary_Search_Tree {
 		root.left.left = new TreeNode(2);
 		root.left.right = new TreeNode(9);
 		root.right.left = new TreeNode(11);
-		root.right.right = new TreeNode(23);	
+		root.right.right = new TreeNode(23);
 		root.left.left.left = new TreeNode(1);
 		root.left.right.left = new TreeNode(6);
 		root.right.left.right = new TreeNode(12);
@@ -122,8 +130,7 @@ public class Largest_Number_Smaller_In_Binary_Search_Tree {
 		int ans = 15;
 		assertTrue("Wrong: " + res, res == ans);
 	}
-	
-	
+
 	@Test
 	public void test3() {
 		TreeNode root = new TreeNode(10);
@@ -143,7 +150,6 @@ public class Largest_Number_Smaller_In_Binary_Search_Tree {
 		int ans = 10;
 		assertTrue("Wrong: " + res, res == ans);
 	}
-
 
 	public static class TreeNode {
 		public int key;
