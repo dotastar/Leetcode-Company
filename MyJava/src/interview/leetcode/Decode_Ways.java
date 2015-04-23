@@ -41,14 +41,22 @@ public class Decode_Ways {
 	 * M[i] = number of decode ways of s[0, i-1]
 	 * Base case:
 	 * M[0] = 1, M[1] = 1
+	 * 
 	 * Induction rule:
-	 * Two cases
-	 * A.s[i] == '0'
-	 * 1.s[i-1] == '1' or '2', M[i] = M[i-2]
-	 * 2.s[i-1] == '0' or '3' ~ '9', can't be decoded, return 0
-	 * B.s[i] != '0'
-	 * 1.s[i-1] != '0' && s[i-1, i] <= 26, M[i] = M[i-2] + M[i-1]
-	 * 2.else, M[i] = M[i-1]
+	 * 1.If s[i-1] == 0,
+	 **** if '0' < s[i-2] <= '2', M[i] = M[i-2],
+	 **** else can't be decoded
+	 * 
+	 * 2.(s[i-1] != 0) If s[i-2] * 10 + s[i-1] > 26 || s[i-2] == '0',
+	 * M[i] = M[i-1]
+	 * 
+	 * 3.Else, M[i] = M[i-1] + M[i-2]
+	 * 
+	 * Corner cases:
+	 * 1.0 as head
+	 * 2.0 as tail
+	 * 3.value > 26
+	 * 
 	 */
 	public int numDecodings_DP(String s) {
 		if (s.length() == 0 || s.charAt(0) == '0')
@@ -57,15 +65,16 @@ public class Decode_Ways {
 		M[0] = 1;
 		M[1] = 1;
 		for (int i = 2; i <= s.length(); i++) {
-			char curr = s.charAt(i - 1), prev = s.charAt(i - 2);
-			if (curr == '0') {
-				if (prev > '2' || prev == '0') // can't be decoded
-					return 0;
-				M[i] = M[i - 2];
-			} else {
-				int val = (prev - '0') * 10 + curr - '0';
-				M[i] = prev == '0' || val > 26 ? M[i - 1] : M[i - 1] + M[i - 2];
-			}
+			int cur = s.charAt(i - 1) - '0', prev = s.charAt(i - 2) - '0';
+			if (cur == 0) {
+				if (prev > 0 && prev <= 2)
+					M[i] = M[i - 2];
+				else
+					return 0; // can't be decoded
+			} else if (prev * 10 + cur > 26 || prev == 0)
+				M[i] = M[i - 1];
+			else
+				M[i] = M[i - 1] + M[i - 2];
 		}
 		return M[s.length()];
 	}

@@ -34,6 +34,8 @@ import org.junit.Test;
 public class All_Valid_Permutations_Of_Parentheses_II {
 
 	public static void main(String[] args) {
+		StringBuilder sb =null;
+		
 		AutoTestUtils
 				.runTestClassAndPrint(All_Valid_Permutations_Of_Parentheses_II.class);
 	}

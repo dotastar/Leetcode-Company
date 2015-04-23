@@ -79,23 +79,18 @@ public class Max_Product_Of_Cutting_Rope {
 
 	/**
 	 * DP, Time: O(n^2)
-	 * M[i] means the max product when the rope has length i.
+	 * M[i] = the max product when the rope has length i.
 	 * Base case: M[1] = 1;
 	 * Induction rule:
 	 * M[i] = max(max(j, M[j]) * max(i-j, M[i-j])) for all j, 1 <= j < i
 	 */
 	public int maxProduct_DP(int n) {
 		int[] M = new int[n + 1];
-		M[1] = 1;
-		int max = 1;
 		for (int i = 2; i <= n; i++) {
 			// optimization: because it's symmetric, only need to try i/2
 			for (int j = 1; j <= i / 2; j++) {
-				// at least one cut in i
-				int product = Math.max(j, M[j]) * Math.max(i - j, M[i - j]);
-				max = Math.max(max, product);
+				M[i] = Math.max(M[i], Math.max(j, M[j]) * Math.max(i - j, M[i - j]));
 			}
-			M[i] = max;
 		}
 		return M[n];
 	}

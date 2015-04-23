@@ -56,12 +56,13 @@ public class Longest_Valid_Parentheses {
 	/**
 	 * (()()
 	 * ^
-	 * traverse the input s:
-	 * if it's '(', push in
-	 * else is ')', peek the top of stack,
-	 * if it is '(', then they match, pop it out, and calculate length, update
-	 * max
-	 * else, no match, push it in
+	 * Use a Stack to store the index of parentheses.
+	 * Traverse the input String s, the current char is si.
+	 * Cases:
+	 * 0.stack empty, push into stack
+	 * 1.si == '(', push into stack
+	 * 2.si == ')', peek stack,
+	 * if matches the top, pop() and calculate length, else push into stack
 	 */
 	public int longestValidParentheses(String s) {
 		int max = 0;

@@ -34,6 +34,12 @@ public class Roman_to_Integer {
 
 	/**
 	 * Best solution
+	 * Use a HashMap to store Roman to Integer Value
+	 * Traverse the String, 2 cases:
+	 * 1.If the next char's value is greater than current char,
+	 * means current char is sth like IX, IV, we should this value
+	 * 2.Else, we add this value
+	 * 
 	 * One key observation: E.g."DCIX",
 	 * Start from left to right, the value is in decreasing order
 	 * unless it's something like IX, IV, XC,

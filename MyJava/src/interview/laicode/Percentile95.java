@@ -41,18 +41,19 @@ public class Percentile95 {
 
 	/**
 	 * Time: O(n)
-	 * Because URL has a maximum length which is 2048 characters, we can use an
+	 * Because URL has a maximum length which is 4096 characters, we can use an
 	 * array as HashMap to count the length.
 	 */
 	public int percentile95_Improved(List<Integer> lengths) {
-		int[] cnts = new int[2048];
-		for (Integer len : lengths)
-			cnts[len]++;
+		int[] urlLengths = new int[4097];
+		for (Integer length : lengths)
+			urlLengths[length]++;
 
-		int total = 0;
-		int i = cnts.length;
-		while (total <= 0.05 * lengths.size()) {
-			total += cnts[--i];
+		double threshold = lengths.size() * 0.05d;
+		double total = 0;
+		int i = urlLengths.length;
+		while (total <= threshold) {
+			total += urlLengths[--i];
 		}
 		return i;
 	}

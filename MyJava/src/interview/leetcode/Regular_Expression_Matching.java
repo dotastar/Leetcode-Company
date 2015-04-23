@@ -58,6 +58,24 @@ public class Regular_Expression_Matching {
 		return match(s, p, 0, 0);
 	}
 
+	/**
+	 * DFS, try every possible pattern of p
+	 * 1.Pattern p will have different forms only if it has '*'
+	 * 2.If p does not have '*', it's just a strict match (like a for loop)
+	 * 3.If p has '*', we need to consider begin from its preceding element,
+	 * because it can cancel one or adding more its preceding element
+	 * 
+	 * Cases:
+	 * 0.j == p.length, return i == s.length()
+	 * 
+	 * 1.j == p.length - 1, if i < s.length && (si == pj || pj == '.')
+	 * return isMatch(i+1, j+1), else return false.
+	 * 
+	 * 2.j != p.length - 1,
+	 * a.if p[j + 1] == '*', if (si == pj || pj == '.') satisfied,
+	 * try isMatch(i, j+2), and if false, i++ (borrow one more)
+	 * b.else, check if i < s.length && (si == pj || pj == '.')
+	 */
 	private boolean match(String s, String p, int i, int j) {
 		if (j == p.length())
 			return s.length() == i;
@@ -104,7 +122,9 @@ public class Regular_Expression_Matching {
 		} else {
 			int len = s.length();
 			int i = -1;
-			while (i < len && (i < 0 || p.charAt(0) == '.' || p.charAt(0) == s.charAt(i))) {
+			while (i < len
+					&& (i < 0 || p.charAt(0) == '.' || p.charAt(0) == s
+							.charAt(i))) {
 				if (isMatch1(s.substring(i + 1), p.substring(2)))
 					return true;
 				i++;
@@ -127,7 +147,8 @@ public class Regular_Expression_Matching {
 			if (j == p.length())
 				return false;
 			if (j == p.length() - 1)
-				return i == s.length() - 1 && (p.charAt(j) == '.' || p.charAt(j) == s.charAt(i));
+				return i == s.length() - 1
+						&& (p.charAt(j) == '.' || p.charAt(j) == s.charAt(i));
 			// current char has a match
 			if (p.charAt(j) == '.' || p.charAt(j) == s.charAt(i)) {
 				if (p.charAt(j + 1) != '*') {

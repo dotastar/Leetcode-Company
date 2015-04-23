@@ -110,8 +110,7 @@ public class Longest_Palindromic_Substring {
 
 	/**
 	 * For a given center, return the length of the longest palindrome that
-	 * based
-	 * on this center.
+	 * based on this center.
 	 */
 	public int longestPalindromeLength(String s, int center, int[] coordinate) {
 		if (coordinate.length < 2)

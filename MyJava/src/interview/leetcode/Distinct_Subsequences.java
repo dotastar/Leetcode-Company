@@ -81,16 +81,15 @@ public class Distinct_Subsequences {
 	 * M[i][j] = M[i-1][j] + M[i-1][j-1], if s[i-1] == t[j-1]
 	 ********* = M[i-1][j], else
 	 */
-	public int numDistinct2(String S, String T) {
+	public int numDistinct_DP2(String S, String T) {
 		if (S.length() < T.length())
 			return 0;
 		int[][] M = new int[S.length() + 1][T.length() + 1];
-		for (int i = 0; i <= S.length(); i++)
-			M[i][0] = 1;
+		M[0][0] = 1;
 		for (int i = 1; i <= S.length(); i++) {
+			M[i][0] = 1;
 			for (int j = 1; j <= i && j <= T.length(); j++) {
-				M[i][j] = S.charAt(i - 1) == T.charAt(j - 1) ? M[i - 1][j]
-						+ M[i - 1][j - 1] : M[i - 1][j];
+				M[i][j] = S.charAt(i - 1) == T.charAt(j - 1) ? M[i - 1][j - 1] + M[i - 1][j] : M[i - 1][j];
 			}
 		}
 		return M[S.length()][T.length()];
@@ -126,8 +125,7 @@ public class Distinct_Subsequences {
 			dp[i][0] = 1;
 		for (int i = 1; i <= lenS; i++) {
 			for (int j = 1; j <= lenT; j++) {
-				dp[i][j] = S.charAt(i - 1) == T.charAt(j - 1) ? dp[i - 1][j]
-						+ dp[i - 1][j - 1] : dp[i - 1][j];
+				dp[i][j] = S.charAt(i - 1) == T.charAt(j - 1) ? dp[i - 1][j] + dp[i - 1][j - 1] : dp[i - 1][j];
 			}
 		}
 		return dp[lenS][lenT];
@@ -150,16 +148,15 @@ public class Distinct_Subsequences {
 		int lenT = T.length();
 		if (lenS < lenT)
 			return 0;
-		int[] dp = new int[lenT + 1];
+		int[] M = new int[lenT + 1];
 
 		for (int i = 1; i <= lenS; i++) {
-			dp[0] = 1;
+			M[0] = 1;
 			for (int j = lenT; j >= 1; j--) {
-				dp[j] = S.charAt(i - 1) == T.charAt(j - 1) ? dp[j] + dp[j - 1]
-						: dp[j];
+				M[j] = S.charAt(i - 1) == T.charAt(j - 1) ? M[j] + M[j - 1] : M[j];
 			}
 		}
 
-		return dp[lenT];
+		return M[lenT];
 	}
 }

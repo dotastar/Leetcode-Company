@@ -40,21 +40,21 @@ public class Largest_Rectangle_in_Histogram {
 		System.out.print(largestRectangleArea_Imroved(heights5));
 		System.out.print(largestRectangleArea_Imroved(heights6));
 		System.out.println();
-		System.out.print(largestRectangleArea_Imroved2(heights0));
-		System.out.print(largestRectangleArea_Imroved2(heights1));
-		System.out.print(largestRectangleArea_Imroved2(heights2));
-		System.out.print(largestRectangleArea_Imroved2(heights3));
-		System.out.print(largestRectangleArea_Imroved2(heights4));
-		System.out.print(largestRectangleArea_Imroved2(heights5));
-		System.out.print(largestRectangleArea_Imroved2(heights6));
+		System.out.print(largestRectangleArea_Best(heights0));
+		System.out.print(largestRectangleArea_Best(heights1));
+		System.out.print(largestRectangleArea_Best(heights2));
+		System.out.print(largestRectangleArea_Best(heights3));
+		System.out.print(largestRectangleArea_Best(heights4));
+		System.out.print(largestRectangleArea_Best(heights5));
+		System.out.print(largestRectangleArea_Best(heights6));
 		System.out.println();
-		System.out.print(largestRectangleArea_Imroved3(heights0));
-		System.out.print(largestRectangleArea_Imroved3(heights1));
-		System.out.print(largestRectangleArea_Imroved3(heights2));
-		System.out.print(largestRectangleArea_Imroved3(heights3));
-		System.out.print(largestRectangleArea_Imroved3(heights4));
-		System.out.print(largestRectangleArea_Imroved3(heights5));
-		System.out.print(largestRectangleArea_Imroved3(heights6));
+		System.out.print(largestRectangleArea_Best(heights0));
+		System.out.print(largestRectangleArea_Best(heights1));
+		System.out.print(largestRectangleArea_Best(heights2));
+		System.out.print(largestRectangleArea_Best(heights3));
+		System.out.print(largestRectangleArea_Best(heights4));
+		System.out.print(largestRectangleArea_Best(heights5));
+		System.out.print(largestRectangleArea_Best(heights6));
 		System.out.println();
 	}
 
@@ -131,102 +131,21 @@ public class Largest_Rectangle_in_Histogram {
 	 * O(n) Time
 	 * 
 	 */
-	public static int largestRectangleArea_Imroved2(int[] height) {
-		int max = 0;
-		Stack<Integer> lefts = new Stack<Integer>(); // left histograms
-		for (int i = 0; i < height.length; i++) {
-			if (lefts.isEmpty() || height[i] > height[lefts.peek()]) {
-				lefts.push(i);
-			} else { // current (height[i]) <= height[stack.peek()]
-				int hidx = lefts.pop(); // height[left] is the min
-				// if lefts.isEmpty(), the width is from 0 to i which is i
-				int width = lefts.isEmpty() ? i : i - (lefts.peek() + 1);
-				max = height[hidx] * width > max ? height[hidx] * width : max;
-				i--; // important, equals to a while loop
-			}
-		}
-
-		while (!lefts.isEmpty()) { // reach the end
-			int hidx = lefts.pop(); // height[left] is the min
-			int width = lefts.isEmpty() ? height.length : height.length
-					- lefts.peek() - 1;
-			max = height[hidx] * width > max ? height[hidx] * width : max;
-		}
-		return max;
-	}
-
-	/**
-	 * Another way of writing it as the above solution
-	 * 
-	 * Every time it meets a histogram lower than the left highest one (the top
-	 * of stack), then pop out it and calculate its area, keep popping out and
-	 * calculating until current is the highest one, then continue the for
-	 * loop(push the highest in).
-	 * 
-	 */
-	public static int largestRectangleArea_Imroved3(int[] height) {
-		int max = 0;
-		int len = height.length;
-		Stack<Integer> lefts = new Stack<Integer>();
-		for (int i = 0; i < len; i++) {
-			while (!lefts.isEmpty() && height[i] < height[lefts.peek()]) {
-				int idx = lefts.pop();
-				// if lefts.isEmpty(), the width is from 0 to i which is i
-				int width = lefts.isEmpty() ? i : i - (lefts.peek() + 1);
-				int area = width * height[idx];
-				max = area > max ? area : max;
-			}
-			lefts.push(i);
-		}
-
-		while (!lefts.isEmpty()) { // reach the end
-			int idx = lefts.pop();
-			int width = lefts.isEmpty() ? len : len - (lefts.peek() + 1);
-			int area = width * height[idx];
-			if (area > max)
-				max = area;
-		}
-		return max;
-	}
-
-	/**
-	 * Second time of above solution
-	 */
-	public int largestRectangleArea3(int[] height) {
-		int maxArea = 0;
-		Stack<Integer> stk = new Stack<Integer>();
-		for (int r = 0; r < height.length; r++) {
-			int newH = height[r], h = Integer.MAX_VALUE;
-			while (!stk.isEmpty() && newH < height[stk.peek()]) {
-				int l = stk.pop();
-				int width = stk.isEmpty() ? r : r - (stk.peek() + 1);
-				h = Math.min(h, height[l]);
-				maxArea = Math.max(maxArea, width * h);
-			}
-			stk.push(r);
-		}
-		while (!stk.isEmpty()) {
-			int l = stk.pop();
-			int width = stk.isEmpty() ? height.length : height.length - (stk.peek() + 1);
-			maxArea = Math.max(maxArea, width * height[l]);
-		}
-		return maxArea;
-	}
 
 	/**
 	 * Best solution
 	 * Use Stack, Time: O(n)
 	 * Combine the above two whiles together
 	 */
-	public int largestRectangleArea_Best(int[] height) {
+	public static int largestRectangleArea_Best(int[] height) {
 		int max = 0;
-		Stack<Integer> stk = new Stack<Integer>();
+		Stack<Integer> stk = new Stack<>();
 		for (int i = 0; i <= height.length; i++) {
-			while (!stk.isEmpty() && (i == height.length || height[i] < height[stk.peek()])) {
-				int curr = stk.pop();
+			while (!stk.isEmpty()
+					&& (i == height.length || height[i] < height[stk.peek()])) {
+				int h = height[stk.pop()];
 				int width = stk.isEmpty() ? i : i - stk.peek() - 1;
-				int area = width * height[curr];
-				max = area > max ? area : max;
+				max = Math.max(h * width, max);
 			}
 			stk.push(i);
 		}

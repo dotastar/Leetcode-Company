@@ -29,39 +29,42 @@ public class Fraction_to_Recurring_Decimal {
 		assert ans.equals(res) : res;
 	}
 
+	/**
+	 * String atoi + HashMap
+	 * 1.decide if it is negative or not, if yes, insert '-' first,
+	 * and p = abs(numerator), q = abs(denominator)
+	 * 2.decide if it has decimal or not, if not, simply return result
+	 * 3.if it has decimal, append dot '.', and then:
+	 * 4.use a hashtable to store previous calculated number as key
+	 * and length of StringBuilder as value (the index will be inserted)
+	 * 5.repeated calculate its result until find recurring:
+	 * if (map.contains(p / q)) then find recurring
+	 * else p = p * 10, p = p % q
+	 * 
+	 * 2 / 3, 0.(6)
+	 */
 	public String fractionToDecimal(int numerator, int denominator) {
 		StringBuilder sb = new StringBuilder();
 		long p = Math.abs((long) numerator), q = Math.abs((long) denominator);
-		if (((numerator ^ denominator) >>> 31 == 1) && numerator != 0)
+		if (p != 0 && (numerator ^ denominator) >>> 31 == 1)
 			sb.append('-');
-
 		sb.append(p / q);
 		p %= q;
-		if (p == 0) // is divisible
-			return sb.toString();
-		sb.append('.');
-
-		assert p < q;
-		Map<Long, Integer> map = new HashMap<>();
-		for (int i = sb.length(); p > 0; i++) {
-			if (map.containsKey(p)) {
-				int start = map.get(p);
-				sb.insert(start, '(');
+		if (p != 0)
+			sb.append('.');
+		Map<Long, Integer> history = new HashMap<>();
+		while (p > 0) {
+			if (history.containsKey(p)) { // find recurring
+				sb.insert(history.get(p).intValue(), '(');
 				sb.append(')');
 				break;
 			} else
-				map.put(p, i);
+				history.put(p, sb.length());
 
-			p *= 10; // potential overflow if use int
+			p *= 10;
 			sb.append(p / q);
 			p %= q;
-
 		}
-
 		return sb.toString();
-	}
-
-	public int abs(int a) {
-		return a == Integer.MIN_VALUE ? Integer.MAX_VALUE : (int) Math.abs(a);
 	}
 }

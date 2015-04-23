@@ -25,16 +25,14 @@ public class Word_Break {
 		dict1.add("abc");
 		dict1.add("ab");
 		dict1.add("cd");
-		System.out.println(obj.wordBreak_Improved(s1, dict1));
-		
-		
+		System.out.println(obj.wordBreak_ImprovedDP(s1, dict1));
+
 		String s2 = "catsanddog";
 		Set<String> dict2 = new HashSet<String>();
-		String[] data2 = {"cat", "cats", "and", "sand", "dog"};
-		for(String d : data2)
+		String[] data2 = { "cat", "cats", "and", "sand", "dog" };
+		for (String d : data2)
 			dict2.add(d);
-		System.out.println(obj.wordBreak_Improved(s2, dict2));
-		
+		System.out.println(obj.wordBreak_ImprovedDP(s2, dict2));
 
 		String s = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
 				+ "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
@@ -44,118 +42,90 @@ public class Word_Break {
 				"aaaaaaa", "aaaaaaaa", "aaaaaaaaa", "aaaaaaaaaa" };
 		for (String d : data)
 			dict.add(d);
-		System.out.println(obj.wordBreak_Improved(s, dict));
+		System.out.println(obj.wordBreak_ImprovedDP(s, dict));
 	}
 
 	/**
-	 * Brute force generate all the substring of s, and check it in the dick
+	 * DFS improved
+	 * Time: O(n^k), n = wordDict.size(),
+	 * k = s.length() / average word length of wordDict that matches in s
 	 * 
+	 * try break at every position i, i = [1, i-1]
+	 * if (wordDict.contains(s[0, i-1]) && wordBreak(s[i, n], wordDict))
+	 * return true
 	 */
-	public boolean wordBreak(String s, Set<String> dict) {
-		if (dict.contains(s))
-			return true;
-		return wordBreakRecur3(s, dict);
-	}
-
-	/**
-	 * Recursion 1, way too slow
-	 * 
-	 * Time O(2^n), n is the length of s
-	 */
-	public boolean wordBreakRecur1(String s, Set<String> dict, int begin) {
-		if (begin == s.length())
-			return true;
-		for (int i = begin + 1; i < s.length(); i++) {
-			if (dict.contains(s.substring(begin, i))) {
-				if (wordBreakRecur1(s, dict, i))
-					return true;
-			}
-		}
-		return false;
-	}
-
-	/**
-	 * Recursion 2, better, still very slow
-	 * 
-	 * Time O(n!), n is the length of dict
-	 */
-	public boolean wordBreakRecur2(String s, Set<String> dict, int begin) {
-		if (begin == s.length())
-			return true;
-		for (String word : dict) {
-			int len = word.length();
-			int end = begin + len;
-			if (end > s.length())
-				continue;
-			if (s.substring(begin, end).equals(word))
-				if (wordBreakRecur2(s, dict, end))
-					return true;
-		}
-		return false;
-	}
-
-	/**
-	 * Same as above, second practice
-	 * 
-	 */
-	public boolean wordBreakRecur3(String s, Set<String> dict) {
+	public boolean wordBreak(String s, Set<String> wordDict) {
 		if (s.length() == 0)
 			return true;
-		for (String word : dict) {
-			if (word.length() > s.length())
-				continue;
-			String sub = s.substring(0, word.length());
-			if (sub.equals(word)) {
-				if (wordBreakRecur3(s.substring(word.length()), dict))
-					return true;
+		for (String word : wordDict) {
+			if (word.length() <= s.length()) {
+				String substr = s.substring(0, word.length());
+				if (wordDict.contains(substr)) {
+					if (wordBreak(s.substring(word.length()), wordDict))
+						return true;
+				}
 			}
 		}
 		return false;
 	}
 
 	/**
-	 * DP, dp[i] = dp[j] && dict.contains(s.substring(j, i)), j is 0...i.
-	 * 
-	 * Time: O(n^2), n is the s.length()
+	 * Naive DFS, Brute force generate all the substring of s
+	 * try break at every position i, i = [1, i-1]
+	 * if (wordDict.contains(s[0, i-1]) && wordBreak(s[i, n], wordDict))
+	 * return true
 	 */
-	public boolean wordBreak_DP_LessImproved(String s, Set<String> dict){
-		if(dict.contains(s))
+	public boolean wordBreak2(String s, Set<String> wordDict) {
+		if (s.length() == 0)
 			return true;
-		int len = s.length();
-		boolean[] dp = new boolean[len+1];
-		dp[0] = true;
-		for(int i=1; i<=len; i++){
-			for(int j=0; j<i; j++){
-				if(dp[j] && dict.contains(s.substring(j, i))){
-					dp[i] = true;
+		for (int i = 1; i < s.length(); i++) {
+			String substr = s.substring(0, i);
+			if (wordDict.contains(substr)
+					&& wordBreak2(s.substring(i), wordDict))
+				return true;
+		}
+		return false;
+	}
+
+	/**
+	 * DP, Time: O(n^2), Space: O(n)
+	 * M[i] = s[0, i - 1] can be segmented or not
+	 * M[i] = M[j] && s[j, i] is in wordDict, j = [0, i - 1]
+	 */
+	public boolean wordBreak_DP(String s, Set<String> wordDict) {
+		boolean[] M = new boolean[s.length() + 1];
+		M[0] = true;
+		for (int i = 1; i <= s.length(); i++) {
+			for (int j = 0; j < i; j++) {
+				if (M[j] && wordDict.contains(s.substring(j, i))) {
+					M[i] = true;
 					break;
 				}
 			}
 		}
-		return dp[len];
+		return M[s.length()];
 	}
-	
-	
+
 	/**
-	 * Dynamic Programming solution
+	 * Dynamic Programming Improved
 	 * 
 	 * Time: O(strlen * dict size), it is faster if dict size < strlen
 	 * 
 	 * Define an array segmentable[] such that segmentable[i] == true => 0-(i-1)
 	 * can be segmented using dictionary
 	 * 
-	 * segmentable[end] = segmentable[i] && s.substring(i, end) is in dict 
+	 * segmentable[end] = segmentable[i] && s.substring(i, end) is in dict
 	 * 
 	 * Initial state segmentable[0] == true
 	 * 
 	 */
-	public boolean wordBreak_Improved(String s, Set<String> dict) {
+	public boolean wordBreak_ImprovedDP(String s, Set<String> dict) {
 		if (dict.contains(s))
 			return true;
 		boolean[] segmentable = new boolean[s.length() + 1];
 		segmentable[0] = true;
 		for (int i = 0; i < s.length(); i++) {
-			if (!segmentable[i])	//if it's false, it's forever false. 
+			if (!segmentable[i]) // if it's false, it's forever false.
 				continue;
 			for (String word : dict) { // try all words with substring_0-(i-1)
 				int end = i + word.length();
@@ -166,7 +136,5 @@ public class Word_Break {
 		}
 		return segmentable[s.length()];
 	}
-	
 
-		
 }

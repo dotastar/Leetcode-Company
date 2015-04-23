@@ -69,19 +69,19 @@ public class Bipartite {
 	/**
 	 * BFS, color nodes
 	 */
-	private boolean colorNode(GraphNode vert, Map<GraphNode, Integer> dict) {
+	private boolean colorNode(GraphNode start, Map<GraphNode, Integer> dict) {
 		// if this node has been traversed, no need to do BFS again.
-		if (dict.containsKey(vert))
+		if (dict.containsKey(start))
 			return true;
 		Queue<GraphNode> q = new LinkedList<>();
-		q.add(vert);
-		dict.put(vert, 0); // we can assign it to any group
+		q.add(start);
+		dict.put(start, 0); // we can assign it to any color
 		while (!q.isEmpty()) {
 			GraphNode node = q.poll();
 			int color = dict.get(node);
 			int oppositeColor = (color + 1) % 2;
 			// if the neighbor has not been traversed, just put it in the queue
-			// and choose the correct group.
+			// and choose the opposite color.
 			for (GraphNode neighbor : node.neighbors) {
 				if (!dict.containsKey(neighbor)) {
 					dict.put(neighbor, oppositeColor);
