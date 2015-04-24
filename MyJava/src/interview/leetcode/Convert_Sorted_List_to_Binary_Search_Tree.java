@@ -11,28 +11,26 @@ public class Convert_Sorted_List_to_Binary_Search_Tree {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-//		Convert_Sorted_List_to_Binary_Search_Tree obj = new Convert_Sorted_List_to_Binary_Search_Tree();
+		// Convert_Sorted_List_to_Binary_Search_Tree obj = new
+		// Convert_Sorted_List_to_Binary_Search_Tree();
 		ListNode head = new ListNode(3);
 		head.next = new ListNode(5);
 		head.next.next = new ListNode(8);
 		head.next.next.next = new ListNode(10);
-//		head.next.next.next.next = new ListNode(12);
-//		head.next.next.next.next.next = new ListNode(14);
+		// head.next.next.next.next = new ListNode(12);
+		// head.next.next.next.next.next = new ListNode(14);
 
 	}
-
 
 	/**
 	 * Create nodes bottom-up, and assign them to its parents. The bottom-up
 	 * approach enables us to access the list in its order at the same time as
 	 * creating nodes.
-	 * 
-	 * @param head
-	 * @return
+	 * Time: O(n)
 	 */
 	static ListNode h;
 
-	public TreeNode sortedListToBST(ListNode head) {
+	public TreeNode sortedListToBST2(ListNode head) {
 		if (head == null)
 			return null;
 		h = head;
@@ -66,6 +64,54 @@ public class Convert_Sorted_List_to_Binary_Search_Tree {
 		if (head != null)
 			len++;
 		return len;
+	}
+
+	/**
+	 * Top-down recursion, Time: O(nlogn)
+	 * Recursively split the list to three parts: mid, mid left, mid right
+	 * Use mid as current TreeNode, recursively construct its left, right child
+	 * 
+	 * Three base cases to consider:
+	 * 1.head == null
+	 * 
+	 * 2.head.next == null
+	 * 1 -> null
+	 * mid fast
+	 * 
+	 * 3.head.next.next == null
+	 * 1 -> 2 -> null
+	 * mid fast
+	 * 
+	 * Recursive body
+	 * 1 --> 2 --> 3 --> null
+	 * prev mid fast
+	 * 
+	 */
+	public TreeNode sortedListToBST(ListNode head) {
+		if (head == null)
+			return null;
+		if (head.next == null)
+			return new TreeNode(head.val);
+		if (head.next.next == null) {
+			TreeNode root = new TreeNode(head.val);
+			root.right = new TreeNode(head.next.val);
+			return root;
+		}
+
+		ListNode mid = head, fast = head.next, prev = null;
+		while (fast != null && fast.next != null) {
+			prev = mid;
+			mid = mid.next;
+			fast = fast.next.next;
+		}
+
+		ListNode l1 = head, l2 = mid.next;
+		prev.next = null;
+		mid.next = null;
+		TreeNode root = new TreeNode(mid.val);
+		root.left = sortedListToBST(l1);
+		root.right = sortedListToBST(l2);
+		return root;
 	}
 
 	public static class TreeNode {

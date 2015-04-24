@@ -12,4 +12,12 @@ public class ListNode {
 	public String toString() {
 		return Integer.toString(value);
 	}
+
+	public static void printList(ListNode head) {
+		while (head != null) {
+			System.out.print(head + "--> ");
+			head = head.next;
+		}
+		System.out.println();
+	}
 }

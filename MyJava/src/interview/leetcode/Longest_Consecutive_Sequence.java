@@ -1,9 +1,14 @@
 package interview.leetcode;
 
+import static org.junit.Assert.*;
+import interview.AutoTestUtils;
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+
+import org.junit.Test;
 
 /**
  * Given an unsorted array of integers, find the length of the longest
@@ -20,8 +25,7 @@ import java.util.Set;
 public class Longest_Consecutive_Sequence {
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
+		AutoTestUtils.runTestClassAndPrint(Longest_Consecutive_Sequence.class);
 	}
 
 	/**
@@ -35,24 +39,19 @@ public class Longest_Consecutive_Sequence {
 	 * update their lengths.
 	 */
 	public int longestConsecutive2(int[] num) {
-		Map<Integer, Integer> cntMap = new HashMap<>();
 		int max = 0;
+		Map<Integer, Integer> cntMap = new HashMap<>();
 		for (int n : num) {
 			if (!cntMap.containsKey(n)) {
-				int cnt = 1, lower = 0, upper = 0;
-				if (cntMap.containsKey(n - 1)) {
-					lower = cntMap.get(n - 1);
-					cnt += lower;
-				}
-				if (cntMap.containsKey(n + 1)) {
-					upper = cntMap.get(n + 1);
-					cnt += upper;
-				}
-				cntMap.put(n - lower, cnt); // update the head
-				cntMap.put(n + upper, cnt); // update the tail
+				int cnt = 1;
+				int upper = cntMap.containsKey(n + 1) ? cntMap.get(n + 1) : 0;
+				int lower = cntMap.containsKey(n - 1) ? cntMap.get(n - 1) : 0;
+				cnt += upper + lower;
+				cntMap.put(n + upper, cnt); // update head
+				cntMap.put(n - lower, cnt); // update tail
+				// must store the current value so that it is visited
 				cntMap.put(n, cnt);
-
-				max = Math.max(max, cnt);
+				max = Math.max(cnt, max);
 			}
 		}
 		return max;
@@ -93,5 +92,14 @@ public class Longest_Consecutive_Sequence {
 			max = length > max ? length : max;
 		}
 		return max;
+	}
+
+	@Test
+	public void test1() {
+		int[] num = { 4, 0, -4, -2, 2, 5, 2, 0, -8, -8, -8, -8, -1, 7, 4, 5, 5, -4, 6, 6,
+				-3 };
+		int ans = 5;
+		int res = longestConsecutive2(num);
+		assertTrue("Wrong: " + res, ans == res);
 	}
 }
