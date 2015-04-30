@@ -70,25 +70,22 @@ public class Largest_Number_Smaller_In_Binary_Search_Tree {
 	}
 
 	/**
-	 * 1.top-down asking for the largest smaller number,
-	 * 2.if target > root, ask right child if there is a greater number than
-	 * current root, if it returns INT_MIN, then current is the largest number
-	 * smaller than target, otherwise return its right child's value.
-	 * 3.else ask left child if there is the largest number that smaller than
-	 * target, return whatever its left child's return value.
+	 * Ask children nodes for largestSmaller, if find a result, return it,
+	 * otherwise return Int.MIN
+	 * Cases:
+	 * 0.Base case, node is null, return Int.MIN
+	 * 1.If current value < target, return max(current, rightchild's result)
+	 * 2.Else, current >= target, return leftChild's
 	 * 
+	 * Use the property of BST
 	 */
 	public int largestSmaller(TreeNode root, int target) {
 		if (root == null)
 			return Integer.MIN_VALUE;
-		if (root.key >= target) {
+		if (root.key < target)
+			return Math.max(root.key, largestSmaller(root.right, target));
+		else
 			return largestSmaller(root.left, target);
-		} else {
-			int res = largestSmaller(root.right, target);
-			if (res == Integer.MIN_VALUE)
-				res = root.key;
-			return res;
-		}
 	}
 
 	@Test

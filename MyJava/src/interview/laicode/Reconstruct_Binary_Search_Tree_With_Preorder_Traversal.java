@@ -67,6 +67,29 @@ public class Reconstruct_Binary_Search_Tree_With_Preorder_Traversal {
 	}
 
 	/**
+	 * Time: O(n)
+	 */
+	int idx;
+
+	public TreeNode reconstruct2(int[] pre) {
+		idx = 0;
+		return construct(pre, Integer.MAX_VALUE);
+	}
+
+	/**
+	 * Do a PreOrder traversal, increment the global pointer every visit
+	 * Need a max to decide current node is valid or not
+	 */
+	private TreeNode construct(int[] pre, int max) {
+		if (idx >= pre.length || pre[idx] > max)
+			return null;
+		TreeNode root = new TreeNode(pre[idx++]); // visiting
+		root.left = construct(pre, root.key);
+		root.right = construct(pre, max);
+		return root;
+	}
+
+	/**
 	 * Time: O(n^2) worst case,
 	 * O(nlogn) average case (if the tree has log(n) height)
 	 */
@@ -74,17 +97,21 @@ public class Reconstruct_Binary_Search_Tree_With_Preorder_Traversal {
 		return reconstruct(pre, 0, pre.length - 1);
 	}
 
+	/**
+	 * pre[l] is the root
+	 * Use the BST property, we can split the pre[] to left and right by the
+	 * root value
+	 */
 	private TreeNode reconstruct(int[] pre, int l, int r) {
 		if (l > r)
 			return null;
-
 		TreeNode root = new TreeNode(pre[l]);
-		int leftEnd = l;
-		for (int i = l + 1; i <= r && pre[i] < root.key; i++) {
-			leftEnd = i;
+		int leftEnd = l + 1;
+		while (leftEnd <= r && pre[leftEnd] < root.key) {
+			leftEnd++;
 		}
-		root.left = reconstruct(pre, l + 1, leftEnd);
-		root.right = reconstruct(pre, leftEnd + 1, r);
+		root.left = reconstruct(pre, l + 1, leftEnd - 1);
+		root.right = reconstruct(pre, leftEnd, r);
 		return root;
 	}
 

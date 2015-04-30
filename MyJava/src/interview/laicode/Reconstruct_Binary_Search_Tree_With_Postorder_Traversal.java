@@ -61,6 +61,31 @@ public class Reconstruct_Binary_Search_Tree_With_Postorder_Traversal {
 	}
 
 	/**
+	 * Time: O(n)
+	 */
+	private int index;
+
+	public TreeNode reconstruct2(int[] post) {
+		// postorder is not null, no duplicates
+		index = post.length - 1;
+		return helper(post, Integer.MIN_VALUE);
+	}
+
+	/**
+	 * Do a reversely PreOrder traversal,
+	 * Use a min to decide current node exists or not.
+	 */
+	private TreeNode helper(int[] postorder, int min) {
+		if (index < 0 || postorder[index] <= min) {
+			return null;
+		}
+		TreeNode root = new TreeNode(postorder[index--]);
+		root.right = helper(postorder, root.key);
+		root.left = helper(postorder, min);
+		return root;
+	}
+
+	/**
 	 * Time: O(n^2) worst case,
 	 * O(nlogn) average case (if the tree has log(n) height)
 	 * 
@@ -72,18 +97,21 @@ public class Reconstruct_Binary_Search_Tree_With_Postorder_Traversal {
 		return reconstruct(post, 0, post.length - 1);
 	}
 
+	/**
+	 * Use the property of BST, split post[] to left and right part by its root
+	 * value which is post[r], recursively construct the tree.
+	 */
 	private TreeNode reconstruct(int[] post, int l, int r) {
 		if (l > r)
 			return null;
 
 		TreeNode root = new TreeNode(post[r]);
-		int rightStart = r;
-		for (int i = r - 1; i >= l && post[i] > root.key; i--) {
-			rightStart = i;
+		int leftEnd = r - 1;
+		while (leftEnd >= l && post[leftEnd] > root.key) {
+			leftEnd--;
 		}
-
-		root.left = reconstruct(post, l, rightStart - 1);
-		root.right = reconstruct(post, rightStart, r - 1);
+		root.left = reconstruct(post, l, leftEnd);
+		root.right = reconstruct(post, leftEnd + 1, r - 1);
 		return root;
 	}
 }
