@@ -9,8 +9,6 @@ package interview.company.facebook;
 public class LongestCommonContiguousSubstring {
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 
 	}
-
 }

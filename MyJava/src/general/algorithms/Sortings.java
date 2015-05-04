@@ -105,16 +105,16 @@ public class Sortings {
 		 * Stable sort
 		 */
 		public static int[] mergeSort(int[] A) {
-			sort(A, new int[A.length], 0, A.length - 1);
+			msort(A, new int[A.length], 0, A.length - 1);
 			return A;
 		}
 
-		private static void sort(int[] A, int[] aux, int l, int r) {
+		private static void msort(int[] A, int[] aux, int l, int r) {
 			if (l >= r)
 				return;
 			int mid = l + (r - l) / 2;
-			sort(A, aux, l, mid);
-			sort(A, aux, mid + 1, r);
+			msort(A, aux, l, mid);
+			msort(A, aux, mid + 1, r);
 			merge(A, aux, l, mid, r);
 		}
 
@@ -123,10 +123,10 @@ public class Sortings {
 			assert isSorted(A, m + 1, r);
 			System.arraycopy(A, l, aux, l, r - l + 1);
 			for (int i = l, j = m + 1, k = l; k <= r; k++) {
-				if (i > m || (j <= r && A[j] < A[i]))
-					A[k] = A[j++];
+				if (i > m || (j <= r && aux[j] < aux[i]))
+					A[k] = aux[j++];
 				else
-					A[k] = A[i++];
+					A[k] = aux[i++];
 			}
 			assert isSorted(A, l, r);
 		}
@@ -173,22 +173,35 @@ public class Sortings {
 	@Test
 	public void testQuickSort1() {
 		int[] A = { 5, 91, 2, 13, 25, 2, 33, 8, 16, 9, 68, 11, 3 };
+		int[] res = Arrays.copyOf(A, A.length);
 		QuickSort.quickSort(A);
 		System.out.println(Arrays.toString(A));
-		assertTrue(isSorted(A));
+		Arrays.sort(res);
+		assertTrue(Arrays.toString(A), Arrays.equals(A, res));
 	}
 
 	@Test
 	public void testMergeSort1() {
 		int[] A = { 5, 91, 2, 13, 25, 2, 33, 8, 16, 9, 68, 11, 3 };
+		int[] res = Arrays.copyOf(A, A.length);
 		MergeSort.mergeSort(A);
-		assertTrue(isSorted(A));
+		Arrays.sort(res);
+		assertTrue(Arrays.toString(A), Arrays.equals(A, res));
+	}
+
+	@Test
+	public void testMergeSort2() {
+		int[] A = { 0, 2, 1 };
+		int[] res = Arrays.copyOf(A, A.length);
+		MergeSort.mergeSort(A);
+		Arrays.sort(res);
+		assertTrue(Arrays.toString(A), Arrays.equals(A, res));
 	}
 
 	/***********************************************************************
 	 * Check if array is sorted - useful for debugging
 	 ***********************************************************************/
-	private static boolean isSorted(int[] a) {
+	public static boolean isSorted(int[] a) {
 		return isSorted(a, 0, a.length - 1);
 	}
 
