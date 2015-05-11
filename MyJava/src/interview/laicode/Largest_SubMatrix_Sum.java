@@ -52,6 +52,29 @@ public class Largest_SubMatrix_Sum {
 	 * cur[j]: current max sum that starts at row start, ends at row i, ends at
 	 * column j
 	 */
+	public int largest3(int[][] A) {
+		int m = A.length, n = A.length == 0 ? 0 : A[0].length;
+		int max = 0;
+		int[] M = new int[n];
+		for (int row = 0; row < m; row++) {
+			Arrays.fill(M, 0);
+			for (int i = row; i >= 0; i--) {
+				for (int j = 0; j < n; j++)
+					M[j] += A[i][j];
+				// max sum of subarray
+				int currMax = 0;
+				for (int j = 0; j < n; j++) {
+					currMax = currMax + M[j] <= 0 ? 0 : currMax + M[j];
+					max = Math.max(currMax, max);
+				}
+			}
+		}
+		return max;
+	}
+
+	/**
+	 * Teacher's version, same as above
+	 */
 	public int largest2(int[][] A) {
 		int res = Integer.MIN_VALUE;
 		int M = A.length, N = A[0].length;
@@ -59,7 +82,7 @@ public class Largest_SubMatrix_Sum {
 		for (int start = 0; start < M; start++) { // start row, fix top border
 			for (int i = start; i < M; i++) { // current row
 				add(cur, A[i]); // add from start row to the end row
-				res = Math.max(res, max(cur));
+				res = Math.max(res, max(cur)); // max sum of subarray
 			}
 			Arrays.fill(cur, 0);
 		}
@@ -161,7 +184,7 @@ public class Largest_SubMatrix_Sum {
 
 		{ 1, 0, 2, 1, -1 } };
 
-		int res = largest2(mat);
+		int res = largest3(mat);
 		int ans = 8;
 		assertTrue("Wrong: " + res, res == ans);
 	}
@@ -178,7 +201,7 @@ public class Largest_SubMatrix_Sum {
 
 		{ 0, 0, 1, 1 } };
 
-		int res = largest2(mat);
+		int res = largest3(mat);
 		int ans = 7;
 		assertTrue("Wrong: " + res, res == ans);
 	}
@@ -193,7 +216,7 @@ public class Largest_SubMatrix_Sum {
 
 		{ 3, 2, 1, -3, -2 } };
 
-		int res = largest2(mat);
+		int res = largest3(mat);
 		int ans = 6;
 		assertTrue("Wrong: " + res, res == ans);
 	}
