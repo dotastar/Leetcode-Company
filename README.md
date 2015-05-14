@@ -11,4 +11,4 @@ Moreover, it contains some simple programs of a technology that I found interest
 To improve my coding skills, I did a little practices on a few websites ([codility](https://codility.com/programmers/), [leetcode](https://leetcode.com/), ...) and a few books ([Cracking the Coding Interview 150](http://www.amazon.com/gp/product/098478280X/), [Elements of Programming Interview](http://www.amazon.com/Elements-Programming-Interviews-Insiders-Guide/dp/1479274836), besides I recorded some interesting coding quesitons I've seen from several forums.
 
 ###[MyJava/src/machine_learning](https://github.com/humpydonkey/Portfolio/tree/master/MyJava/src/machine_learning)
-My coding practices of my machine learning course.
+Coding practices of my machine learning course.
