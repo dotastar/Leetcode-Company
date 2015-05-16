@@ -1,7 +1,7 @@
 package interview.company.others;
 
 import interview.AutoTestUtils;
-import interview.laicode.utils.ListNode;
+import interview.utils.ListNode;
 
 import org.junit.Test;
 

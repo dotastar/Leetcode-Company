@@ -1,7 +1,7 @@
 package general.concurrency;
 
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * Producer Comsumer Pattern
@@ -100,7 +100,7 @@ public class ProducerConsumerPattern {
 
 	public static class JobManager {
 
-		private Queue<Job> jobs = new LinkedList<Job>();
+		private BlockingQueue<Job> jobs = new LinkedBlockingQueue<Job>();
 		private final int MinJobs;
 		private final int MaxJobs;
 		private int jobCount;
