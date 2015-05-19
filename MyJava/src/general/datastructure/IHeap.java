@@ -1,6 +1,6 @@
 package general.datastructure;
 
-public interface MyHeap<T> {
+public interface IHeap<T> {
 	public void offer(T elem);
 
 	public T poll();

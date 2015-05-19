@@ -1,6 +1,6 @@
 package general.datastructure.test;
 
-import general.datastructure.MyHeap;
+import general.datastructure.IHeap;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -19,7 +19,7 @@ public class MyHeapTester {
 	}
 
 	/***************** MinHeap Implementation *****************/
-	public static class MyHeapImpl implements MyHeap<Integer> {
+	public static class MyHeapImpl implements IHeap<Integer> {
 		private int[] data;
 		private int size;
 
@@ -131,7 +131,7 @@ public class MyHeapTester {
 	}
 
 	/***************** Test *****************/
-	private MyHeap<Integer> heap;
+	private IHeap<Integer> heap;
 
 	@Before
 	public void init() {

@@ -1,6 +1,6 @@
 package general.datastructure;
 
-public interface MyQueue<T> {
+public interface IQueue<T> {
 	public void offer(T ele);
 
 	public T poll();

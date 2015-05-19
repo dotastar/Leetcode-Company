@@ -1,6 +1,6 @@
 package general.datastructure.test;
 
-import general.datastructure.MyQueue;
+import general.datastructure.IQueue;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -19,7 +19,7 @@ public class MyQueueTester {
 	}
 
 	/***************** Implementation *****************/
-	public static class MyQueueImpl implements MyQueue<Integer> {
+	public static class MyQueueImpl implements IQueue<Integer> {
 
 		@Override
 		public void offer(Integer ele) {
@@ -54,7 +54,7 @@ public class MyQueueTester {
 	}
 
 	/***************** Test *****************/
-	private MyQueue<Integer> q;
+	private IQueue<Integer> q;
 
 	@Before
 	public void init() {

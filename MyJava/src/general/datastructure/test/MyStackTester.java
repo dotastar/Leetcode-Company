@@ -1,7 +1,7 @@
 package general.datastructure.test;
 
 import static org.junit.Assert.assertTrue;
-import general.datastructure.MyStack;
+import general.datastructure.IStack;
 import general.datastructure.Stack_LinkList;
 
 import org.junit.Before;
@@ -27,7 +27,7 @@ public class MyStackTester {
 	}
 
 	/***************** MyStack Test *****************/
-	private MyStack<Integer> stk;
+	private IStack<Integer> stk;
 
 	@Before
 	public void init() {

@@ -2,7 +2,7 @@ package general.datastructure;
 
 import java.util.Arrays;
 
-public class Stack_Array<T> implements MyStack<T> {
+public class Stack_Array<T> implements IStack<T> {
 	private static final int DEFAULT_SIZE = 10;
 	private T[] arr;
 	private int size;

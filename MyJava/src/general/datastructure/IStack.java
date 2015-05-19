@@ -1,6 +1,6 @@
 package general.datastructure;
 
-public interface MyStack<T> {
+public interface IStack<T> {
 	public void push(T t);
 
 	public T pop();

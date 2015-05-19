@@ -1,6 +1,6 @@
 package general.datastructure;
 
-public class Queue_Array<T> implements MyQueue<T> {
+public class Queue_Array<T> implements IQueue<T> {
 	private T[] arr;
 	private int head, tail; // tail is not the last stored element,
 							// is the next available slot (last+1).
