@@ -53,8 +53,8 @@ public class Word_Break_II {
 				+ "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
 				+ "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaab";
 		Set<String> dict = new HashSet<String>();
-		String[] data = { "a", "aa", "aaa", "aaaa", "aaaaa", "aaaaaa",
-				"aaaaaaa", "aaaaaaaa", "aaaaaaaaa", "aaaaaaaaaa" };
+		String[] data = { "a", "aa", "aaa", "aaaa", "aaaaa", "aaaaaa", "aaaaaaa",
+				"aaaaaaaa", "aaaaaaaaa", "aaaaaaaaaa" };
 		for (String d : data)
 			dict.add(d);
 		System.out.println(obj.wordBreak(s, dict));
@@ -91,8 +91,8 @@ public class Word_Break_II {
 		return res;
 	}
 
-	private void buildPath(String s, List<Integer>[] dp, Stack<String> path,
-			int idx, List<String> res) {
+	private void buildPath(String s, List<Integer>[] dp, Stack<String> path, int idx,
+			List<String> res) {
 		if (idx == 0) {
 			StringBuilder sb = new StringBuilder();
 			for (int i = path.size() - 1; i >= 0; i--)
@@ -114,34 +114,63 @@ public class Word_Break_II {
 	 * Recursion + DP
 	 * 
 	 */
-    public List<String> wordBreak(String s, Set<String> dict) {
-        List<String> res = new ArrayList<>();
-        boolean[] breakable = new boolean[s.length()+1]; // for dp
-        Arrays.fill(breakable, true);
-        breakWord(res, s, dict, new StringBuilder(), 0, breakable);
-        return res;
-    }
-    
-    private void breakWord(List<String> res, String s, Set<String> dict, StringBuilder sb, int start, boolean[] breakable){
-        if(start==s.length()){
-            res.add(sb.substring(1));
-            return;
-        }
-        
-        for(int i=start; i<s.length(); i++){
-            if(!breakable[i+1])	// eliminate unnecessory search
-                continue;
-            String word = s.substring(start, i+1);
-            if(dict.contains(word)){
-                int length = sb.length();
-                sb.append(' ');
-                sb.append(word);
-                int resultSize = res.size();
-                breakWord(res, s, dict, sb, i+1, breakable);
-                // if no solution, set the possible to false
-                breakable[i+1] = res.size()!=resultSize;
-                sb.setLength(length);
-            }
-        }
-    }
+	public List<String> wordBreak(String s, Set<String> dict) {
+		List<String> res = new ArrayList<>();
+		boolean[] breakable = new boolean[s.length() + 1]; // for dp
+		Arrays.fill(breakable, true);
+		breakWord(res, s, dict, new StringBuilder(), 0, breakable);
+		return res;
+	}
+
+	private void breakWord(List<String> res, String s, Set<String> dict,
+			StringBuilder sb, int start, boolean[] breakable) {
+		if (start == s.length()) {
+			res.add(sb.substring(1));
+			return;
+		}
+
+		for (int i = start; i < s.length(); i++) {
+			if (!breakable[i + 1]) // eliminate unnecessary search
+				continue;
+			String word = s.substring(start, i + 1);
+			if (dict.contains(word)) {
+				int length = sb.length();
+				sb.append(' ');
+				sb.append(word);
+				int resultSize = res.size();
+				breakWord(res, s, dict, sb, i + 1, breakable);
+				// if no solution, set the possible to false
+				breakable[i + 1] = res.size() != resultSize;
+				sb.setLength(length);
+			}
+		}
+	}
+
+	/**
+	 * Simply recursion
+	 */
+	public List<String> wordBreak_Recursion(String s, Set<String> wordDict) {
+		List<String> res = new ArrayList<>();
+		breakWord_Recur(s, wordDict, 0, new StringBuilder(), res);
+		return res;
+	}
+
+	private void breakWord_Recur(String s, Set<String> dict, int idx, StringBuilder solu,
+			List<String> res) {
+		if (idx == s.length()) {
+			res.add(solu.substring(1));
+			return;
+		}
+		StringBuilder word = new StringBuilder();
+		for (int i = idx; i < s.length(); i++) {
+			word.append(s.charAt(i));
+			if (dict.contains(word.toString())) {
+				int oldLen = solu.length();
+				solu.append(' ');
+				solu.append(word.toString());
+				breakWord_Recur(s, dict, i + 1, solu, res);
+				solu.setLength(oldLen);
+			}
+		}
+	}
 }

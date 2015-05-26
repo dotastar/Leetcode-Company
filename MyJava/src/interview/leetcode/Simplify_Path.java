@@ -20,6 +20,12 @@ public class Simplify_Path {
 	}
 
 	/**
+	 * Corner cases:
+	 * 1.redundant slashed: //root///user -> /root/user
+	 * 2.exceeds root path: /../../ -> /
+	 */
+
+	/**
 	 * Second time practice
 	 * Use string.split() to reduce a some amount of code.
 	 */

@@ -31,12 +31,11 @@ public class Search_in_Rotated_Sorted_Array_II {
 	 * if A[mid]<A[l], then A[l~mid] must shorter than A[mid~r], which means
 	 * A[mid] is at right hand side.
 	 * 
-	 * however it won't work if there is duplicates, because duplicates will
-	 * make the length of both sides arbitrary, (we can make any side
-	 * longer/shorter by add/delete the duplicates values of one of the number
-	 * in that side), so the two conditions above con't be used to decide where
-	 * A[mid] is?(either in left hand side or in right hand side).
 	 * 
+	 * however it won't work if there are duplicates, a counter example:
+	 * 1 3 1 1 1
+	 * because if there are duplicates and A[mid] == A[l], we can't tell the two
+	 * cases which one it belongs to.
 	 * therefore, we add the third condition to exclude duplicate values.
 	 */
 	public static boolean search(int[] A, int target) {
