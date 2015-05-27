@@ -28,7 +28,6 @@ import java.util.List;
 public class Triangle {
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 		List<List<Integer>> triangle = new ArrayList<List<Integer>>();
 		List<Integer> row0 = new ArrayList<Integer>();
 		triangle.add(row0);
