@@ -47,8 +47,7 @@ public class Palindrome_Partitioning_II {
 		for (int i = 1; i < N; i++) {
 			M[i] = M[i - 1] + 1;
 			for (int j = i - 1; j >= 0; j--) {
-				if (S.charAt(j) == S.charAt(i)
-						&& (i - j <= 2 || isPalin[j + 1][i - 1])) {
+				if (S.charAt(j) == S.charAt(i) && (i - j <= 2 || isPalin[j + 1][i - 1])) {
 					isPalin[j][i] = true;
 					M[i] = j == 0 ? 0 : Math.min(M[i], M[j - 1] + 1);
 				}

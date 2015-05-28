@@ -52,7 +52,7 @@ public class Count_Primes {
 	}
 
 	/**
-	 * Time: O(sqrt(n) * )
+	 * Time: O(nloglogn)
 	 * Space: O(n)
 	 * Improvement: only calculate to sqrt(n)
 	 */
