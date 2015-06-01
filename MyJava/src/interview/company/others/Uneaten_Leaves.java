@@ -1,7 +1,6 @@
 package interview.company.others;
 
-import static org.junit.Assert.*;
-import interview.AutoTestUtils;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
@@ -23,13 +22,15 @@ import org.junit.Test;
 public class Uneaten_Leaves {
 
 	public static void main(String[] args) {
-		AutoTestUtils.runTestClassAndPrint(Uneaten_Leaves.class);
+		// AutoTestUtils.runTestClassAndPrint(Uneaten_Leaves.class);
+		int a = 12;
+		for (int i = 85; i * 12 < 12000; i++)
+			if (a * i > 10000)
+				System.out.println(a * i);
 	}
 
 	public int countUneatenLeaves(int N, int[] A) {
-		
-		
-		
+
 		return 0;
 	}
 
