@@ -28,7 +28,7 @@ public class Uneaten_Leaves {
 			if (a * i > 10000)
 				System.out.println(a * i);
 	}
-
+	
 	public int countUneatenLeaves(int N, int[] A) {
 
 		return 0;
