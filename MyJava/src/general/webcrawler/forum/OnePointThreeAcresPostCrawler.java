@@ -8,38 +8,34 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-import org.jsoup.Connection.Response;
 import org.jsoup.Jsoup;
+import org.jsoup.Connection.Response;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-public class MeetQunPostCrawler {
+public class OnePointThreeAcresPostCrawler {
 
 	public static void main(String[] args) {
-		MeetQunPostCrawler pc = new MeetQunPostCrawler();
-		pc.crawlPostsToFile(ROOT_URL);
-
+		OnePointThreeAcresPostCrawler crawler = new OnePointThreeAcresPostCrawler();
+		crawler.crawlPostsToFile(ROOT_URL);
 	}
 
 	private static final String[] KEY_WORDS = { "booking", "connectifier", "vertica" };
-	private static final int MAX_PAGE = 140;
+	// { "zenefits" };
+	private static final int MAX_PAGE = 68;
 	private static final long WAIT_TIME = 200; // ms
-	private static final int TIMEOUT = 10_000; // ms
+	private static final int TIMEOUT = 20_000; // ms
 
-	private static final String ROOT_URL = "http://www.meetqun.com/forum-36-#.html";
+	private static final String ROOT_URL = "http://www.1point3acres.com/bbs/forum-145-#.html";
 	private static final String USER_AGENT = "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:25.0) Gecko/20100101 Firefox/25.0";
-	private static final String HTML_BEGIN = "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01//EN\" \"http://www.w3.org/TR/html4/strict.dtd\"> <html> <head> <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"> <meta http-equiv=\"Content-Style-Type\" content=\"text/css\"> <base href=\"http://www.meetqun.com/\"> <link rel=\"stylesheet\" type=\"text/css\" href=\"data/cache/style_7_common.css?K6D\"> <link rel=\"stylesheet\" type=\"text/css\" href=\"data/cache/style_7_forum_forumdisplay.css?K6D\">   <script src=\"data/cache/common.js?K6D\" type=\"text/javascript\"></script>  <link href=\"template/week_steady/images//js/portal.css\" rel=\"stylesheet\" type=\"text/css\"> <link rel=\"stylesheet\" id=\"css_widthauto\" type=\"text/css\" href=\"data/cache/style_7_widthauto?K6D\">  <script src=\"data/cache/common.js?K6D\" type=\"text/javascript\"></script>  <script type=\"text/javascript\">HTMLNODE.className += ' widthauto'</script>  <script src=\"data/cache/forum.js?K6D\" type=\"text/javascript\"></script>  <script src=\"data/cache/portal.js?K6D\" type=\"text/javascript\"></script>  <title>过滤面经</title> </head> <body id=\"nv_forum\" class=\"pg_forumdisplay\" onkeydown=\"if(event.keyCode==27) return false;\">  <table>";
+	private static final String HTML_BEGIN = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\"><html xmlns=\"http://www.w3.org/1999/xhtml\"><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"><title>一亩三分地面经</title><base href=\"http://www.1point3acres.com/bbs/\" /><link rel=\"stylesheet\" type=\"text/css\" href=\"data/cache/style_5_common.css?D6I\" /><link rel=\"stylesheet\" type=\"text/css\" href=\"data/cache/style_5_forum_forumdisplay.css?D6I\" /><script src=\"data/cache/common.js?D6I\" type=\"text/javascript\"></script><link rel=\"stylesheet\" id=\"css_widthauto\" type=\"text/css\" href=\"data/cache/style_5_widthauto.css?D6I\" /><script type=\"text/javascript\">HTMLNODE.className += ' widthauto'</script><script src=\"data/cache/forum.js?D6I\" type=\"text/javascript\"></script></head><body id=\"nv_forum\" class=\"pg_forumdisplay\" onkeydown=\"if(event.keyCode==27) return false;\"><table>";
 	private static final String HTML_END = "</table> </body> </html>";
 	private static final String HTML_CHECKBOX = "<td> <input type=\"checkbox\" name=\"read\" value=\"false\"> </td>";
 
-	public MeetQunPostCrawler() {
-
-	}
-
 	public void crawlPostsToFile(String root) {
 		DateFormat dateFormat = new SimpleDateFormat("HH-mm-MM-dd-yyyy");
-		String fileName = "/Users/yazhoucao/Downloads/ForumPosts/mq-"
+		String fileName = "/Users/yazhoucao/Downloads/ForumPosts/1m3f-"
 				+ dateFormat.format(Calendar.getInstance().getTime()) + ".html";
 		File file = new File(fileName);
 		int pageIdx = 1;
