@@ -13,11 +13,11 @@ public class BinaryTreeIterator {
 		AutoTestUtils.runTestClassAndPrint(BinaryTreeIterator.class);
 	}
 
-	public static class BTreeIterator {
+	public static class InorderIterator {
 		Stack<TreeNode> stk;
 		TreeNode next; // next node to traverse
 
-		public BTreeIterator(TreeNode root) {
+		public InorderIterator(TreeNode root) {
 			next = root;
 			stk = new Stack<TreeNode>();
 
@@ -63,7 +63,7 @@ public class BinaryTreeIterator {
 		root.right.right.left = new TreeNode(9);
 		root.right.right.right = new TreeNode(11);
 		root.right.right.right.right = new TreeNode(12);
-		BTreeIterator iter = new BTreeIterator(root);
+		InorderIterator iter = new InorderIterator(root);
 		for (int i = 1; i <= 12; i++) {
 			assertTrue(iter.hasNext());
 			assertTrue(iter.next().key == i);
