@@ -26,6 +26,7 @@ public class Singleton {
 		 */
 
 		/**
+		 * volatile ensures ClassSingle is already initialized.
 		 * volatile solves one issue that is visibility issue . If you are
 		 * writing to one variable that is declared volatile then the value will
 		 * be visible to other thread immediately. As we all know we have

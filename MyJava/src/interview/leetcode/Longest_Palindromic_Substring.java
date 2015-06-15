@@ -56,9 +56,6 @@ public class Longest_Palindromic_Substring {
 	 * Dynamic Programming, Time: O(n^2), Space: O(n^2)
 	 * M[j][i] = if s[j, i] is palindrome or not
 	 * 
-	 * Base case:
-	 * M[j][i] = 1, when i == j
-	 * 
 	 * Induction rule:
 	 * M[j][i] = s[i] == s[j] && (i - j <= 2 || M[j+1][i-1])
 	 * 

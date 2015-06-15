@@ -34,6 +34,26 @@ public class Longest_Substring_Without_Repeating_Characters {
 	}
 
 	/**
+	 * Improved solution of sliding window
+	 * Don't have to remove left side one by one
+	 * Time: n = O(n)
+	 */
+	public int lengthOfLongestSubstring3(String s) {
+		int[] dict = new int[128];
+		Arrays.fill(dict, -1);
+		int max = 0;
+		for (int l = 0, r = 0; r < s.length(); r++) {
+			char cr = s.charAt(r);
+			if (dict[cr] >= l) // shorten the window
+				l = dict[cr] + 1;
+			dict[cr] = r;
+			int len = r - l + 1;
+			max = len > max ? len : max;
+		}
+		return max;
+	}
+
+	/**
 	 * Two pointers, sliding window
 	 */
 	public int lengthOfLongestSubstring2(String s) {

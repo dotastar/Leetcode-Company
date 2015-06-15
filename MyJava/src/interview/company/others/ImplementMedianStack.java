@@ -12,6 +12,12 @@ import java.util.TreeSet;
 
 import org.junit.Test;
 
+/**
+ * HP - vertica
+ * 
+ * @author yazhoucao
+ *
+ */
 public class ImplementMedianStack {
 
 	public static void main(String[] args) {
