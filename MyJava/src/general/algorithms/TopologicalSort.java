@@ -45,6 +45,8 @@ public class TopologicalSort {
 	/**
 	 * DFS -traverse all the neighbors and then push its value to stack
 	 * Finally the stack will have the topologically ordered values
+	 * 
+	 * Assume there is no cycle
 	 */
 	private void topoSort(GraphNode node, Stack<Integer> res, Set<GraphNode> visited) {
 		if (node == null || !visited.add(node))
