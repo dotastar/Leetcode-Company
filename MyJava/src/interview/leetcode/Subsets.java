@@ -91,6 +91,7 @@ public class Subsets {
 
 	/**
 	 * Recursion, DFS
+	 * Time: O(2^n), n = length(S)
 	 */
 	public List<List<Integer>> subsets1(int[] S) {
 		Arrays.sort(S);
@@ -103,8 +104,7 @@ public class Subsets {
 	 * Two states:
 	 * 1.choose S[idx], 2.not choose S[idx]
 	 */
-	private void generate(int[] S, int idx, List<List<Integer>> res,
-			Stack<Integer> set) {
+	private void generate(int[] S, int idx, List<List<Integer>> res, Stack<Integer> set) {
 		if (idx == S.length) {
 			res.add(new ArrayList<Integer>(set));
 			return;
@@ -126,8 +126,7 @@ public class Subsets {
 		return sets;
 	}
 
-	public void subsets(int[] S, int idx, Stack<Integer> set,
-			List<List<Integer>> sets) {
+	public void subsets(int[] S, int idx, Stack<Integer> set, List<List<Integer>> sets) {
 		if (idx == S.length) {
 			return;
 		}
