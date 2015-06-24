@@ -71,8 +71,7 @@ public class Word_Search {
 		board[i][j] = '\0';
 		for (int p = -1; p <= 1; p++) {
 			for (int q = -1; q <= 1; q++)
-				if (Math.abs(p + q) == 1
-						&& exist(board, word, i + p, j + q, idx + 1))
+				if (Math.abs(p + q) == 1 && exist(board, word, i + p, j + q, idx + 1))
 					return true;
 		}
 		board[i][j] = word.charAt(idx);
@@ -106,8 +105,7 @@ public class Word_Search {
 	 * Time O(4^k), k is the length of word
 	 * 
 	 */
-	private static boolean search(char[][] board, int i, int j, String word,
-			int idx) {
+	private static boolean search(char[][] board, int i, int j, String word, int idx) {
 		if (idx == word.length())
 			return true;
 		int m = board.length;
