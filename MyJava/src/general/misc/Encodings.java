@@ -27,6 +27,7 @@ public class Encodings {
 			System.out.print(Integer.toBinaryString(b) + "");
 		}
 	}
+
 	public static String base64Encoding(long data) {
 		byte[] bytes = ByteBuffer.allocate(Long.BYTES / Byte.BYTES).putLong(data).array();
 		return Base64.getEncoder().encodeToString(bytes);
