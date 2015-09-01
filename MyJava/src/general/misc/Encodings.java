@@ -25,8 +25,8 @@ public class Encodings {
 		System.out.println(Integer.toBinaryString(5) + Integer.toBinaryString(6)
 				+ Integer.toBinaryString(7) + Integer.toBinaryString(8));
 
-
-		// encode to String of UTF-8 encoding
+		//encode to String of UTF-8 encoding
+>>>>>>> tweak Encodings.java a little bit
 		System.out.println(Integer.toBinaryString(5678).getBytes("UTF-8").length);
 		for (Byte b : Integer.toBinaryString(5678).getBytes("UTF-8")) {
 			System.out.print(Integer.toBinaryString(b) + "");
