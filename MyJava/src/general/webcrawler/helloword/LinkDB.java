@@ -1,4 +1,4 @@
-package general.webcrawler;
+package general.webcrawler.helloword;
 
 import java.util.HashSet;
 import java.util.LinkedList;

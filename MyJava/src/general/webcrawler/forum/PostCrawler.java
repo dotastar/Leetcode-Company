@@ -11,7 +11,7 @@ import org.jsoup.select.Elements;
 
 public abstract class PostCrawler implements Runnable {
 
-	protected static final String[] KEY_WORDS = { "Egencia" };
+	protected static final String[] KEY_WORDS = { "yelp" };
 	protected static final long WAIT_TIME = 100; // ms
 	protected static final int TIMEOUT = 10_000; // ms
 
