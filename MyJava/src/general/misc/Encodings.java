@@ -7,6 +7,7 @@ public class Encodings {
 		//encode to binary as one number
 		System.out.println(Integer.toBinaryString(5678));
 		
+
 		//encode to binary as several digits
 		System.out.println(Integer.toBinaryString(5)+Integer.toBinaryString(6)+Integer.toBinaryString(7)+Integer.toBinaryString(8));
 		
