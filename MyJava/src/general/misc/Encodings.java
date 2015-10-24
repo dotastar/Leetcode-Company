@@ -6,8 +6,15 @@ import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 
+import lombok.Data;
+
 public class Encodings {
 	public static void main(String[] args) throws UnsupportedEncodingException {
+		Interval i = new Interval();
+		i.setStart(1);
+		i.setEnd(5);
+		System.out.println(i);
+		
 		long id = 1235;
 		String encoded = base64Encoding(id); // "AAAAAAAABNM=";
 		System.out.println(encoded);
@@ -47,5 +54,12 @@ public class Encodings {
 		map.put('+', value++);
 		map.put('/', value++);
 		return map;
+	}
+	
+	@Data
+	public static class Interval {
+		int start;
+		int end;
+		
 	}
 }
