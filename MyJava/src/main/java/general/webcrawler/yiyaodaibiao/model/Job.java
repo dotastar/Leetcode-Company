@@ -1,32 +1,22 @@
 package general.webcrawler.yiyaodaibiao.model;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-import java.util.Date;
-
+import com.mongodb.client.model.Filters;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import org.bson.BsonDocument;
-import org.bson.BsonDocumentWrapper;
-import org.bson.BsonReader;
-import org.bson.BsonString;
-import org.bson.BsonValue;
-import org.bson.BsonWriter;
-import org.bson.Document;
-import org.bson.codecs.Codec;
-import org.bson.codecs.CollectibleCodec;
-import org.bson.codecs.DecoderContext;
-import org.bson.codecs.DocumentCodec;
-import org.bson.codecs.EncoderContext;
+import org.bson.*;
+import org.bson.codecs.*;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 
-import com.mongodb.client.model.Filters;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 @Data
 @Builder
@@ -37,7 +27,7 @@ public class Job implements Bson {
     protected String jobTitle;
     protected String companyName;
     protected String contactName;
-    protected String phoneURL;
+    protected List<String> phoneURL = new ArrayList<>();
     protected String jobAddress;
     protected String industry;
     protected String companyType;
@@ -65,9 +55,8 @@ public class Job implements Bson {
     }
 
     @Override
-    public <TDocument> BsonDocument toBsonDocument(Class<TDocument> documentClass,
-                                                   CodecRegistry codecRegistry) {
-        return new BsonDocumentWrapper<Job>(this, codecRegistry.get(Job.class));
+    public <TDocument> BsonDocument toBsonDocument(Class<TDocument> documentClass, CodecRegistry codecRegistry) {
+        return new BsonDocumentWrapper<>(this, codecRegistry.get(Job.class));
     }
 
     public static class Dao extends BaseDao<Job> {
@@ -86,9 +75,9 @@ public class Job implements Bson {
             this.documentCodec = new DocumentCodec();
         }
 
-        public JobCodec(Codec<Document> codec) {
-            this.documentCodec = codec;
-        }
+//        public JobCodec(Codec<Document> codec) {
+//            this.documentCodec = codec;
+//        }
 
         @Override
         public void encode(BsonWriter writer, Job value, EncoderContext encoderContext) {

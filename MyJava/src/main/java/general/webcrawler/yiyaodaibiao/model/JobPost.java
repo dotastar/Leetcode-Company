@@ -1,145 +1,133 @@
 package general.webcrawler.yiyaodaibiao.model;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-
+import com.mongodb.client.model.Filters;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-
-import org.bson.BsonDocument;
-import org.bson.BsonDocumentWrapper;
-import org.bson.BsonReader;
-import org.bson.BsonString;
-import org.bson.BsonValue;
-import org.bson.BsonWriter;
-import org.bson.Document;
-import org.bson.codecs.Codec;
-import org.bson.codecs.CollectibleCodec;
-import org.bson.codecs.DecoderContext;
-import org.bson.codecs.DocumentCodec;
-import org.bson.codecs.EncoderContext;
+import org.bson.*;
+import org.bson.codecs.*;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 
-import com.mongodb.client.model.Filters;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 
-@Data 
+@Data
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
 public class JobPost implements Bson {
-	protected ObjectId id;
-	protected String title;
-	protected String companyName;
-	protected String district;
-	protected String postDate;
-	protected String url;
-	protected String parentUrl;
-	
-	
-	@Override
-	public <TDocument> BsonDocument toBsonDocument(Class<TDocument> documentClass,
-			CodecRegistry codecRegistry) {
-		return new BsonDocumentWrapper<JobPost>(this, codecRegistry.get(JobPost.class));
-	}
-	
+    protected ObjectId id;
+    protected String title;
+    protected String companyName;
+    protected String district;
+    protected String postDate;
+    protected String url;
+    protected String parentUrl;
 
-	public static class Dao extends BaseDao<JobPost> {
-		private static final String COLLECTION_NAME = "jobPost";
+    public JobPost() {
+        id = new ObjectId();
+    }
 
-		public Dao() {
-			super(COLLECTION_NAME, JobPost.class, new JobPostCodec());
-		}
-	}
+    @Override
+    public <TDocument> BsonDocument toBsonDocument(Class<TDocument> documentClass, CodecRegistry codecRegistry) {
+        return new BsonDocumentWrapper<JobPost>(this, codecRegistry.get(JobPost.class));
+    }
 
-	public static class JobPostCodec implements CollectibleCodec<JobPost> {
 
-		private Codec<Document> documentCodec;
+    public static class Dao extends BaseDao<JobPost> {
+        private static final String COLLECTION_NAME = "jobPost";
 
-		public JobPostCodec() {
-			this.documentCodec = new DocumentCodec();
-		}
+        public Dao() {
+            super(COLLECTION_NAME, JobPost.class, new JobPostCodec());
+        }
+    }
 
-		public JobPostCodec(Codec<Document> codec) {
-			this.documentCodec = codec;
-		}
+    public static class JobPostCodec implements CollectibleCodec<JobPost> {
 
-		@Override
-		public void encode(BsonWriter writer, JobPost value, EncoderContext encoderContext) {
-			Document document = new Document();
-			if (value.getId() == null) {
-				value.setId(new ObjectId());
-			}
-			Field[] fields = JobPost.class.getDeclaredFields();
-			for (Field f : fields) {
-				try {
-					if (!Modifier.isStatic(f.getModifiers()) && f.get(value) != null) {
-						document.put(f.getName(), f.get(value));
-					}
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
+        private Codec<Document> documentCodec;
 
-			documentCodec.encode(writer, document, encoderContext);
+        public JobPostCodec() {
+            this.documentCodec = new DocumentCodec();
+        }
 
-		}
+//        public JobPostCodec(Codec<Document> codec) {
+//            this.documentCodec = codec;
+//        }
 
-		@Override
-		public Class<JobPost> getEncoderClass() {
-			return JobPost.class;
-		}
+        @Override
+        public void encode(BsonWriter writer, JobPost value, EncoderContext encoderContext) {
+            Document document = new Document();
+            if (value.getId() == null) {
+                value.setId(new ObjectId());
+            }
+            Field[] fields = JobPost.class.getDeclaredFields();
+            for (Field f : fields) {
+                try {
+                    if (!Modifier.isStatic(f.getModifiers()) && f.get(value) != null) {
+                        document.put(f.getName(), f.get(value));
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
 
-		@Override
-		public JobPost decode(BsonReader reader, DecoderContext decoderContext) {
-			Document document = documentCodec.decode(reader, decoderContext);
-			JobPost post = new JobPost();
-			post.setId(document.getObjectId("_id"));
-			Field[] fields = JobPost.class.getDeclaredFields();
-			for (Field f : fields) {
-				try {
-					if (!Modifier.isStatic(f.getModifiers()) && document.get(f.getName()) != null) {
-						f.set(post, document.get(f.getName()));
-					}
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-			return post;
-		}
+            documentCodec.encode(writer, document, encoderContext);
 
-		@Override
-		public JobPost generateIdIfAbsentFromDocument(JobPost document) {
-			if (!documentHasId(document)) {
-				document.setId(new ObjectId());
-			} 
-			return document;
-		}
+        }
 
-		@Override
-		public boolean documentHasId(JobPost document) {
-			return document.getId() != null;
-		}
+        @Override
+        public Class<JobPost> getEncoderClass() {
+            return JobPost.class;
+        }
 
-		@Override
-		public BsonValue getDocumentId(JobPost document) {
-			return new BsonString(document.getId().toHexString());
-		}
+        @Override
+        public JobPost decode(BsonReader reader, DecoderContext decoderContext) {
+            Document document = documentCodec.decode(reader, decoderContext);
+            JobPost post = new JobPost();
+            post.setId(document.getObjectId("_id"));
+            Field[] fields = JobPost.class.getDeclaredFields();
+            for (Field f : fields) {
+                try {
+                    if (!Modifier.isStatic(f.getModifiers()) && document.get(f.getName()) != null) {
+                        f.set(post, document.get(f.getName()));
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            return post;
+        }
 
-	}
-	
-	public static void main(String[] args) {
-		JobPost.Dao dao = new JobPost.Dao();
-		JobPost post = JobPost.builder().title("医药代表高薪招聘").district("白云").companyName("广州天河制药").build();
-		dao.insert(post);
-		JobPost saved = dao.findOne();
-		System.out.println(post);
-		Assert.assertNotNull(saved);
-		dao.deleteOne(Filters.eq("companyName", "广州天河制药"));
-		Assert.assertFalse(dao.find(Filters.eq("jobTitle", "医药代表高薪招聘")).iterator().hasNext());
-	}
+        @Override
+        public JobPost generateIdIfAbsentFromDocument(JobPost document) {
+            if (!documentHasId(document)) {
+                document.setId(new ObjectId());
+            }
+            return document;
+        }
+
+        @Override
+        public boolean documentHasId(JobPost document) {
+            return document.getId() != null;
+        }
+
+        @Override
+        public BsonValue getDocumentId(JobPost document) {
+            return new BsonString(document.getId().toHexString());
+        }
+
+    }
+
+    public static void main(String[] args) {
+        JobPost.Dao dao = new JobPost.Dao();
+        JobPost post = JobPost.builder().title("医药代表高薪招聘").district("白云").companyName("广州天河制药").build();
+        dao.insert(post);
+        JobPost saved = dao.findOne();
+        System.out.println(post);
+        Assert.assertNotNull(saved);
+        dao.deleteOne(Filters.eq("companyName", "广州天河制药"));
+        Assert.assertFalse(dao.find(Filters.eq("jobTitle", "医药代表高薪招聘")).iterator().hasNext());
+    }
 }
