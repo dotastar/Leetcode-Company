@@ -13,6 +13,7 @@ import org.junit.Test;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.List;
+import java.util.function.Function;
 
 import static org.junit.Assert.assertEquals;
 
@@ -24,7 +25,7 @@ public class WuBaCrawler {
     protected static final int MAX_RETRY = 3;
     protected static final int MAX_PAGE = 100;
     protected static final String CITY_LIST = "http://www.58.com/yiyaodaibiao/changecity/";
-//    protected static final String ROOT_URL = "http://city.58.com/yiyaodaibiao/pn#/";
+    //    protected static final String ROOT_URL = "http://city.58.com/yiyaodaibiao/pn#/";
     protected static final String USER_AGENT = "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:25.0) Gecko/20100101 Firefox/25.0";
 
     private Job.Dao jobDao = new Job.Dao();
@@ -35,21 +36,20 @@ public class WuBaCrawler {
     public static void main(String[] args) {
 //		AutoTestUtils.runTestClassAndPrint(WuBaCrawler.class);
         WuBaCrawler crawler = new WuBaCrawler();
-        crawler.crawlAllCities();
+        crawler.crawlAllCities(false);
     }
 
-    public void crawlAllCities() {
+    public void crawlAllCities(boolean shouldParseJob) {
         try {
             Document cityListPage = Jsoup.connect(CITY_LIST).timeout(TIMEOUT).userAgent(USER_AGENT).get();
             List<City> cities = parser.extractCities(cityListPage);
-//            cities.forEach(System.out::println);
-            cities.forEach(this::crawlByCity);
+            cities.forEach(city -> crawlByCity(city, shouldParseJob ? this::saveJobPost : this::crawlAndSaveJobs));
         } catch (IOException | ParseException e) {
             e.printStackTrace();
         }
     }
 
-    public void crawlByCity(City city) {
+    public void crawlByCity(City city, Function<JobPost, Boolean> action) {
         Preconditions.checkNotNull(city);
         log.info("Begin crawling city: {}", city);
 
@@ -65,34 +65,31 @@ public class WuBaCrawler {
                 if (WuBaParser.isEndPage(jobListPage)) {
                     break;
                 }
-                jobPosts = parser.extractPosts(jobListPage);
+                jobPosts = parser.extractPosts(jobListPage, city);
             } catch (IOException | ParseException e) {
                 log.error("Error({}) happened during crawling jobListPage, page url {}\n{}", e.getMessage(), url, toString(e.getStackTrace()));
                 failedRecordDao.insert(new FailedRecord(url));
                 continue;
             }
 
-            jobCount += crawlAndParseJobs(jobPosts, city);
+            log.info("Extracted " + jobPosts.size() + " job posts");
+            jobCount += jobPosts.stream().map(action).filter(Boolean::booleanValue).count();
         }
         log.info("Finish crwaling, crwaled " + (pageIdx - 1) + " pages, " + jobCount + " jobs.");
     }
 
-    private int crawlAndParseJobs(List<JobPost> jobPosts, City city) {
-        int success = 0;
-        log.info("Extracted " + jobPosts.size() + " job posts");
-        for (JobPost post : jobPosts) {
-            Job job = crawlJob(post);
-            if (job == null) {
-                continue;
-            }
+    private Boolean saveJobPost(JobPost jobPost) {
+        jobPostDao.insert(jobPost);
+        return true;
+    }
 
-            job.setCity(city.getName());
-            job.setProvince(city.getProvinceName());
-            jobDao.insert(job);
-            success++;
+    private Boolean crawlAndSaveJobs(JobPost jobPost) {
+        Job job = crawlJob(jobPost);
+        if (job == null) {
+            return saveJobPost(jobPost);
         }
-        return success;
-
+        jobDao.insert(job);
+        return true;
     }
 
     /**
@@ -102,35 +99,35 @@ public class WuBaCrawler {
         Document jobPage = null;
         for (int i = 0; jobPage == null && i < MAX_RETRY; i++) {
             try {
-                Thread.sleep(WAIT_TIME);
                 jobPage = Jsoup.connect(post.getUrl()).timeout(TIMEOUT).userAgent(USER_AGENT).get();
+                Thread.sleep(WAIT_TIME);
             } catch (IOException e) {
                 log.error("IOException {}, {} time retry", e.getMessage(), i);
             } catch (InterruptedException e) {
                 log.warn("InterruptedException {}", e.getMessage());
-                break;
+
+                return null;
             }
+        }
+        if (jobPage == null) {
+            log.error("Crawl {} failed, saved it in database.", post);
+            jobPostDao.insert(post);
+            return null;
         }
 
-        Job job = null;
-        if (jobPage != null) {
-            try {
-                job = parser.parseJob(jobPage, post);
-            } catch (ParseException e) {
-                log.error("Parse failed {}\n{}", e.getMessage(), toString(e.getStackTrace()));
-            }
-        }
-        if (job == null) {
-            log.error("Failed to crawl/parse job post, saved the JobPost {} in database.", post);
+        try {
+            return parser.parseJob(jobPage, post);
+        } catch (Exception e) {
+            log.error("{}\tParse {} failed\n{}", e.getMessage(), post, toString(e.getStackTrace()));
             jobPostDao.insert(post);
+            return null;
         }
-        return job;
     }
 
     private String toString(StackTraceElement[] stackTraceElements) {
         StringBuilder sb = new StringBuilder();
         for (StackTraceElement stackTrace : stackTraceElements) {
-            sb.append(stackTrace + "\n");
+            sb.append(stackTrace).append(System.lineSeparator());
         }
         return sb.toString();
     }

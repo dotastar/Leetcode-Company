@@ -64,7 +64,7 @@ public class WuBaParser {
         return cities;
     }
 
-    public List<JobPost> extractPosts(Document page) throws ParseException {
+    public List<JobPost> extractPosts(Document page, City city) throws ParseException {
         final String ID_INFOLIST = "infolist";
         Element infoList = page.getElementById(ID_INFOLIST);
         checkNotNull(infoList, ID_INFOLIST);
@@ -76,17 +76,18 @@ public class WuBaParser {
             if (postEle.getElementsByTag("dt").isEmpty()) {
                 continue;
             }
-            JobPost jobPost = parseJobPost(postEle);
+            JobPost jobPost = parseJobPost(postEle, parentUrl, city);
             if (jobPost == null) {
+                // The end
                 break;
             }
-            jobPost.setParentUrl(parentUrl);
+
             posts.add(jobPost);
         }
         return posts;
     }
 
-    private JobPost parseJobPost(Element dlTag) throws ParseException {
+    private JobPost parseJobPost(Element dlTag, String parentUrl, City city) throws ParseException {
         final String TAG_DT = "dt";
         final String TAG_A = "a";
         Elements dtTags = dlTag.getElementsByTag(TAG_DT);
@@ -106,7 +107,7 @@ public class WuBaParser {
         String district = otherInfo.get(2).text().trim();
         String date = otherInfo.get(3).text().trim();
         // Leave field parentUrl for null, set it later
-        return new JobPost(new ObjectId(), title, companyName, district, date, url, null);
+        return new JobPost(new ObjectId(), title, companyName, district, date, url, parentUrl, city.getName(), city.getProvinceName());
     }
 
     private String extractTextFromLink(Element e) throws ParseException {
@@ -147,12 +148,28 @@ public class WuBaParser {
         // Other info from job post
         String postTitle = post.getTitle();
         String district = post.getDistrict();
-        String url = post.getUrl();
+        String sourceUrl = post.getUrl();
         String postDate = convertRelativeDateStr(post.getPostDate());
         String companyName = post.getCompanyName();
 
-        // Leave fields city, province for null for now
-        return new Job(new ObjectId(), jobTitle, companyName, contactName, phoneUrls, jobAddress, industry, companyType, companySize, salaryRange, district, null, null, postTitle, postDate, url);
+        return new Job(
+                new ObjectId(),
+                jobTitle,
+                companyName,
+                contactName,
+                phoneUrls,
+                jobAddress,
+                industry,
+                companyType,
+                companySize,
+                salaryRange,
+                district,
+                post.getCity(),
+                post.getProvince(),
+                postTitle,
+                postDate,
+                sourceUrl
+        );
     }
 
     private String replacePhoneUrl(String url, String pageNum) {
@@ -239,7 +256,7 @@ public class WuBaParser {
     @Test
     public void testParseJob_NoPhone() throws IOException, ParseException {
         String url = "http://gz.58.com/yewu/21564236746016x.shtml";
-        JobPost post = new JobPost(new ObjectId(), "Fake post title", "Fake company name", "Fake district", "Fake date", url, "Fake parent url");
+        JobPost post = new JobPost(new ObjectId(), "Fake post title", "Fake company name", "Fake district", "Fake date", url, "Fake parent url", "Beijing", "Beijing");
         Document doc = Jsoup.connect(url).userAgent(USER_AGENT).get();
         Job job = parseJob(doc, post);
         System.out.println(job);
@@ -248,7 +265,7 @@ public class WuBaParser {
     @Test
     public void testParseJob_HasPhone() throws IOException, ParseException {
         String url = "http://gz.58.com/yewu/23111813389471x.shtml";
-        JobPost post = new JobPost(new ObjectId(), "Fake post title", "Fake company name", "Fake district", "Fake date", url, "Fake parent url");
+        JobPost post = new JobPost(new ObjectId(), "Fake post title", "Fake company name", "Fake district", "Fake date", url, "Fake parent url", "GuangZhou", "GuangDong");
         Document doc = Jsoup.connect(url).userAgent(USER_AGENT).get();
         Job job = parseJob(doc, post);
         System.out.println(job);
@@ -257,7 +274,7 @@ public class WuBaParser {
     @Test
     public void testParseJob_HasTwoPhoneNumbers() throws IOException, ParseException {
         String url = "http://gz.58.com/yewu/22669508894473x.shtml";
-        JobPost post = new JobPost(new ObjectId(), "Fake post title", "Fake company name", "Fake district", "Fake date", url, "Fake parent url");
+        JobPost post = new JobPost(new ObjectId(), "Fake post title", "Fake company name", "Fake district", "Fake date", url, "Fake parent url", "YiYang", "HuNan");
         Document doc = Jsoup.connect(url).userAgent(USER_AGENT).get();
         Job job = parseJob(doc, post);
         System.out.println(job);
@@ -268,7 +285,7 @@ public class WuBaParser {
         String url = "http://gz.58.com/yiyaodaibiao/pn3/";
         int timeout = 10_000;
         Document doc = Jsoup.connect(url).timeout(timeout).userAgent(USER_AGENT).get();
-        List<JobPost> posts = extractPosts(doc);
+        List<JobPost> posts = extractPosts(doc, new City("Beijing", "Beijing", "bj.58.com/yiyaodaibiao/"));
         System.out.println("Extracted " + posts.size() + " job posts");
         for (JobPost post : posts)
             System.out.println(post);

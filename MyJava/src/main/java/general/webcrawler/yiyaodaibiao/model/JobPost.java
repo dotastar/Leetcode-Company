@@ -25,6 +25,8 @@ public class JobPost implements Bson {
     protected String postDate;
     protected String url;
     protected String parentUrl;
+    protected String city;
+    protected String province;
 
     public JobPost() {
         id = new ObjectId();
