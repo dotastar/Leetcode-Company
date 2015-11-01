@@ -4,14 +4,17 @@ import com.mongodb.MongoClient;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Filters;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import org.bson.codecs.Codec;
 import org.bson.codecs.configuration.CodecRegistries;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.conversions.Bson;
+import org.bson.types.ObjectId;
 
 import java.util.List;
+import java.util.Set;
 
 public class BaseDao<T> {
     private static final String DB_NAME = "yiyaodaibiao";
@@ -25,12 +28,21 @@ public class BaseDao<T> {
         coll = conn.getCollection(collectionName, clazz).withCodecRegistry(codecRegistry);
     }
 
+    public BaseDao(String collectionName, Class<T> clazz, CodecRegistry codecRegistry) {
+        codecRegistry = CodecRegistries.fromRegistries(codecRegistry, MongoClient.getDefaultCodecRegistry());
+        coll = conn.getCollection(collectionName, clazz).withCodecRegistry(codecRegistry);
+    }
+
     public void insert(T doc) {
         coll.insertOne(doc);
     }
 
     public void insertMany(List<T> docs) {
         coll.insertMany(docs);
+    }
+
+    public long count() {
+        return coll.count();
     }
 
     public T findOne() {
@@ -43,6 +55,14 @@ public class BaseDao<T> {
 
     public FindIterable<T> find(Bson filter) {
         return coll.find(filter);
+    }
+
+    public FindIterable<T> findByIds(Set<ObjectId> ids) {
+        return coll.find(Filters.in("_id", ids));
+    }
+
+    public FindIterable<T> findByIds(Set<ObjectId> ids, Bson filter) {
+        return coll.find(Filters.and(Filters.in("_id", ids), filter));
     }
 
     public DeleteResult deleteOne(Bson filter) {

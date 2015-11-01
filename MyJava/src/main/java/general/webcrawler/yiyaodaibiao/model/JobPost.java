@@ -17,8 +17,8 @@ import java.lang.reflect.Modifier;
 @Data
 @Builder
 @AllArgsConstructor
-public class JobPost implements Bson {
-    protected ObjectId id;
+public class JobPost implements Bson, Model<ObjectId> {
+    protected ObjectId _id;
     protected String title;
     protected String companyName;
     protected String district;
@@ -29,17 +29,26 @@ public class JobPost implements Bson {
     protected String province;
 
     public JobPost() {
-        id = new ObjectId();
+        this._id = new ObjectId();
     }
 
     @Override
     public <TDocument> BsonDocument toBsonDocument(Class<TDocument> documentClass, CodecRegistry codecRegistry) {
-        return new BsonDocumentWrapper<JobPost>(this, codecRegistry.get(JobPost.class));
+        return new BsonDocumentWrapper<>(this, codecRegistry.get(JobPost.class));
     }
 
+    @Override
+    public ObjectId getId() {
+        return _id;
+    }
+
+    @Override
+    public void setId(ObjectId key) {
+        this._id = key;
+    }
 
     public static class Dao extends BaseDao<JobPost> {
-        private static final String COLLECTION_NAME = "jobPost";
+        public static final String COLLECTION_NAME = "jobPost";
 
         public Dao() {
             super(COLLECTION_NAME, JobPost.class, new JobPostCodec());
@@ -53,10 +62,6 @@ public class JobPost implements Bson {
         public JobPostCodec() {
             this.documentCodec = new DocumentCodec();
         }
-
-//        public JobPostCodec(Codec<Document> codec) {
-//            this.documentCodec = codec;
-//        }
 
         @Override
         public void encode(BsonWriter writer, JobPost value, EncoderContext encoderContext) {

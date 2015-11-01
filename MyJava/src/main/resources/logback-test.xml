@@ -58,7 +58,7 @@
 
     </appender>
 
-    <root level="DEBUG">
+    <root name="com.yazhoucao.MyJava.general.webcrawler.yiyaodaibiao" level="INFO">
         <appender-ref ref="STDOUT" />
         <appender-ref ref="APP" />
         <appender-ref ref="DEBUG-OUT" />

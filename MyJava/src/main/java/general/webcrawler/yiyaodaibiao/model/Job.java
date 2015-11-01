@@ -1,6 +1,5 @@
 package general.webcrawler.yiyaodaibiao.model;
 
-import com.mongodb.client.model.Filters;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,20 +9,24 @@ import org.bson.codecs.*;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
-import org.junit.Assert;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
+
+import static java.util.stream.Collectors.counting;
+import static java.util.stream.Collectors.groupingBy;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Job implements Bson {
-    protected ObjectId id;
+public class Job implements Bson, Model<ObjectId> {
+    protected ObjectId _id;
     protected String jobTitle;
     protected String companyName;
     protected String contactName;
@@ -44,14 +47,11 @@ public class Job implements Bson {
 
     public static void main(String[] args) {
         Job.Dao dao = new Job.Dao();
-        Job job = Job.builder().jobTitle("jobTitle").city("广州")
-                .companyName("companyName").postDate(new Date().toString()).build();
-        dao.insert(job);
-        Job saved = dao.findOne();
-        System.out.println(job);
-        Assert.assertNotNull(saved);
-        dao.deleteOne(Filters.eq("jobTitle", "广州"));
-        Assert.assertFalse(dao.find(Filters.eq("jobTitle", "广州")).iterator().hasNext());
+        Stream<Job> stream = StreamSupport.stream(dao.find().spliterator(), true);
+        Map<String, Long>  urlCnt = stream.collect(groupingBy(Job::getSourceURL, counting()));
+        long total = urlCnt.values().stream().mapToLong(V -> V.longValue()).sum();
+        System.out.println(total + "\t" + urlCnt);
+        System.out.println(urlCnt);
     }
 
     @Override
@@ -59,8 +59,18 @@ public class Job implements Bson {
         return new BsonDocumentWrapper<>(this, codecRegistry.get(Job.class));
     }
 
+    @Override
+    public ObjectId getId() {
+        return _id;
+    }
+
+    @Override
+    public void setId(ObjectId key) {
+        this._id = key;
+    }
+
     public static class Dao extends BaseDao<Job> {
-        private static final String COLLECTION_NAME = "job";
+        public static final String COLLECTION_NAME = "job";
 
         public Dao() {
             super(COLLECTION_NAME, Job.class, new JobCodec());

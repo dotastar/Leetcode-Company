@@ -1,7 +1,7 @@
 package general.webcrawler.yiyaodaibiao.model;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.mongodb.client.result.DeleteResult;
+import lombok.*;
 import org.bson.*;
 import org.bson.codecs.*;
 import org.bson.codecs.configuration.CodecRegistry;
@@ -10,26 +10,35 @@ import org.bson.types.ObjectId;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
+
+import static com.mongodb.client.model.Filters.and;
+import static com.mongodb.client.model.Filters.eq;
 
 /**
  * Created by yazhoucao on 10/25/15.
  */
 @Data
 @NoArgsConstructor
-public class FailedRecord implements Bson {
-    protected ObjectId id;
-    protected String pageUrl;
+public class FailedRecord<K> implements Bson, Model<ObjectId> {
 
-    public FailedRecord(String pageUrl) {
-        this.pageUrl = pageUrl;
+    public static void main(String[] args) {
+        FailedRecord<ObjectId> failedRecord = new FailedRecord<>(new ObjectId(), "test");
+        FailedRecord.Dao dao = new Dao();
+        Set<ObjectId> failedIds = dao.getFailedRecordIds(JobPost.class.getSimpleName());
+        System.out.println(failedIds);
     }
 
-    public static class Dao extends BaseDao<FailedRecord> {
-        private static final String COLLECTION_NAME = "failedRecord";
+    @Getter(AccessLevel.PRIVATE) @Setter(AccessLevel.PRIVATE)
+    protected ObjectId _id;
+    protected K recordId;
+    protected String collectionName;
 
-        public Dao() {
-            super(COLLECTION_NAME, FailedRecord.class, new FailedRecordCodec());
-        }
+    public FailedRecord(K recordId, String recordType) {
+        this.collectionName = recordType;
+        this.recordId = recordId;
     }
 
     @Override
@@ -37,6 +46,40 @@ public class FailedRecord implements Bson {
         return new BsonDocumentWrapper<>(this, codecRegistry.get(FailedRecord.class));
     }
 
+    @Override
+    public ObjectId getId() {
+        return _id;
+    }
+
+    @Override
+    public void setId(ObjectId key) {
+        this._id = key;
+    }
+
+    /**
+     * Dao
+     */
+    public static class Dao extends BaseDao<FailedRecord> {
+
+        public static final String COLLECTION_NAME = "failedJobPost";
+
+        public Dao() {
+            super(COLLECTION_NAME, FailedRecord.class, new FailedRecordCodec());
+        }
+
+        public Set getFailedRecordIds(String collecName) {
+            return StreamSupport.stream(find(eq("collectionName", collecName)).spliterator(), true).map(FailedRecord::getRecordId).collect(Collectors.toSet());
+        }
+
+        public boolean deleteRecord(Object recordId, String collecName) {
+            DeleteResult result = deleteMany(and(eq("recordId", recordId), eq("collectionName", collecName)));
+            return result.getDeletedCount() > 0;
+        }
+    }
+
+    /**
+     * Codec
+     */
     public static class FailedRecordCodec implements CollectibleCodec<FailedRecord> {
         private Codec<Document> documentCodec;
 
