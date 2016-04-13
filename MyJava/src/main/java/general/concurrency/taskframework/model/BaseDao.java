@@ -16,6 +16,8 @@ import java.util.List;
 public class BaseDao<T extends Model<K>, K> {
     private static final String DB_NAME = "task_db";
     private static final MongoClient mongoClient = new MongoClient("localhost", 27017);
+
+    @SuppressWarnings("deprecated")
     private static final DB db = mongoClient.getDB(DB_NAME);
 
     protected final JacksonDBCollection<T, K> coll;

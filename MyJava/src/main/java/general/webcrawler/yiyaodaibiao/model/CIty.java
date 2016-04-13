@@ -20,6 +20,10 @@ public class City {
         return MUNICIPALITIES.contains(cityName);
     }
 
+    private String provinceName;
+    private final String name;
+    private final String url;
+
     public String getAbbreviatedName() {
         /**
          * Samples:
@@ -33,12 +37,6 @@ public class City {
         int end = url.indexOf(".", start);
         return url.substring(start, end);
     }
-
-    private String provinceName;
-
-    final private String name;
-
-    final private String url;
 
 
 }
