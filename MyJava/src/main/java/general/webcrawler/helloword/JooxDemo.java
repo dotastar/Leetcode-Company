@@ -1,4 +1,4 @@
-package general.webcrawler.parser;
+package general.webcrawler.helloword;
 
 import java.io.IOException;
 import java.util.List;
