@@ -15,6 +15,7 @@ import java.util.Set;
 @Slf4j
 public class CrawlWuBaJobTask extends BaseTask<ObjectId, JobPost> {
 
+    @SuppressWarnings("unchecked")
     public static void main(String[] args) {
         // 13692 + 270
         // Affected 12,127 / 12,526 processed.
@@ -39,6 +40,7 @@ public class CrawlWuBaJobTask extends BaseTask<ObjectId, JobPost> {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public boolean operate(JobPost jobPost) {
         boolean res = crawler.crawlJobAndNotSavePost(jobPost);
         if (!res) {
