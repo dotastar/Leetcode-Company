@@ -1,9 +1,5 @@
 package general.webcrawler.parser;
 
-import com.google.common.base.Preconditions;
-import com.google.common.collect.HashMultiset;
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Multiset;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -12,12 +8,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+
 import javax.xml.parsers.ParserConfigurationException;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.LocalDate;
 import org.jsoup.Jsoup;
@@ -30,10 +29,15 @@ import org.jsoup.select.Elements;
 import org.jsoup.select.Selector;
 import org.xml.sax.SAXException;
 
+import com.google.common.base.Preconditions;
+import com.google.common.collect.HashMultiset;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Multiset;
 
 /**
  * CSS Selector auto generator
- * The goal is to give profile parser a CSS path auto-generate and a self-healing capability, make them maintenance-free and scalable in creating new parsers
+ * The goal is to give profile parser a CSS path auto-generate and a self-healing capability, make them maintenance-free
+ * and scalable in creating new parsers
  *
  * How:
  * 1.Create a designed-for-parsing profile for each parser, make each text field that we want to parse unique and final
@@ -48,33 +52,34 @@ import org.xml.sax.SAXException;
  * 2.Sometimes we don't know how many elements there are, usually just get a list of elements, and iterate through them
  * --> Solution:
  * a.find the list element, generate the css selector
- * b.find one list item element in the list, and generate a css selector from list to list item in the scope of that list
+ * b.find one list item element in the list, and generate a css selector from list to list item in the scope of that
+ * list
  * c.so now we know how to iterate through every list item in that list
  * d.then generate css selector for every field we want to parse in the list item in the scope of the list item element
  *
  * 3.How to search for an html element that doesn't have a text, e.g. the link(src/href) of an image in a profile
- * --> One solution to this is to define a relative relation to a known element, like a sibling/common ancestor, use the relation to navigate
+ * --> One solution to this is to define a relative relation to a known element, like a sibling/common ancestor, use the
+ * relation to navigate
  *
  */
 @Data
 @Slf4j
 public class CssSelectorGenerator {
-  // Below is just a rough categorization of attributes from https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes
-  private static final Set<String> identifiableAttributes =
-      ImmutableSet.of("alt", "autocomplete", "autofocus", "autoplay", "autosave", "bgcolor", "class", "color", "for",
-          "form", "formaction", "headers", "id", "itemid", "itemprop", "keytype", "kind", "label", "language", "name",
-          "placeholder", "required", "scope", "style", "summary", "type", "target", "usemap", "value");
-  private static final Set<String> flakyAttributes =
-      ImmutableSet.of("accept", "accept-charset", "accesskey", "action", "align", "async", "border", "buffered",
-          "challenge", "charset", "checked", "cite", "code", "codebase", "cols", "colspan", "content",
-          "contenteditable", "contextmenu", "controls", "coords", "data", "datetime", "default", "defer", "dir",
-          "dirname", "disabled", "download", "draggable", "dropzone", "enctype", "height", "hidden", "high", "href",
-          "hreflang", "http-equiv", "icon", "ismap", "lang", "list", "loop", "low", "manifest", "max", "maxlength",
-          "media", "method", "min", "multiple", "muted", "novalidate", "open", "optimum", "pattern", "ping", "poster",
-          "preload", "radiogroup", "readonly", "rel", "reversed", "rows", "rowspan", "sandbox", "scoped", "seamless",
-          "selected", "shape", "size", "sizes", "span", "spellcheck", "src", "srcdoc", "srclang", "srcset", "start",
-          "step", "tabindex", "title", "width", "wrap");
 
+  // Below is just a rough categorization of attributes from https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes
+  private static final Set<String> identifiableAttributes = ImmutableSet.of("alt", "autocomplete", "autofocus", "autoplay", "autosave", "bgcolor", "class",
+      "color", "for",
+      "form", "formaction", "headers", "id", "itemid", "itemprop", "keytype", "kind", "label", "language", "name",
+      "placeholder", "required", "scope", "style", "summary", "type", "target", "usemap", "value");
+  private static final Set<String> flakyAttributes = ImmutableSet.of("accept", "accept-charset", "accesskey", "action", "align", "async", "border", "buffered",
+      "challenge", "charset", "checked", "cite", "code", "codebase", "cols", "colspan", "content",
+      "contenteditable", "contextmenu", "controls", "coords", "data", "datetime", "default", "defer", "dir",
+      "dirname", "disabled", "download", "draggable", "dropzone", "enctype", "height", "hidden", "high", "href",
+      "hreflang", "http-equiv", "icon", "ismap", "lang", "list", "loop", "low", "manifest", "max", "maxlength",
+      "media", "method", "min", "multiple", "muted", "novalidate", "open", "optimum", "pattern", "ping", "poster",
+      "preload", "radiogroup", "readonly", "rel", "reversed", "rows", "rowspan", "sandbox", "scoped", "seamless",
+      "selected", "shape", "size", "sizes", "span", "spellcheck", "src", "srcdoc", "srclang", "srcset", "start",
+      "step", "tabindex", "title", "width", "wrap");
   private Multiset<TagIdentifier> tagIdCounts = HashMultiset.create();
   private Map<Element, List<TagIdentifier>> tag2Id = new HashMap<>();
 
@@ -86,16 +91,60 @@ public class CssSelectorGenerator {
     Element body = document.body();
     generator.initialize(body);
     String text = "Popular repositories";
-    MatchCondition matchCondition = new MatchCondition(CssSelectorGenerator.MatchCondition.TargetType.OWN_TEXT, text,
-        MatchCondition.EqualType.EQUALS);
-    Element element = generator.search(body, matchCondition);
+    FieldMatchCondition fieldMatchCondition = new FieldMatchCondition(FieldMatchCondition.FieldType.OWN_TEXT, text,
+        FieldMatchCondition.MatchType.EQUALS);
+    Element element = generator.search(body, fieldMatchCondition);
     element = element.parent();
     String firstSelector = generator.generateCssSelector(element);
     CssSelectorGenerator second = new CssSelectorGenerator();
     second.initialize(element);
-    matchCondition.setMatchValue("modelmapper");
-    String secondSelector = second.searchAndGenerate(element, matchCondition);
+    fieldMatchCondition.setMatchValue("modelmapper");
+    String secondSelector = second.autoGenerateSingleItem(element, fieldMatchCondition);
     System.out.println(firstSelector + " " + secondSelector);
+  }
+
+  public static String extractField(Element element, FieldMatchCondition condition) {
+    String value;
+    switch (condition.getFieldType()) {
+    case ID:
+      value = element.id();
+      break;
+    case CLASS:
+      value = element.className();
+      break;
+    case ATTRIBUTE:
+      Preconditions.checkNotNull(condition.getAttributeName());
+      value = element.attr(condition.getAttributeName());
+      break;
+    case OWN_TEXT:
+      value = element.ownText();
+      break;
+    case TEXT:
+      value = element.text();
+      break;
+    default:
+      throw new IllegalArgumentException("Unknown TargetType " + condition.getFieldType());
+    }
+    return value;
+  }
+
+  public static boolean isMatch(Element element, FieldMatchCondition condition) {
+    String fieldValue = extractField(element, condition);
+    Preconditions.checkState(fieldValue != null);
+    return isMatch(fieldValue, condition);
+  }
+
+  public static boolean isMatch(String fieldValue, FieldMatchCondition condition) {
+    Preconditions.checkState(fieldValue != null);
+
+    switch (condition.getMatchType()) {
+    case EQUALS:
+      return fieldValue.equals(condition.getMatchValue());
+    case CONTAINS:
+      return fieldValue.contains(condition.getMatchValue());
+    default:
+      throw new IllegalArgumentException("Unknown EqualType " + condition.getMatchValue());
+    }
   }
 
   public void initialize(Element root) {
@@ -128,8 +177,10 @@ public class CssSelectorGenerator {
     root.children().forEach(this::initialize);
   }
 
-  // TODO: the result should include indication of if it is identifiable(no other Elements)
-  public String searchAndGenerate(Element root, MatchCondition condition) {
+  /**
+   * TODO: the result should include indication of if it is identifiable(no other Elements)
+   */
+  public String autoGenerateSingleItem(Element root, FieldMatchCondition condition) {
     log.debug("Searching for node... ");
     Element node = search(root, condition);
     if (node == null) {
@@ -140,16 +191,20 @@ public class CssSelectorGenerator {
     return generateCssSelector(node);
   }
 
-  public List<String> searchListItemAndGenerate(Element root, MatchCondition[] sameFields,
-      MatchCondition... listItemFields) {
+  public List<String> autoGenerateListItems(Element root, ListItemMatchCondition listItemMatchCondition) {
+    return autoGenerateListItems(root, listItemMatchCondition.getFieldsWithinListItem(), listItemMatchCondition.getFieldWithinSiblingNode());
+  }
+
+  private List<String> autoGenerateListItems(Element root, FieldMatchCondition[] sameFields,
+      FieldMatchCondition... listItemFields) {
     Element listRoot = searchLCS(root, sameFields);
     if (listRoot == null) {
       log.error("Couldn't find LCS in conditions {}", Arrays.toString(sameFields));
       return null;
     }
-    log.debug("Found node {}", node2String(listRoot));
+    log.debug("Found node {} as root of listItems", node2String(listRoot));
     String listSelector = generateCssSelector(listRoot);
-    log.debug("List root selector: {} for MatchCondition {}", listSelector, sameFields);
+    log.debug("List root selector: {} for FieldMatchCondition {}", listSelector, sameFields);
     List<String> result = new ArrayList<>(listItemFields.length + 1);
     result.add(listSelector);
 
@@ -160,19 +215,18 @@ public class CssSelectorGenerator {
 
     result.add(link(listRoot, itemRoot));
 
-    for (MatchCondition fieldMatch : listItemFields) {
-      String secondSelector = listItemGenerator.searchAndGenerate(itemRoot, fieldMatch);
-      log.debug("List item selector: {} for MatchCondition {}", secondSelector, fieldMatch);
+    for (FieldMatchCondition fieldMatch : listItemFields) {
+      String secondSelector = listItemGenerator.autoGenerateSingleItem(itemRoot, fieldMatch);
+      log.debug("List item selector: {} for FieldMatchCondition {}", secondSelector, fieldMatch);
       result.add(secondSelector);
     }
     return result;
   }
 
-  public Element search(Element root, MatchCondition condition) {
+  public Element search(Element root, FieldMatchCondition condition) {
     if (root == null || isMatch(root, condition)) {
       return root;
     }
-
     for (Element child : root.children()) {
       Element target = search(child, condition);
       if (target != null) {
@@ -195,7 +249,7 @@ public class CssSelectorGenerator {
       if (generateByNode(parent, selectorChain)) {
         break;
       }
-      // TODO: if keep escalating resolve the same number of results, should use the lowest node
+      // TODO: if keep escalating will resolve the same number of results, should use the lowest node(trim path)
       String partialSelector = link(selectorChain);
       if (isUnique(partialSelector, root)) {
         break;
@@ -231,46 +285,13 @@ public class CssSelectorGenerator {
 
     chain.add(selectorBuilder.toString());
 
-    log.debug("Found selector:{} for node({})", selectorBuilder, node2String(node));
+    log.debug("Generate selector:{} for node({})", selectorBuilder, node2String(node));
     return stopNext;
-  }
-
-  private boolean isMatch(Element element, MatchCondition condition) {
-    String targetValue;
-    switch (condition.targetType) {
-      case ID:
-        targetValue = element.id();
-        break;
-      case CLASS:
-        targetValue = element.className();
-        break;
-      case ATTRIBUTE:
-        targetValue = element.attr(condition.getAttributeName());
-        break;
-      case OWN_TEXT:
-        targetValue = element.ownText();
-        break;
-      case TEXT:
-        targetValue = element.text();
-        break;
-      default:
-        throw new IllegalArgumentException("Unknown TargetType " + condition.targetType);
-    }
-
-    Preconditions.checkState(targetValue != null);
-
-    switch (condition.equalType) {
-      case EQUALS:
-        return targetValue.equals(condition.getMatchValue());
-      case CONTAINS:
-        return targetValue.contains(condition.getMatchValue());
-      default:
-        throw new IllegalArgumentException("Unknown EqualType " + condition.equalType);
-    }
   }
 
   /**
    * Link selectors together
+   *
    * @param selectors: selectors have to be in reverse order
    */
   private String link(List<String> selectors) {
@@ -335,7 +356,7 @@ public class CssSelectorGenerator {
     try {
       boolean isGenerated = StringUtils.isNumeric(value) || LocalDate.parse(value) != null || key.contains("data-");
       if (isGenerated) {
-        log.debug("Found generated TagIdentifier: {}", identifier);
+        log.debug("Classify {} as generated TagIdentifier", identifier);
       }
       return !isGenerated;
     } catch (IllegalArgumentException e) {
@@ -364,11 +385,11 @@ public class CssSelectorGenerator {
     return score;
   }
 
-  private Element searchLCS(Element root, MatchCondition... matchConditions) {
-    Preconditions.checkArgument(matchConditions.length > 1);
-    Element[] targets = new Element[matchConditions.length];
-    for (int i = 0; i < matchConditions.length; i++) {
-      targets[i] = search(root, matchConditions[i]);
+  private Element searchLCS(Element root, FieldMatchCondition... fieldMatchConditions) {
+    Preconditions.checkArgument(fieldMatchConditions.length > 1);
+    Element[] targets = new Element[fieldMatchConditions.length];
+    for (int i = 0; i < fieldMatchConditions.length; i++) {
+      targets[i] = search(root, fieldMatchConditions[i]);
     }
     return lcs(targets);
   }
@@ -418,46 +439,49 @@ public class CssSelectorGenerator {
     return node.tagName() + node.attributes();
   }
 
+  // TODO: weird, compiler doesn't recognize any lombok annotations on this class only, and only on class level, bug?
+//  public static class FieldMatchCondition {
+//    @Getter @Setter @NonNull private String matchValue;
+//    @Getter @Setter @NonNull private FieldType fieldType;
+//    @Getter @Setter @NonNull private MatchType matchType;
+//    @Getter @Setter private String attributeName; // Only set when fieldType=ATTRIBUTE
+//
+//    public FieldMatchCondition(FieldType fieldType, String matchValue, MatchType matchType) {
+//      this.fieldType = fieldType;
+//      this.matchValue = matchValue;
+//      this.matchType = matchType;
+//    }
+//
+//    public FieldMatchCondition(String matchValue, FieldType fieldType, MatchType matchType, String attributeName) {
+//      this.fieldType = fieldType;
+//      this.matchValue = matchValue;
+//      this.matchType = matchType;
+//      this.attributeName = attributeName;
+//    }
+//
+//    enum FieldType {
+//      ID, CLASS, ATTRIBUTE, OWN_TEXT, TEXT
+//    }
+//
+//    enum MatchType {
+//      // All are case sensitive
+//      EQUALS, CONTAINS
+//    }
+//  }
+//
+//  @Data
+//  @AllArgsConstructor
+//  public static class ListItemMatchCondition {
+//    @NonNull private FieldMatchCondition[] fieldsWithinListItem; // All fields that you need
+//    @NonNull private FieldMatchCondition fieldWithinSiblingNode; // Any field is OK, choose a stable one
+//  }
+
   @Data
   @AllArgsConstructor
-  public static class MatchCondition {
-    @NonNull
-    private TargetType targetType;
-    @NonNull
-    private String matchValue;
-    @NonNull
-    private EqualType equalType;
-    // Only for targetType=ATTRIBUTE
-    private String attributeName;
-
-    public MatchCondition(TargetType targetType, String matchValue, EqualType equalType) {
-      this.targetType = targetType;
-      this.matchValue = matchValue;
-      this.equalType = equalType;
-    }
-
-    enum TargetType {
-      ID,
-      CLASS,
-      ATTRIBUTE,
-      OWN_TEXT,
-      TEXT
-    }
-
-    enum EqualType {
-      // All case sensitive
-      EQUALS,
-      CONTAINS
-    }
-  }
-
-  @Data
-  @AllArgsConstructor
-  @EqualsAndHashCode(of = {"tag", "attribute"})
-  public static class TagIdentifier {
+  @EqualsAndHashCode(of = { "tag", "attribute" })
+  private static class TagIdentifier {
     private Tag tag;
-    @NonNull
-    private Attribute attribute;
+    @NonNull private Attribute attribute;
 
     public TagIdentifier(Attribute attribute) {
       this.attribute = attribute;
@@ -478,14 +502,14 @@ public class CssSelectorGenerator {
         sb.append('#').append(attribute.getValue());
       } else {
         /**
-         * [attr]       has attribute
-         * [attr=val]   has attribute with value val
-         * [attr!=val]  does not have attribute with value val
-         * [attr^=val]  attribute begins with val
-         * [attr$=val]  attribute ends with val
-         * [attr*=val]  attribute includes val
-         * [attr~=val]  attribute includes val as a word
-         * [attr|=val]  attribute begins with val and optional hyphen
+         * [attr] has attribute
+         * [attr=val] has attribute with value val
+         * [attr!=val] does not have attribute with value val
+         * [attr^=val] attribute begins with val
+         * [attr$=val] attribute ends with val
+         * [attr*=val] attribute includes val
+         * [attr~=val] attribute includes val as a word
+         * [attr|=val] attribute begins with val and optional hyphen
          */
         sb.append('[').append(attribute.getKey()).append("=").append(attribute.getValue()).append("]");
       }
