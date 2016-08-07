@@ -1,6 +1,7 @@
-package general.webcrawler.yiyaodaibiao.task;
+package general.webcrawler.yiyaodaibiao;
 
-import general.webcrawler.yiyaodaibiao.WuBaCrawler;
+import general.webcrawler.task.BaseTask;
+import general.webcrawler.task.TaskControl;
 import general.webcrawler.yiyaodaibiao.model.FailedRecord;
 import general.webcrawler.yiyaodaibiao.model.JobPost;
 import lombok.extern.slf4j.Slf4j;

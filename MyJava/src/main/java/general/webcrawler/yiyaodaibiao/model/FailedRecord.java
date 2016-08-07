@@ -6,6 +6,8 @@ import java.lang.reflect.Modifier;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
+
+import general.webcrawler.data.Model;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Getter;
@@ -74,7 +76,7 @@ public class FailedRecord<K> implements Bson, Model<ObjectId> {
   /**
    * Dao
    */
-  public static class Dao extends BaseDao<FailedRecord> {
+  public static class Dao extends general.webcrawler.data.BaseDao<FailedRecord> {
 
     public static final String COLLECTION_NAME = "failedJobPost";
 

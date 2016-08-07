@@ -1,4 +1,4 @@
-package general.webcrawler.yiyaodaibiao.task;
+package general.webcrawler.task;
 
 import com.google.common.base.Throwables;
 import lombok.extern.slf4j.Slf4j;

@@ -1,4 +1,4 @@
-package general.webcrawler.yiyaodaibiao.task;
+package general.webcrawler.task;
 
 import lombok.extern.slf4j.Slf4j;
 

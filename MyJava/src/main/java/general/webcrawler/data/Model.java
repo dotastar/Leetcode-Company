@@ -1,4 +1,4 @@
-package general.webcrawler.yiyaodaibiao.model;
+package general.webcrawler.data;
 
 public interface Model<K> {
     K getId();

@@ -1,6 +1,6 @@
-package general.webcrawler.yiyaodaibiao.task;
+package general.webcrawler.task;
 
-import general.webcrawler.yiyaodaibiao.model.Model;
+import general.webcrawler.data.Model;
 import lombok.extern.slf4j.Slf4j;
 import org.joda.time.DateTime;
 import org.joda.time.Period;

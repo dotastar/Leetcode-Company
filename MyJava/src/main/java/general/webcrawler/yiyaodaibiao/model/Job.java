@@ -1,5 +1,6 @@
 package general.webcrawler.yiyaodaibiao.model;
 
+import general.webcrawler.data.Model;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -69,7 +70,7 @@ public class Job implements Bson, Model<ObjectId> {
         this._id = key;
     }
 
-    public static class Dao extends BaseDao<Job> {
+    public static class Dao extends general.webcrawler.data.BaseDao<Job> {
         public static final String COLLECTION_NAME = "job";
 
         public Dao() {

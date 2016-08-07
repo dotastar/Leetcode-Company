@@ -1,4 +1,4 @@
-package general.webcrawler.yiyaodaibiao.model;
+package general.webcrawler.data;
 
 import com.mongodb.MongoClient;
 import com.mongodb.client.FindIterable;
