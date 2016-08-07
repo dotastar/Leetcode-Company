@@ -1,4 +1,4 @@
-package general.webcrawler.parser;
+package general.webcrawler.cssselector;
 
 import java.util.List;
 import org.jsoup.Jsoup;

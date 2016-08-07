@@ -1,4 +1,4 @@
-package general.webcrawler.parser;
+package general.webcrawler.cssselector;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.HashMultiset;
