@@ -1,16 +1,18 @@
 package projects.crawler.yiyaodaibiao;
 
-import projects.crawler.yiyaodaibiao.model.FailedRecord;
-import projects.crawler.yiyaodaibiao.model.JobPost;
-import projects.crawler.task.BaseTask;
-import projects.crawler.task.TaskControl;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
+import projects.crawler.task.BaseTask;
+import projects.crawler.task.TaskControl;
+import projects.crawler.yiyaodaibiao.model.FailedRecord;
+import projects.crawler.yiyaodaibiao.model.JobPost;
 
+import javax.inject.Inject;
 import java.util.Iterator;
 import java.util.Set;
 
 /**
+ *
  * Created by yazhoucao on 10/28/15.
  */
 @Slf4j
@@ -21,8 +23,8 @@ public class CrawlWuBaJobTask extends BaseTask<ObjectId, JobPost> {
         // 13692 + 270
         // Affected 12,127 / 12,526 processed.
         // 25819 + 669
-        JobPost.Dao jobPostDao = new JobPost.Dao();
-        FailedRecord.Dao failedRecordDao = new FailedRecord.Dao();
+        JobPost.Dao jobPostDao = new YiyaodaibiaoModule().getInstance(JobPost.Dao.class);
+        FailedRecord.Dao failedRecordDao = new YiyaodaibiaoModule().getInstance(FailedRecord.Dao.class);
         Set<ObjectId> failedIds = failedRecordDao.getFailedRecordIds(JobPost.class.getSimpleName());
         CrawlWuBaJobTask crawlTask = new CrawlWuBaJobTask(jobPostDao.findByIds(failedIds).iterator());
         new TaskControl(crawlTask);
@@ -31,13 +33,11 @@ public class CrawlWuBaJobTask extends BaseTask<ObjectId, JobPost> {
     private final static int numThreads = 10;
     private final static int logFrequency = 100;
 
-    private WuBaCrawler crawler;
-    private FailedRecord.Dao failRecordDao;
+    @Inject private WuBaCrawler crawler;
+    @Inject private FailedRecord.Dao failRecordDao;
 
     public CrawlWuBaJobTask(Iterator<? extends JobPost> iterator) {
         super(iterator, numThreads, logFrequency);
-        this.crawler = new WuBaCrawler();
-        this.failRecordDao = new FailedRecord.Dao();
     }
 
     @Override

@@ -1,15 +1,16 @@
 package projects.crawler.yiyaodaibiao;
 
 import com.google.common.base.Preconditions;
-import projects.crawler.yiyaodaibiao.model.City;
-import projects.crawler.yiyaodaibiao.model.FailedRecord;
-import projects.crawler.yiyaodaibiao.model.Job;
-import projects.crawler.yiyaodaibiao.model.JobPost;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.junit.Test;
+import projects.crawler.yiyaodaibiao.model.City;
+import projects.crawler.yiyaodaibiao.model.FailedRecord;
+import projects.crawler.yiyaodaibiao.model.Job;
+import projects.crawler.yiyaodaibiao.model.JobPost;
 
+import javax.inject.Inject;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.List;
@@ -28,14 +29,14 @@ public class WuBaCrawler {
     //    protected static final String ROOT_URL = "http://city.58.com/yiyaodaibiao/pn#/";
     protected static final String USER_AGENT = "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:25.0) Gecko/20100101 Firefox/25.0";
 
-    private Job.Dao jobDao = new Job.Dao();
-    private JobPost.Dao jobPostDao = new JobPost.Dao();
-    private WuBaParser parser = new WuBaParser();
-    private FailedRecord.Dao failedRecordDao = new FailedRecord.Dao();
+    @Inject private Job.Dao jobDao;
+    @Inject private JobPost.Dao jobPostDao;
+    @Inject private WuBaParser parser;
+    @Inject private FailedRecord.Dao failedRecordDao;
 
     public static void main(String[] args) {
 //		AutoTestUtils.runTestClassAndPrint(WuBaCrawler.class);
-        WuBaCrawler crawler = new WuBaCrawler();
+        WuBaCrawler crawler = new YiyaodaibiaoModule().getInstance(WuBaCrawler.class);
         crawler.crawlAllJobPosts();
     }
 

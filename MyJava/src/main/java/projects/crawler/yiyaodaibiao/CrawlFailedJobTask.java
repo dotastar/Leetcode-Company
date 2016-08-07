@@ -7,10 +7,12 @@ import projects.crawler.yiyaodaibiao.model.JobPost;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
 
+import javax.inject.Inject;
 import java.util.Iterator;
 import java.util.Set;
 
 /**
+ *
  * Created by yazhoucao on 10/31/15.
  */
 @Slf4j
@@ -19,10 +21,15 @@ public class CrawlFailedJobTask extends BaseTask<ObjectId, JobPost> {
     private final static int numThreads = 10;
     private final static int logFrequency = 100;
 
-    private static FailedRecord.Dao failedRecordDao = new FailedRecord.Dao();
-    private static JobPost.Dao jobPostDao = new JobPost.Dao();
+    @Inject
+    private FailedRecord.Dao failedRecordDao;
+    @Inject
+    private JobPost.Dao jobPostDao;
 
     public static void main(String[] args) {
+        FailedRecord.Dao failedRecordDao = new YiyaodaibiaoModule().getInstance(FailedRecord.Dao.class);
+        JobPost.Dao jobPostDao = new YiyaodaibiaoModule().getInstance(JobPost.Dao.class);
+        @SuppressWarnings("unchecked")
         Set<ObjectId> failedIds = failedRecordDao.getFailedRecordIds(JobPost.class.getSimpleName());
         Iterator<JobPost> failedJobPosts = jobPostDao.findByIds(failedIds).iterator();
         CrawlFailedJobTask crawlTask = new CrawlFailedJobTask(failedJobPosts);

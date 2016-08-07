@@ -1,7 +1,6 @@
 package projects.crawler.yiyaodaibiao.model;
 
 import com.mongodb.client.model.Filters;
-import projects.crawler.data.Model;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,7 +10,11 @@ import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
+import projects.crawler.data.Model;
+import projects.crawler.data.MongoConn;
+import projects.crawler.yiyaodaibiao.YiyaodaibiaoModule;
 
+import javax.inject.Inject;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
@@ -51,8 +54,9 @@ public class JobPost implements Bson, Model<ObjectId> {
     public static class Dao extends projects.crawler.data.BaseDao<JobPost> {
         public static final String COLLECTION_NAME = "jobPost";
 
-        public Dao() {
-            super(COLLECTION_NAME, JobPost.class, new JobPostCodec());
+        @Inject
+        public Dao(MongoConn conn) {
+            super(COLLECTION_NAME, conn, JobPost.class, new JobPostCodec());
         }
     }
 
@@ -129,7 +133,7 @@ public class JobPost implements Bson, Model<ObjectId> {
     }
 
     public static void main(String[] args) {
-        JobPost.Dao dao = new JobPost.Dao();
+        JobPost.Dao dao = new YiyaodaibiaoModule().getInstance(JobPost.Dao.class);
         JobPost post = JobPost.builder().title("医药代表高薪招聘").district("白云").companyName("广州天河制药").build();
         dao.insert(post);
         JobPost saved = dao.findOne();

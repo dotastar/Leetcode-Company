@@ -1,33 +1,22 @@
 package projects.crawler.yiyaodaibiao.model;
 
 import com.mongodb.client.result.DeleteResult;
+import lombok.*;
+import org.bson.*;
+import org.bson.codecs.*;
+import org.bson.codecs.configuration.CodecRegistry;
+import org.bson.conversions.Bson;
+import org.bson.types.ObjectId;
+import projects.crawler.data.Model;
+import projects.crawler.data.MongoConn;
+import projects.crawler.yiyaodaibiao.YiyaodaibiaoModule;
+
+import javax.inject.Inject;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
-
-import projects.crawler.data.Model;
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import org.bson.BsonDocument;
-import org.bson.BsonDocumentWrapper;
-import org.bson.BsonReader;
-import org.bson.BsonString;
-import org.bson.BsonValue;
-import org.bson.BsonWriter;
-import org.bson.Document;
-import org.bson.codecs.Codec;
-import org.bson.codecs.CollectibleCodec;
-import org.bson.codecs.DecoderContext;
-import org.bson.codecs.DocumentCodec;
-import org.bson.codecs.EncoderContext;
-import org.bson.codecs.configuration.CodecRegistry;
-import org.bson.conversions.Bson;
-import org.bson.types.ObjectId;
 
 import static com.mongodb.client.model.Filters.and;
 import static com.mongodb.client.model.Filters.eq;
@@ -42,7 +31,8 @@ public class FailedRecord<K> implements Bson, Model<ObjectId> {
 
   public static void main(String[] args) {
     FailedRecord<ObjectId> failedRecord = new FailedRecord<>(new ObjectId(), "test");
-    FailedRecord.Dao dao = new Dao();
+    FailedRecord.Dao dao = new YiyaodaibiaoModule().getInstance(FailedRecord.Dao.class);
+    @SuppressWarnings("unchecked")
     Set<ObjectId> failedIds = dao.getFailedRecordIds(JobPost.class.getSimpleName());
     System.out.println(failedIds);
   }
@@ -80,8 +70,9 @@ public class FailedRecord<K> implements Bson, Model<ObjectId> {
 
     public static final String COLLECTION_NAME = "failedJobPost";
 
-    public Dao() {
-      super(COLLECTION_NAME, FailedRecord.class, new FailedRecordCodec());
+    @Inject
+    public Dao(MongoConn conn) {
+      super(COLLECTION_NAME, conn, FailedRecord.class, new FailedRecordCodec());
     }
 
     public Set getFailedRecordIds(String collecName) {

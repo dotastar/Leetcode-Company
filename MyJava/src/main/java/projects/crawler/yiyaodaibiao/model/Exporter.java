@@ -2,6 +2,7 @@ package projects.crawler.yiyaodaibiao.model;
 
 import projects.crawler.yiyaodaibiao.WuBaCrawler;
 import lombok.extern.slf4j.Slf4j;
+import projects.crawler.yiyaodaibiao.YiyaodaibiaoModule;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -41,7 +42,7 @@ public class Exporter {
                 e.printStackTrace();
             }
         });
-        Job.Dao jobDao = new Job.Dao();
+        Job.Dao jobDao = new YiyaodaibiaoModule().getInstance(Job.Dao.class);
         // Aggregate jobs by city
         Map<String, List<Job>> jobsByCity = StreamSupport.stream(jobDao.find().spliterator(), true).collect(groupingBy(Job::getCity, toList()));
         // Export jobsByCity to HTML files, and create a map of city to path

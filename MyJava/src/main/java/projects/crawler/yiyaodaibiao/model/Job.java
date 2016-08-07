@@ -10,7 +10,10 @@ import org.bson.codecs.*;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
+import projects.crawler.data.MongoConn;
+import projects.crawler.yiyaodaibiao.YiyaodaibiaoModule;
 
+import javax.inject.Inject;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
@@ -47,9 +50,9 @@ public class Job implements Bson, Model<ObjectId> {
     protected String sourceURL;
 
     public static void main(String[] args) {
-        Job.Dao dao = new Job.Dao();
+        Job.Dao dao = new YiyaodaibiaoModule().getInstance(Job.Dao.class);
         Stream<Job> stream = StreamSupport.stream(dao.find().spliterator(), true);
-        Map<String, Long>  urlCnt = stream.collect(groupingBy(Job::getSourceURL, counting()));
+        Map<String, Long> urlCnt = stream.collect(groupingBy(Job::getSourceURL, counting()));
         long total = urlCnt.values().stream().mapToLong(V -> V.longValue()).sum();
         System.out.println(total + "\t" + urlCnt);
         System.out.println(urlCnt);
@@ -73,8 +76,9 @@ public class Job implements Bson, Model<ObjectId> {
     public static class Dao extends projects.crawler.data.BaseDao<Job> {
         public static final String COLLECTION_NAME = "job";
 
-        public Dao() {
-            super(COLLECTION_NAME, Job.class, new JobCodec());
+        @Inject
+        public Dao(MongoConn conn) {
+            super(COLLECTION_NAME, conn, Job.class, new JobCodec());
         }
     }
 
