@@ -1,4 +1,4 @@
-package general.webcrawler.task;
+package projects.crawler.task;
 
 import lombok.extern.slf4j.Slf4j;
 

@@ -1,6 +1,6 @@
-package general.webcrawler.yiyaodaibiao.model;
+package projects.crawler.yiyaodaibiao.model;
 
-import general.webcrawler.yiyaodaibiao.WuBaCrawler;
+import projects.crawler.yiyaodaibiao.WuBaCrawler;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;

@@ -1,9 +1,9 @@
-package general.webcrawler.yiyaodaibiao;
+package projects.crawler.yiyaodaibiao;
 
 import com.google.common.base.Preconditions;
-import general.webcrawler.yiyaodaibiao.model.City;
-import general.webcrawler.yiyaodaibiao.model.Job;
-import general.webcrawler.yiyaodaibiao.model.JobPost;
+import projects.crawler.yiyaodaibiao.model.City;
+import projects.crawler.yiyaodaibiao.model.Job;
+import projects.crawler.yiyaodaibiao.model.JobPost;
 import interview.AutoTestUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;

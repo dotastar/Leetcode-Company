@@ -1,4 +1,4 @@
-package general.webcrawler.yiyaodaibiao.model;
+package projects.crawler.yiyaodaibiao.model;
 
 import com.google.common.collect.ImmutableSet;
 import lombok.AllArgsConstructor;

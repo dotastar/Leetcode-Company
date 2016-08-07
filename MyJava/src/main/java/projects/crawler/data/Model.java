@@ -1,4 +1,4 @@
-package general.webcrawler.data;
+package projects.crawler.data;
 
 public interface Model<K> {
     K getId();

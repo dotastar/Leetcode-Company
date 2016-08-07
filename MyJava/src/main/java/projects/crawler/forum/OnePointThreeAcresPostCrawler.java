@@ -1,4 +1,4 @@
-package general.webcrawler.forum;
+package projects.crawler.forum;
 
 import org.jsoup.Connection.Response;
 import org.jsoup.Jsoup;

@@ -1,4 +1,4 @@
-package general.webcrawler.data;
+package projects.crawler.data;
 
 import com.mongodb.MongoClient;
 import com.mongodb.client.FindIterable;
