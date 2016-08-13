@@ -4,7 +4,7 @@ import com.google.common.base.Preconditions;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.junit.Test;
+import projects.crawler.data.City;
 import projects.crawler.subproject.autohome.model.DealerPost;
 
 import javax.inject.Inject;
@@ -12,20 +12,18 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 @Slf4j
 public class AutohomeCrawler {
-  protected static final long WAIT_TIME = 500; // ms
+//  protected static final long WAIT_TIME = 500; // ms
   protected static final int TIMEOUT = 10_000; // ms
 
-  protected static final int MAX_RETRY = 5;
+//  protected static final int MAX_RETRY = 5;
   protected static final int MAX_PAGE = 100;
-  protected static final String CITY_LIST = "http://www.58.com/yiyaodaibiao/changecity/";
-  //    protected static final String ROOT_URL = "http://city.58.com/yiyaodaibiao/pn#/";
   protected static final String USER_AGENT = "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:25.0) Gecko/20100101 Firefox/25.0";
 
-  private static final String URL_TEMPLATE = "http://dealer.autohome.com.cn/%s/0_0_0_0_#_1_0.html";
+//  private static final String URL_TEMPLATE = "http://dealer.autohome.com.cn/%s/0_0_0_0_#_1_0.html";
 
   @Inject private DealerPost.Dao postDao;
   @Inject private AutohomeParser parser;
@@ -33,16 +31,20 @@ public class AutohomeCrawler {
   public static void main(String[] args) {
 //		AutoTestUtils.runTestClassAndPrint(WuBaCrawler.class);
     AutohomeCrawler crawler = new AutohomeModule().getInstance(AutohomeCrawler.class);
-    crawler.crawlByCity("beijing");
+    String url = "http://dealer.autohome.com.cn/beijing/0_0_0_0_1.html";
+    City city = new City("直辖市", "北京", url);
+    crawler.crawlDealerPostByCity(city);
   }
 
-  public void crawlByCity(String city) {
-    Preconditions.checkNotNull(city);
+  public int crawlDealerPostByCity(City city) {
+    checkNotNull(city.getName());
+    checkNotNull(city.getUrl());
     log.info("Start crawling city: {}", city);
 
     int postsCount = 0;
     int pageIdx = 1;
-    String baseUrl = String.format(URL_TEMPLATE, city);
+    String baseUrl = toBaseUrl(city.getUrl());
+
     for (; pageIdx <= MAX_PAGE; pageIdx++) {
       String url = baseUrl.replace("#", Integer.toString(pageIdx));
       List<DealerPost> posts;
@@ -63,18 +65,17 @@ public class AutohomeCrawler {
       postDao.insertMany(posts);
       postsCount += posts.size();
     }
-    log.info("Finish crawling! Crawled " + (pageIdx - 1) + " pages, " + postsCount + " jobs.");
+
+    log.info("Finish crawling {}!\nCrawled {} pages, {} posts.", city, (pageIdx - 1), postsCount);
+    return postsCount;
   }
 
-  @Test
-  public void test1() throws IOException {
-    String url1 = "http://gz.58.com/yiyaodaibiao/pn1/";
-    String url2 = "http://gz.58.com/yiyaodaibiao/pn2/";
-    String url3 = "http://gz.58.com/yiyaodaibiao/pn3/";
-    System.out.println(Jsoup.connect(url1).timeout(TIMEOUT).userAgent(USER_AGENT).get().hashCode());
-    System.out.println(Jsoup.connect(url2).timeout(TIMEOUT).userAgent(USER_AGENT).get().hashCode());
-    System.out.println(Jsoup.connect(url3).timeout(TIMEOUT).userAgent(USER_AGENT)
-        .get().hashCode());
-    assertEquals(true, true);
+  /**
+   * http://dealer.autohome.com.cn/linyi/0_0_0_0_1.html => http://dealer.autohome.com.cn/linyi/0_0_0_0_#.html
+   */
+  private String toBaseUrl(String url) {
+    int i = url.lastIndexOf('1');
+    Preconditions.checkState(i >= 0, "url:" + url);
+    return url.substring(0, i) + '#' + url.substring(i + 1);
   }
 }

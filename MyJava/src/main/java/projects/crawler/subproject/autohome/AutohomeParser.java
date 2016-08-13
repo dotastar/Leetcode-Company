@@ -8,6 +8,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.junit.Test;
 import projects.crawler.annotation.Extraction;
+import projects.crawler.data.City;
 import projects.crawler.subproject.autohome.model.DealerPost;
 import projects.crawler.utils.Exporter;
 import projects.crawler.utils.ReflectionUtil;
@@ -78,13 +79,14 @@ public class AutohomeParser {
 
   }
 
-  public List<DealerPost> parsePosts(Document page, String city) throws ParseException {
+  public List<DealerPost> parsePosts(Document page, City city) throws ParseException {
     List<DealerPost> res = new ArrayList<>();
     ParsingSchema schema = new ParsingSchema();
     Elements postElements = schema.getExtractPosts().apply(page.body());
     for (Element postElem : postElements) {
       DealerPost post = new DealerPost();
-      post.setCity(city);
+      post.setCity(city.getName());
+      post.setProvince(city.getProvinceName());
 
       ReflectionUtil.extractAndApplyValues(post, postElem, schema);
 
@@ -101,11 +103,11 @@ public class AutohomeParser {
 
   @Test
   public void testExtractPosts() throws IOException, ParseException {
-    String url = "http://dealer.autohome.com.cn/beijing/";
+    String url = "http://dealer.autohome.com.cn/beijing/0_0_0_0_1.html";
     int timeout = 10_000;
     Document doc = Jsoup.connect(url).timeout(timeout).userAgent(USER_AGENT).get();
-    List<DealerPost> posts = parsePosts(doc, "Beijing");
-    System.out.println("Extracted " + posts.size() + " job posts");
+    List<DealerPost> posts = parsePosts(doc, new City("直辖市", "北京", url));
+    System.out.println("Extracted " + posts.size() + " posts");
     for (DealerPost post : posts) {
       System.out.println(post);
       assertEquals(url, post.getWhereAtUrl());
