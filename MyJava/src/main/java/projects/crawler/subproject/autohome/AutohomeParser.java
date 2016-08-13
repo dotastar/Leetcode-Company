@@ -1,6 +1,5 @@
 package projects.crawler.subproject.autohome;
 
-import com.google.common.collect.Iterables;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
@@ -8,19 +7,21 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.junit.Test;
+import projects.crawler.metadata.Extraction;
 import projects.crawler.subproject.autohome.model.DealerPost;
 import projects.crawler.utils.Exporter;
 import projects.crawler.utils.ReflectionUtil;
 
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import java.lang.reflect.Field;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.function.BiConsumer;
 import java.util.function.Function;
 
+import static com.google.common.collect.Iterables.getOnlyElement;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -46,41 +47,31 @@ public class AutohomeParser {
     private static String BRAND = " .telphone";
     private static String PROMOTION = ".pos-relative > a:nth-child(2)";
 
-    // linkTo
-    // whereAt
-
     private Function<Element, Elements> extractPosts = pageElem -> pageElem.select(POSTS);
 
-    private Function<Element, String> extractTitle = postElem -> Iterables.getOnlyElement(postElem.select(TITLE)).text();
-    private Function<Element, String> extractPhone = postElem -> Iterables.getOnlyElement(postElem.select(PHONE)).text();
-    private Function<Element, String> extractAddress = postElem -> Iterables.getOnlyElement(postElem.select(PHONE)).parent().parent().nextElementSibling()
-        .ownText();
-    private Function<Element, String> extractBrand = postElem -> Iterables.getOnlyElement(postElem.select(BRAND)).nextElementSibling().ownText();
-    private Function<Element, String> extractPromotion = postElem -> {
-      Element element = Iterables.getOnlyElement(postElem.select(PROMOTION), null);
-      return element == null ? "" : element.ownText();
+    @Extraction
+    private BiConsumer<Element, DealerPost> extractTitle = (postElem, post) -> post.setTitle(getOnlyElement(postElem.select(TITLE)).text());
+    @Extraction
+    private BiConsumer<Element, DealerPost> extractPhone = (postElem, post) -> post.setPhone(getOnlyElement(postElem.select(PHONE)).text());
+    @Extraction
+    private BiConsumer<Element, DealerPost> extractAddress = (postElem, post) -> post.setAddress(
+        getOnlyElement(postElem.select(PHONE)).parent().parent().nextElementSibling().ownText());
+    @Extraction
+    private BiConsumer<Element, DealerPost> extractBrand = (postElem, post) -> post.setBrand(
+        getOnlyElement(postElem.select(BRAND)).nextElementSibling().ownText());
+    @Extraction
+    private BiConsumer<Element, DealerPost> extractPromotion = (postElem, post) -> {
+      Element element = getOnlyElement(postElem.select(PROMOTION), null);
+      if (element == null) {
+        log.debug("No promotion found!");
+        return;
+      }
+      post.setPromotion(element.ownText());
     };
-
-    @SuppressWarnings("unchecked")
-    private Function<Element, String> getExtractionFunction(String fieldName) {
-      Method method = ReflectionUtil.getGetter(ParsingSchema.class, fieldName);
-      try {
-        return (Function<Element, String>) method.invoke(this);
-      } catch (IllegalAccessException | InvocationTargetException e) {
-        e.printStackTrace();
-        throw new IllegalArgumentException(e);
-      }
-    }
-
-    private void setValue(DealerPost post, String fieldName, Element elem) {
-      try {
-        Method method = ReflectionUtil.getSetter(DealerPost.class, fieldName);
-        String value = getExtractionFunction(fieldName).apply(elem);
-        method.invoke(post, value);
-      } catch (Exception e) {
-        log.error("Parse {} for Post({}) out of Element({}) error\n{}", fieldName, post, elem, e.getCause());
-      }
-    }
+    @Extraction
+    private BiConsumer<Element, DealerPost> extractWhereAtUrl = (postElem, post) -> post.setWhereAtUrl(postElem.ownerDocument().location());
+    @Extraction
+    private BiConsumer<Element, DealerPost> extractLinkToUrl = (postElem, post) -> post.setLinkToUrl(getOnlyElement(postElem.select(TITLE)).absUrl("href"));
 
   }
 
@@ -92,12 +83,7 @@ public class AutohomeParser {
       DealerPost post = new DealerPost();
       post.setCity(city);
       post.setCrawlDate(new Date());
-      schema.setValue(post, "title", postElem);
-      schema.setValue(post, "phone", postElem);
-      schema.setValue(post, "address", postElem);
-      schema.setValue(post, "promotion", postElem);
-      schema.setValue(post, "brand", postElem);
-      post.setWhereAtUrl(page.location());
+      ReflectionUtil.extractAndApplyValues(post, postElem, schema);
       res.add(post);
     }
     return res;

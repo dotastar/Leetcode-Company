@@ -1,11 +1,18 @@
 package projects.crawler.utils;
 
+import lombok.extern.slf4j.Slf4j;
+import org.jsoup.nodes.Element;
+import projects.crawler.metadata.Extraction;
+
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.function.BiConsumer;
 import java.util.stream.Stream;
 
 /**
  * Created by yazhoucao on 8/8/16.
  */
+@Slf4j
 public class ReflectionUtil {
 
   public static Method searchMethod(Class clazz, String fieldName, String prefix) {
@@ -19,7 +26,25 @@ public class ReflectionUtil {
     return searchMethod(clazz, fieldName, "get");
   }
 
-  public static Method getSetter(Class clazz, String fieldName) {
-    return searchMethod(clazz, fieldName, "set");
+  public static  <T, S> void extractAndApplyValues(T data, Element elem, S schema) {
+    try {
+      Field[] fields = schema.getClass().getDeclaredFields();
+      for (Field extractionField : fields) {
+        if (!extractionField.isAnnotationPresent(Extraction.class)) {
+          continue;
+        }
+        extractionField.setAccessible(true);
+        Object extraction = extractionField.get(schema);
+        if (!BiConsumer.class.isInstance(extraction)) {
+          log.error("Expecting field {} of Class {} has a type of {}", extractionField.getName(), data.getClass().getSimpleName(), BiConsumer.class);
+          throw new AssertionError();
+        }
+        @SuppressWarnings("unchecked")
+        BiConsumer<Element, T> consumer = (BiConsumer<Element, T>) extraction;
+        consumer.accept(elem, data);
+      }
+    } catch (Exception e) {
+      log.error("Parse Post({}) \nout of Element({}) error\n{}", data, elem, e);
+    }
   }
 }
