@@ -53,7 +53,7 @@ public class Job implements Bson, Model<ObjectId> {
         Job.Dao dao = new YiyaodaibiaoModule().getInstance(Job.Dao.class);
         Stream<Job> stream = StreamSupport.stream(dao.find().spliterator(), true);
         Map<String, Long> urlCnt = stream.collect(groupingBy(Job::getSourceURL, counting()));
-        long total = urlCnt.values().stream().mapToLong(V -> V.longValue()).sum();
+        long total = urlCnt.values().stream().mapToLong(V -> V).sum();
         System.out.println(total + "\t" + urlCnt);
         System.out.println(urlCnt);
     }

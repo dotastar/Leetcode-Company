@@ -1,4 +1,4 @@
-package projects.crawler.subproject.yiyaodaibiao.model;
+package projects.crawler.data;
 
 import com.google.common.collect.ImmutableSet;
 import lombok.AllArgsConstructor;
@@ -12,7 +12,7 @@ import java.util.Set;
  */
 @Data
 @AllArgsConstructor
-@EqualsAndHashCode(of={"name"})
+@EqualsAndHashCode(of = { "name" })
 public class City {
     private static final Set<String> MUNICIPALITIES = ImmutableSet.of("北京", "上海", "天津", "重庆");
 
@@ -23,20 +23,4 @@ public class City {
     private String provinceName;
     private final String name;
     private final String url;
-
-    public String getAbbreviatedName() {
-        /**
-         * Samples:
-         * http://np.58.com/yiyaodaibiao/
-         * http://xa.58.com/yiyaodaibiao/
-         * http://yc.58.com/yiyaodaibiao/
-         * http://bz.58.com/yiyaodaibiao/
-         * http://zhangbei.58.com/yiyaodaibiao/
-         */
-        int start = url.indexOf("http://") + "http://".length();
-        int end = url.indexOf(".", start);
-        return url.substring(start, end);
-    }
-
-
 }

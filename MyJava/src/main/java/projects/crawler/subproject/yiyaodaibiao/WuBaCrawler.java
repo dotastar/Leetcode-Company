@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.junit.Test;
-import projects.crawler.subproject.yiyaodaibiao.model.City;
+import projects.crawler.data.City;
 import projects.crawler.subproject.yiyaodaibiao.model.FailedRecord;
 import projects.crawler.subproject.yiyaodaibiao.model.Job;
 import projects.crawler.subproject.yiyaodaibiao.model.JobPost;

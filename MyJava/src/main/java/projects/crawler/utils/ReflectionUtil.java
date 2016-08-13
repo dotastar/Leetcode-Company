@@ -2,7 +2,7 @@ package projects.crawler.utils;
 
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.nodes.Element;
-import projects.crawler.metadata.Extraction;
+import projects.crawler.annotation.Extraction;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;

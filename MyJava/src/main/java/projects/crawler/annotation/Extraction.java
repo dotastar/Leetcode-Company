@@ -1,4 +1,4 @@
-package projects.crawler.metadata;
+package projects.crawler.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

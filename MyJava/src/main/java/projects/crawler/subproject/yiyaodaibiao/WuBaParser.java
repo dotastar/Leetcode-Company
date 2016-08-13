@@ -1,9 +1,6 @@
 package projects.crawler.subproject.yiyaodaibiao;
 
 import com.google.common.base.Preconditions;
-import projects.crawler.subproject.yiyaodaibiao.model.City;
-import projects.crawler.subproject.yiyaodaibiao.model.Job;
-import projects.crawler.subproject.yiyaodaibiao.model.JobPost;
 import interview.AutoTestUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
@@ -12,6 +9,9 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.junit.Test;
+import projects.crawler.data.City;
+import projects.crawler.subproject.yiyaodaibiao.model.Job;
+import projects.crawler.subproject.yiyaodaibiao.model.JobPost;
 
 import java.io.IOException;
 import java.text.DateFormat;

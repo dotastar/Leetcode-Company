@@ -7,13 +7,12 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.junit.Test;
-import projects.crawler.metadata.Extraction;
+import projects.crawler.annotation.Extraction;
 import projects.crawler.subproject.autohome.model.DealerPost;
 import projects.crawler.utils.Exporter;
 import projects.crawler.utils.ReflectionUtil;
 
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -28,6 +27,7 @@ import static org.junit.Assert.assertTrue;
 @Slf4j
 public class AutohomeParser {
 
+  @SuppressWarnings("unchecked")
   public static void main(String[] args) {
 //    AutoTestUtils.runTestClassAndPrint(AutohomeParser.class);
     Exporter exporter = new Exporter();
@@ -50,28 +50,31 @@ public class AutohomeParser {
     private Function<Element, Elements> extractPosts = pageElem -> pageElem.select(POSTS);
 
     @Extraction
-    private BiConsumer<Element, DealerPost> extractTitle = (postElem, post) -> post.setTitle(getOnlyElement(postElem.select(TITLE)).text());
+    private BiConsumer<Element, DealerPost> setTitle = (postElem, post) -> post.setTitle(getOnlyElement(postElem.select(TITLE)).text());
     @Extraction
-    private BiConsumer<Element, DealerPost> extractPhone = (postElem, post) -> post.setPhone(getOnlyElement(postElem.select(PHONE)).text());
+    private BiConsumer<Element, DealerPost> setPhone = (postElem, post) -> post.setPhone(getOnlyElement(postElem.select(PHONE)).text());
     @Extraction
-    private BiConsumer<Element, DealerPost> extractAddress = (postElem, post) -> post.setAddress(
+    private BiConsumer<Element, DealerPost> setAddress = (postElem, post) -> post.setAddress(
         getOnlyElement(postElem.select(PHONE)).parent().parent().nextElementSibling().ownText());
     @Extraction
-    private BiConsumer<Element, DealerPost> extractBrand = (postElem, post) -> post.setBrand(
+    private BiConsumer<Element, DealerPost> setBrand = (postElem, post) -> post.setBrand(
         getOnlyElement(postElem.select(BRAND)).nextElementSibling().ownText());
     @Extraction
-    private BiConsumer<Element, DealerPost> extractPromotion = (postElem, post) -> {
+    private BiConsumer<Element, DealerPost> setPromotion = (postElem, post) -> {
       Element element = getOnlyElement(postElem.select(PROMOTION), null);
       if (element == null) {
-        log.debug("No promotion found!");
+        log.debug("No promotion found in Element {} for Post {}", postElem, post);
         return;
       }
       post.setPromotion(element.ownText());
     };
+
     @Extraction
-    private BiConsumer<Element, DealerPost> extractWhereAtUrl = (postElem, post) -> post.setWhereAtUrl(postElem.ownerDocument().location());
+    private BiConsumer<Element, DealerPost> setWhereAtUrl = (postElem, post) -> post.setWhereAtUrl(postElem.ownerDocument().location());
     @Extraction
-    private BiConsumer<Element, DealerPost> extractLinkToUrl = (postElem, post) -> post.setLinkToUrl(getOnlyElement(postElem.select(TITLE)).absUrl("href"));
+    private BiConsumer<Element, DealerPost> setLinkToUrl = (postElem, post) -> post.setLinkToUrl(getOnlyElement(postElem.select(TITLE)).absUrl("href"));
+    @Extraction
+    private BiConsumer<Element, DealerPost> setCrawlDate = (postElem, post) -> post.setCrawlDate(new Date());
 
   }
 
@@ -82,8 +85,9 @@ public class AutohomeParser {
     for (Element postElem : postElements) {
       DealerPost post = new DealerPost();
       post.setCity(city);
-      post.setCrawlDate(new Date());
+
       ReflectionUtil.extractAndApplyValues(post, postElem, schema);
+
       res.add(post);
     }
     return res;
