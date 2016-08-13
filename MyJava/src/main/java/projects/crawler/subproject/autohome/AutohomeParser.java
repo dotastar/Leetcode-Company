@@ -1,7 +1,6 @@
-package projects.crawler.autohome;
+package projects.crawler.subproject.autohome;
 
 import com.google.common.collect.Iterables;
-import interview.AutoTestUtils;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
@@ -9,7 +8,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.junit.Test;
-import projects.crawler.autohome.model.DealerPost;
+import projects.crawler.subproject.autohome.model.DealerPost;
 import projects.crawler.utils.Exporter;
 import projects.crawler.utils.ReflectionUtil;
 
@@ -22,6 +21,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.function.Function;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 @Slf4j
@@ -97,6 +97,7 @@ public class AutohomeParser {
       schema.setValue(post, "address", postElem);
       schema.setValue(post, "promotion", postElem);
       schema.setValue(post, "brand", postElem);
+      post.setWhereAtUrl(page.location());
       res.add(post);
     }
     return res;
@@ -115,8 +116,10 @@ public class AutohomeParser {
     Document doc = Jsoup.connect(url).timeout(timeout).userAgent(USER_AGENT).get();
     List<DealerPost> posts = parsePosts(doc, "Beijing");
     System.out.println("Extracted " + posts.size() + " job posts");
-    for (DealerPost post : posts)
+    for (DealerPost post : posts) {
       System.out.println(post);
+      assertEquals(url, post.getWhereAtUrl());
+    }
     assertTrue(posts.size() > 0);
   }
 }

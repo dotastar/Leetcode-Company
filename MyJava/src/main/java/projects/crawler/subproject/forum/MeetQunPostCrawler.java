@@ -1,4 +1,4 @@
-package projects.crawler.forum;
+package projects.crawler.subproject.forum;
 
 import java.io.BufferedWriter;
 import java.io.File;

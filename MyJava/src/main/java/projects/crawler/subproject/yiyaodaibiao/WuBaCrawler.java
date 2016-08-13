@@ -1,14 +1,14 @@
-package projects.crawler.yiyaodaibiao;
+package projects.crawler.subproject.yiyaodaibiao;
 
 import com.google.common.base.Preconditions;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.junit.Test;
-import projects.crawler.yiyaodaibiao.model.City;
-import projects.crawler.yiyaodaibiao.model.FailedRecord;
-import projects.crawler.yiyaodaibiao.model.Job;
-import projects.crawler.yiyaodaibiao.model.JobPost;
+import projects.crawler.subproject.yiyaodaibiao.model.City;
+import projects.crawler.subproject.yiyaodaibiao.model.FailedRecord;
+import projects.crawler.subproject.yiyaodaibiao.model.Job;
+import projects.crawler.subproject.yiyaodaibiao.model.JobPost;
 
 import javax.inject.Inject;
 import java.io.IOException;

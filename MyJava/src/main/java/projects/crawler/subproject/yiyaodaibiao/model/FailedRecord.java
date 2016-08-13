@@ -1,4 +1,4 @@
-package projects.crawler.yiyaodaibiao.model;
+package projects.crawler.subproject.yiyaodaibiao.model;
 
 import com.mongodb.client.result.DeleteResult;
 import lombok.*;
@@ -9,7 +9,7 @@ import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
 import projects.crawler.data.Model;
 import projects.crawler.data.MongoConn;
-import projects.crawler.yiyaodaibiao.YiyaodaibiaoModule;
+import projects.crawler.subproject.yiyaodaibiao.YiyaodaibiaoModule;
 
 import javax.inject.Inject;
 import java.lang.reflect.Field;

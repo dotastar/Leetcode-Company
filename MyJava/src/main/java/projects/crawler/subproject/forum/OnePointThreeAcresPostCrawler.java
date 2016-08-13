@@ -1,4 +1,4 @@
-package projects.crawler.forum;
+package projects.crawler.subproject.forum;
 
 import org.jsoup.Connection.Response;
 import org.jsoup.Jsoup;

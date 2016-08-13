@@ -1,4 +1,4 @@
-package projects.crawler.forum;
+package projects.crawler.subproject.forum;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;

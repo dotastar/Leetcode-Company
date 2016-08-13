@@ -1,8 +1,8 @@
-package projects.crawler.yiyaodaibiao;
+package projects.crawler.subproject.yiyaodaibiao;
 
 import projects.crawler.data.BaseModule;
 import projects.crawler.data.DBConfig;
-import projects.crawler.yiyaodaibiao.model.YiyaodaibiaoConfig;
+import projects.crawler.subproject.yiyaodaibiao.model.YiyaodaibiaoConfig;
 
 /**
  * Autohome Guice dependency injection module

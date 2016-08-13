@@ -1,11 +1,11 @@
-package projects.crawler.autohome;
+package projects.crawler.subproject.autohome;
 
 import com.google.common.base.Preconditions;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.junit.Test;
-import projects.crawler.autohome.model.DealerPost;
+import projects.crawler.subproject.autohome.model.DealerPost;
 
 import javax.inject.Inject;
 import java.io.IOException;

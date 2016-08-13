@@ -1,11 +1,11 @@
-package projects.crawler.yiyaodaibiao;
+package projects.crawler.subproject.yiyaodaibiao;
 
 import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
 import projects.crawler.task.BaseTask;
 import projects.crawler.task.TaskControl;
-import projects.crawler.yiyaodaibiao.model.FailedRecord;
-import projects.crawler.yiyaodaibiao.model.JobPost;
+import projects.crawler.subproject.yiyaodaibiao.model.FailedRecord;
+import projects.crawler.subproject.yiyaodaibiao.model.JobPost;
 
 import javax.inject.Inject;
 import java.util.Iterator;

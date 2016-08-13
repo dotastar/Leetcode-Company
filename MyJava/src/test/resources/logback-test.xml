@@ -11,7 +11,7 @@
     </encoder>
   </appender>
 
-  <root name="com.yazhoucao.MyJava.projects.crawler.yiyaodaibiao" level="DEBUG">
+  <root name="com.yazhoucao.MyJava.projects.crawler.subproject.yiyaodaibiao" level="DEBUG">
     <appender-ref ref="STDOUT" />
     <appender-ref ref="STDERR" />
   </root>

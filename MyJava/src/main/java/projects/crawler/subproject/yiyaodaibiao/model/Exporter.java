@@ -1,8 +1,8 @@
-package projects.crawler.yiyaodaibiao.model;
+package projects.crawler.subproject.yiyaodaibiao.model;
 
-import projects.crawler.yiyaodaibiao.WuBaCrawler;
+import projects.crawler.subproject.yiyaodaibiao.WuBaCrawler;
 import lombok.extern.slf4j.Slf4j;
-import projects.crawler.yiyaodaibiao.YiyaodaibiaoModule;
+import projects.crawler.subproject.yiyaodaibiao.YiyaodaibiaoModule;
 
 import java.io.IOException;
 import java.lang.reflect.Field;

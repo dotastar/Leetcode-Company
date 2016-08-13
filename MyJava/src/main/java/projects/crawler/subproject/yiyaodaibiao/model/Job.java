@@ -1,4 +1,4 @@
-package projects.crawler.yiyaodaibiao.model;
+package projects.crawler.subproject.yiyaodaibiao.model;
 
 import projects.crawler.data.Model;
 import lombok.AllArgsConstructor;
@@ -11,7 +11,7 @@ import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
 import projects.crawler.data.MongoConn;
-import projects.crawler.yiyaodaibiao.YiyaodaibiaoModule;
+import projects.crawler.subproject.yiyaodaibiao.YiyaodaibiaoModule;
 
 import javax.inject.Inject;
 import java.lang.reflect.Field;

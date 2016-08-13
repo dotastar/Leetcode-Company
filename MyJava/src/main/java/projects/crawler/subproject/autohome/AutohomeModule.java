@@ -1,6 +1,6 @@
-package projects.crawler.autohome;
+package projects.crawler.subproject.autohome;
 
-import projects.crawler.autohome.model.AutohomeConfig;
+import projects.crawler.subproject.autohome.model.AutohomeConfig;
 import projects.crawler.data.BaseModule;
 import projects.crawler.data.DBConfig;
 

@@ -1,4 +1,4 @@
-package projects.crawler.autohome.model;
+package projects.crawler.subproject.autohome.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,7 +12,7 @@ import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
-import projects.crawler.autohome.AutohomeModule;
+import projects.crawler.subproject.autohome.AutohomeModule;
 import projects.crawler.data.Model;
 import projects.crawler.data.MongoConn;
 
