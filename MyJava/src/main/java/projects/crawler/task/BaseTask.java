@@ -1,6 +1,6 @@
 package projects.crawler.task;
 
-import projects.crawler.data.Model;
+import projects.crawler.data.model.Model;
 import lombok.extern.slf4j.Slf4j;
 import org.joda.time.DateTime;
 import org.joda.time.Period;

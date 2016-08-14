@@ -6,7 +6,6 @@ package general.nlp;
  * Created by yazhoucao on 1/21/16.
  */
 
-import de.flapdoodle.embed.process.collections.Collections;
 import edu.stanford.nlp.hcoref.CorefCoreAnnotations;
 import edu.stanford.nlp.hcoref.data.CorefChain;
 import edu.stanford.nlp.ie.AbstractSequenceClassifier;
@@ -32,6 +31,7 @@ import lombok.SneakyThrows;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringReader;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -70,7 +70,9 @@ public class NERDemo {
     props.setProperty("annotators", "tokenize, ner");
     CRFClassifier<CoreLabel> crfClassifier = new CRFClassifier(props);
     List<CoreLabel> labels = generateCoreLabel();
-    crfClassifier.train(Collections.newArrayList(labels));
+    List<List<CoreLabel>> docs = new ArrayList<>();
+    docs.add(labels);
+    crfClassifier.train(docs);
     List<List<CoreLabel>> classify = crfClassifier.classify("LAKSHMAN VENEPALL 200 Water St, New York, NY 10038 | 434-258-9649 | lv223@cornell.edu");
     classify.forEach(System.out::println);
   }

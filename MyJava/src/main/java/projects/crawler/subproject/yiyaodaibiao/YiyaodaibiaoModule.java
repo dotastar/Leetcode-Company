@@ -1,8 +1,11 @@
 package projects.crawler.subproject.yiyaodaibiao;
 
+import com.google.inject.Provides;
 import projects.crawler.data.BaseModule;
-import projects.crawler.data.DBConfig;
+import projects.crawler.data.db.DBConfig;
 import projects.crawler.subproject.yiyaodaibiao.model.YiyaodaibiaoConfig;
+
+import javax.inject.Singleton;
 
 /**
  * Autohome Guice dependency injection module
@@ -12,6 +15,13 @@ import projects.crawler.subproject.yiyaodaibiao.model.YiyaodaibiaoConfig;
 public class YiyaodaibiaoModule extends BaseModule {
   @Override
   protected void configure() {
-    bind(DBConfig.class).to(YiyaodaibiaoConfig.class);
   }
+
+  @Override
+  @Provides
+  @Singleton
+  public DBConfig provideDBConfig() {
+    return new YiyaodaibiaoConfig();
+  }
+
 }

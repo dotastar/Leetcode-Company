@@ -25,20 +25,14 @@ import java.util.List;
 public class SavedOffset<K> implements Model<String> {
 
     // task name
-    @Id
-    private String id;
-    @JsonProperty
-    private int offset;
-    @JsonProperty
-    private List<K> failedRecords;
+    @Id private String id;
+    @JsonProperty private int offset;
+    @JsonProperty private List<K> failedRecords;
     /**
      * This is the key value (used only when key is set) of the last processed record.
      */
-    @JsonProperty
-    @JsonSerialize
-    private K lastRecord;
-    @JsonProperty
-    private Key key;
+    @JsonProperty @JsonSerialize private K lastRecord;
+    @JsonProperty private Key key;
 
     public SavedOffset(String taskName) {
         this.id = taskName;

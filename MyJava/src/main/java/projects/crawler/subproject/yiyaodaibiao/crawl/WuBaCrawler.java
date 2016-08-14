@@ -1,12 +1,12 @@
-package projects.crawler.subproject.yiyaodaibiao;
+package projects.crawler.subproject.yiyaodaibiao.crawl;
 
 import com.google.common.base.Preconditions;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.junit.Test;
-import projects.crawler.data.City;
-import projects.crawler.subproject.yiyaodaibiao.model.FailedRecord;
+import projects.crawler.data.model.City;
+import projects.crawler.subproject.yiyaodaibiao.YiyaodaibiaoModule;
 import projects.crawler.subproject.yiyaodaibiao.model.Job;
 import projects.crawler.subproject.yiyaodaibiao.model.JobPost;
 
@@ -32,7 +32,7 @@ public class WuBaCrawler {
     @Inject private Job.Dao jobDao;
     @Inject private JobPost.Dao jobPostDao;
     @Inject private WuBaParser parser;
-    @Inject private FailedRecord.Dao failedRecordDao;
+//    @Inject private FailedRecord.Dao failedRecordDao;
 
     public static void main(String[] args) {
 //		AutoTestUtils.runTestClassAndPrint(WuBaCrawler.class);
@@ -82,7 +82,7 @@ public class WuBaCrawler {
                 jobPosts = parser.extractPosts(jobListPage, city);
             } catch (IOException | ParseException e) {
                 log.error("Error({}) happened during crawling jobListPage, page url {}\n{}", e.getMessage(), url, e);
-                failedRecordDao.insert(new FailedRecord());
+//                failedRecordDao.insert(new FailedRecord());
                 continue;
             }
 

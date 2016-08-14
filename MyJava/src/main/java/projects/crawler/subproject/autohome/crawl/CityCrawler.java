@@ -1,4 +1,4 @@
-package projects.crawler.subproject.autohome;
+package projects.crawler.subproject.autohome.crawl;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
@@ -8,7 +8,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import projects.crawler.data.City;
+import projects.crawler.data.model.City;
 
 import java.io.IOException;
 import java.util.*;

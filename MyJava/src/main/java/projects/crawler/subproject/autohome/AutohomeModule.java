@@ -1,8 +1,11 @@
 package projects.crawler.subproject.autohome;
 
+import com.google.inject.Provides;
 import projects.crawler.subproject.autohome.model.AutohomeConfig;
 import projects.crawler.data.BaseModule;
-import projects.crawler.data.DBConfig;
+import projects.crawler.data.db.DBConfig;
+
+import javax.inject.Singleton;
 
 /**
  * Autohome Guice dependency injection module
@@ -12,6 +15,13 @@ import projects.crawler.data.DBConfig;
 public class AutohomeModule extends BaseModule {
   @Override
   protected void configure() {
-    bind(DBConfig.class).to(AutohomeConfig.class);
   }
+
+  @Override
+  @Provides
+  @Singleton
+  public DBConfig provideDBConfig() {
+    return new AutohomeConfig();
+  }
+
 }

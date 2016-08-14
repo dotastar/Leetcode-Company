@@ -1,4 +1,4 @@
-package projects.crawler.data;
+package projects.crawler.data.db;
 
 import lombok.Data;
 import lombok.NonNull;

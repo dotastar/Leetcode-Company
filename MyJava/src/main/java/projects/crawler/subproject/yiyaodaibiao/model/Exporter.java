@@ -1,8 +1,8 @@
 package projects.crawler.subproject.yiyaodaibiao.model;
 
 import lombok.extern.slf4j.Slf4j;
-import projects.crawler.data.City;
-import projects.crawler.subproject.yiyaodaibiao.WuBaCrawler;
+import projects.crawler.data.model.City;
+import projects.crawler.subproject.yiyaodaibiao.crawl.WuBaCrawler;
 import projects.crawler.subproject.yiyaodaibiao.YiyaodaibiaoModule;
 
 import java.io.IOException;
@@ -12,12 +12,18 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.StreamSupport;
 
 import static java.nio.file.StandardOpenOption.CREATE;
 import static java.nio.file.StandardOpenOption.WRITE;
-import static java.util.stream.Collectors.*;
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.reducing;
+import static java.util.stream.Collectors.toList;
 import static org.junit.Assert.assertEquals;
 
 @Slf4j
@@ -122,6 +128,7 @@ public class Exporter {
             return Files.write(Paths.get(filePath), html.getBytes("UTF-8"), CREATE, WRITE, StandardOpenOption.TRUNCATE_EXISTING);
         }
 
+      @SuppressWarnings("unchecked")
         private String toTableRow(Field[] fields, T obj) {
             StringBuilder row = new StringBuilder("<tr>");
             for (Field f : fields) {

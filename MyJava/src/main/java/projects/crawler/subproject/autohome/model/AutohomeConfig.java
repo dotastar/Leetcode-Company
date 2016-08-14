@@ -1,7 +1,7 @@
 package projects.crawler.subproject.autohome.model;
 
 import lombok.Data;
-import projects.crawler.data.DBConfig;
+import projects.crawler.data.db.DBConfig;
 
 /**
  * Created by yazhoucao on 8/7/16.

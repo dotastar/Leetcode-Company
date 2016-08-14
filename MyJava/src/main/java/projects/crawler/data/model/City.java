@@ -1,4 +1,4 @@
-package projects.crawler.data;
+package projects.crawler.data.model;
 
 import com.google.common.collect.ImmutableSet;
 import lombok.AllArgsConstructor;

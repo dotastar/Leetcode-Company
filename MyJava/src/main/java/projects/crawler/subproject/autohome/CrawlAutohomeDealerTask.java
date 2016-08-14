@@ -5,7 +5,10 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import projects.crawler.data.City;
+import projects.crawler.data.model.City;
+import projects.crawler.subproject.autohome.crawl.AutohomeCrawler;
+import projects.crawler.subproject.autohome.crawl.AutohomeParser;
+import projects.crawler.subproject.autohome.crawl.CityCrawler;
 import projects.crawler.task.BaseTask;
 import projects.crawler.task.TaskControl;
 

@@ -1,10 +1,17 @@
 package projects.crawler.data;
 
+import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Module;
+import com.google.inject.Provides;
+import com.mongodb.DB;
+import com.mongodb.MongoClient;
+import projects.crawler.data.db.DBConfig;
+
+import javax.inject.Singleton;
 
 /**
  * Base Module, including the caller module itself when getInstance()
@@ -20,5 +27,21 @@ public abstract class BaseModule extends AbstractModule {
   public <T> T getInstance(Class<T> type) {
     Injector injector = Guice.createInjector(this);
     return injector.getInstance(type);
+  }
+
+  public abstract DBConfig provideDBConfig();
+
+  @Provides
+  @Singleton
+  @SuppressWarnings("deprecated")
+  protected DB provideDatabase(DBConfig config) {
+
+    Preconditions.checkNotNull(config.getDBName());
+    Preconditions.checkNotNull(config.getIP());
+    Preconditions.checkNotNull(config.getPort());
+
+//    MongoCredential credential = MongoCredential.createCredential(null, config.getDBName(), null);
+    MongoClient client = new MongoClient(config.getIP(), config.getPort());
+    return client.getDB(config.getDBName());
   }
 }

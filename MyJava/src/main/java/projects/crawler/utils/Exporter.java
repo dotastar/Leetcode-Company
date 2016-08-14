@@ -1,8 +1,8 @@
 package projects.crawler.utils;
 
-import com.mongodb.client.FindIterable;
+import org.mongojack.DBCursor;
 import projects.crawler.data.BaseDao;
-import projects.crawler.data.Model;
+import projects.crawler.data.model.Model;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -19,15 +19,15 @@ import static java.nio.file.StandardOpenOption.WRITE;
  *
  * Created by yazhoucao on 8/8/16.
  */
-public class Exporter<T extends Model<T>> {
+public class Exporter<T extends Model<K>, K> {
   private static final String DIR = "/Users/yazhoucao/Downloads/";
 
-  public void exportToCsv(String fileName, BaseDao<T> dao, String[] fields) {
+  public void exportToCsv(String fileName, BaseDao<T, K> dao, String[] fields) {
     try {
       Files.createDirectories(Paths.get(DIR));
       StringBuilder content = new StringBuilder();
 
-      FindIterable<T> iterable = dao.find();
+      DBCursor<T> iterable = dao.find();
       for (T t : iterable) {
         for (String fieldName : fields) {
           Method getter = ReflectionUtil.getGetter(t.getClass(), fieldName);

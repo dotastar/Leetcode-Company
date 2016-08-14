@@ -1,21 +1,17 @@
 package projects.crawler.subproject.yiyaodaibiao.model;
 
-import projects.crawler.data.Model;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.mongodb.DB;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.bson.*;
-import org.bson.codecs.*;
-import org.bson.codecs.configuration.CodecRegistry;
-import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
-import projects.crawler.data.MongoConn;
+import org.mongojack.Id;
+import projects.crawler.data.model.Model;
 import projects.crawler.subproject.yiyaodaibiao.YiyaodaibiaoModule;
 
 import javax.inject.Inject;
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -29,25 +25,25 @@ import static java.util.stream.Collectors.groupingBy;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Job implements Bson, Model<ObjectId> {
-    protected ObjectId _id;
-    protected String jobTitle;
-    protected String companyName;
-    protected String contactName;
-    protected List<String> phoneURL = new ArrayList<>();
-    protected String jobAddress;
-    protected String industry;
-    protected String companyType;
-    protected String companySize;
-    protected String salaryRange;
-    protected String district;
-    protected String city;
-    protected String province;
+public class Job implements Model<ObjectId> {
+    @Id private ObjectId id;
+    @JsonProperty private String jobTitle;
+    @JsonProperty private String companyName;
+    @JsonProperty private String contactName;
+    @JsonProperty private List<String> phoneURL = new ArrayList<>();
+    @JsonProperty private String jobAddress;
+    @JsonProperty private String industry;
+    @JsonProperty private String companyType;
+    @JsonProperty private String companySize;
+    @JsonProperty private String salaryRange;
+    @JsonProperty private String district;
+    @JsonProperty private String city;
+    @JsonProperty private String province;
 
     // Meta data
-    protected String postTitle;
-    protected String postDate;
-    protected String sourceURL;
+    @JsonProperty private String postTitle;
+    @JsonProperty private String postDate;
+    @JsonProperty private String sourceURL;
 
     public static void main(String[] args) {
         Job.Dao dao = new YiyaodaibiaoModule().getInstance(Job.Dao.class);
@@ -58,104 +54,12 @@ public class Job implements Bson, Model<ObjectId> {
         System.out.println(urlCnt);
     }
 
-    @Override
-    public <TDocument> BsonDocument toBsonDocument(Class<TDocument> documentClass, CodecRegistry codecRegistry) {
-        return new BsonDocumentWrapper<>(this, codecRegistry.get(Job.class));
-    }
-
-    @Override
-    public ObjectId getId() {
-        return _id;
-    }
-
-    @Override
-    public void setId(ObjectId key) {
-        this._id = key;
-    }
-
-    public static class Dao extends projects.crawler.data.BaseDao<Job> {
+    public static class Dao extends projects.crawler.data.BaseDao<Job, ObjectId> {
         public static final String COLLECTION_NAME = "job";
 
         @Inject
-        public Dao(MongoConn conn) {
-            super(COLLECTION_NAME, conn, Job.class, new JobCodec());
+        public Dao(DB db) {
+            super(db, COLLECTION_NAME, Job.class, ObjectId.class);
         }
     }
-
-    public static class JobCodec implements CollectibleCodec<Job> {
-
-        private Codec<Document> documentCodec;
-
-        public JobCodec() {
-            this.documentCodec = new DocumentCodec();
-        }
-
-//        public JobCodec(Codec<Document> codec) {
-//            this.documentCodec = codec;
-//        }
-
-        @Override
-        public void encode(BsonWriter writer, Job value, EncoderContext encoderContext) {
-            Document document = new Document();
-            if (value.getId() == null) {
-                value.setId(new ObjectId());
-            }
-            Field[] fields = Job.class.getDeclaredFields();
-            for (Field f : fields) {
-                try {
-                    if (!Modifier.isStatic(f.getModifiers()) && f.get(value) != null) {
-                        document.put(f.getName(), f.get(value));
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-
-            documentCodec.encode(writer, document, encoderContext);
-
-        }
-
-        @Override
-        public Class<Job> getEncoderClass() {
-            return Job.class;
-        }
-
-        @Override
-        public Job decode(BsonReader reader, DecoderContext decoderContext) {
-            Document document = documentCodec.decode(reader, decoderContext);
-            Job job = new Job();
-            job.setId(document.getObjectId("_id"));
-            Field[] fields = Job.class.getDeclaredFields();
-            for (Field f : fields) {
-                try {
-                    if (!Modifier.isStatic(f.getModifiers()) && document.get(f.getName()) != null) {
-                        f.set(job, document.get(f.getName()));
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-            return job;
-        }
-
-        @Override
-        public Job generateIdIfAbsentFromDocument(Job document) {
-            if (!documentHasId(document)) {
-                document.setId(new ObjectId());
-            }
-            return document;
-        }
-
-        @Override
-        public boolean documentHasId(Job document) {
-            return document.getId() != null;
-        }
-
-        @Override
-        public BsonValue getDocumentId(Job document) {
-            return new BsonString(document.getId().toHexString());
-        }
-
-    }
-
 }

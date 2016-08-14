@@ -1,10 +1,11 @@
-package projects.crawler.subproject.autohome;
+package projects.crawler.subproject.autohome.crawl;
 
 import com.google.common.base.Preconditions;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import projects.crawler.data.City;
+import projects.crawler.data.model.City;
+import projects.crawler.subproject.autohome.AutohomeModule;
 import projects.crawler.subproject.autohome.model.DealerPost;
 
 import javax.inject.Inject;

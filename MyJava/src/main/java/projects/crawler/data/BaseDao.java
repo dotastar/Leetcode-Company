@@ -1,82 +1,74 @@
 package projects.crawler.data;
 
-import com.mongodb.MongoClient;
-import com.mongodb.client.FindIterable;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.model.Filters;
-import com.mongodb.client.result.DeleteResult;
-import com.mongodb.client.result.UpdateResult;
-import org.bson.codecs.Codec;
-import org.bson.codecs.configuration.CodecRegistries;
-import org.bson.codecs.configuration.CodecRegistry;
-import org.bson.conversions.Bson;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
 import org.bson.types.ObjectId;
+import org.mongojack.DBCursor;
+import org.mongojack.DBQuery;
+import org.mongojack.JacksonDBCollection;
+import org.mongojack.WriteResult;
+import projects.crawler.data.model.Model;
 
 import java.util.List;
 import java.util.Set;
 
-public class BaseDao<T> {
-    private MongoCollection<T> coll;
+public class BaseDao<T extends Model<K>, K> {
 
-    public BaseDao(String collectionName, MongoConn mongoConn, Class<T> clazz, Codec<T> codec) {
-        CodecRegistry codecRegistry = CodecRegistries.fromRegistries(CodecRegistries.fromCodecs(codec), MongoClient.getDefaultCodecRegistry());
-        coll = mongoConn.getConn().getCollection(collectionName, clazz).withCodecRegistry(codecRegistry);
-    }
+  protected final JacksonDBCollection<T, K> coll;
 
-    public BaseDao(String collectionName, MongoConn mongoConn,  Class<T> clazz, CodecRegistry codecRegistry) {
-        codecRegistry = CodecRegistries.fromRegistries(codecRegistry, MongoClient.getDefaultCodecRegistry());
-        coll = mongoConn.getConn().getCollection(collectionName, clazz).withCodecRegistry(codecRegistry);
-    }
+  public BaseDao(DBCollection mongoColl, Class<T> clazz, Class<K> idClazz) {
+    coll = JacksonDBCollection.wrap(mongoColl, clazz, idClazz);
+  }
 
-    public void insert(T doc) {
-        coll.insertOne(doc);
-    }
+  public BaseDao(DB db, String collName, Class<T> clazz, Class<K> idClazz) {
+    coll = JacksonDBCollection.wrap(db.getCollection(collName), clazz, idClazz);
+  }
 
-    public void insertMany(List<T> docs) {
-        coll.insertMany(docs);
-    }
+  public void insert(T doc) {
+    coll.insert(doc);
+  }
 
-    public long count() {
-        return coll.count();
-    }
+  public void insertMany(List<T> docs) {
+    coll.insert(docs);
+  }
 
-    public T findOne() {
-        return coll.find().iterator().next();
-    }
+  public long count() {
+    return coll.count();
+  }
 
-    public FindIterable<T> find() {
-        return coll.find();
-    }
+  public T findOne() {
+    return coll.find().iterator().next();
+  }
 
-    public FindIterable<T> find(Bson filter) {
-        return coll.find(filter);
-    }
+  public DBCursor<T> find() {
+    return coll.find();
+  }
 
-    public FindIterable<T> findById(ObjectId id) {
-        return find(Filters.eq("_id", id));
-    }
+  public DBCursor<T> find(DBQuery.Query query) {
+    return coll.find(query);
+  }
 
-    public FindIterable<T> findByIds(Set<ObjectId> ids) {
-        return coll.find(Filters.in("_id", ids));
-    }
+  public T findById(K id) {
+    return coll.findOneById(id);
+  }
 
-    public FindIterable<T> findByIds(Set<ObjectId> ids, Bson filter) {
-        return coll.find(Filters.and(Filters.in("_id", ids), filter));
-    }
+  public DBCursor<T> findByIds(Set<ObjectId> ids) {
+    return coll.find(DBQuery.in("_id", ids));
+  }
 
-    public DeleteResult deleteById(ObjectId id) {
-        return deleteOne(Filters.eq("_id", id));
-    }
+  public DBCursor<T> findByIds(Set<ObjectId> ids, DBQuery.Query query) {
+    return coll.find(DBQuery.and(DBQuery.in("_id", ids), query));
+  }
 
-    public DeleteResult deleteOne(Bson filter) {
-        return coll.deleteOne(filter);
-    }
+  public WriteResult<T, K> deleteById(K id) {
+    return coll.removeById(id);
+  }
 
-    public DeleteResult deleteMany(Bson filter) {
-        return coll.deleteMany(filter);
-    }
+  public WriteResult<T, K> deleteOne(DBQuery.Query query) {
+    return coll.remove(query);
+  }
 
-    public UpdateResult updateOne(Bson filter, Bson update) {
-        return coll.updateOne(filter, update);
-    }
+  public WriteResult deleteMany(DBQuery.Query query) {
+    return coll.remove(query);
+  }
 }

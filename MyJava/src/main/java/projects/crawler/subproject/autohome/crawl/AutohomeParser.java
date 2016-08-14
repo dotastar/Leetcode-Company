@@ -1,4 +1,4 @@
-package projects.crawler.subproject.autohome;
+package projects.crawler.subproject.autohome.crawl;
 
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -8,7 +8,8 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.junit.Test;
 import projects.crawler.annotation.Extraction;
-import projects.crawler.data.City;
+import projects.crawler.data.model.City;
+import projects.crawler.subproject.autohome.AutohomeModule;
 import projects.crawler.subproject.autohome.model.DealerPost;
 import projects.crawler.utils.Exporter;
 import projects.crawler.utils.ReflectionUtil;
