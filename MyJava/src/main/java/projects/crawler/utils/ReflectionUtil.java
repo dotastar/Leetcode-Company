@@ -6,8 +6,11 @@ import projects.crawler.annotation.Extraction;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.stream.Stream;
+
+import static java.util.stream.Collectors.toList;
 
 /**
  *
@@ -16,6 +19,7 @@ import java.util.stream.Stream;
 @Slf4j
 public class ReflectionUtil {
 
+  // fieldName case insensitive
   public static Method searchMethod(Class clazz, String fieldName, String prefix) {
     return Stream.of(clazz.getMethods())
         .filter(m -> m.getName().startsWith(prefix) && m.getName().toLowerCase().contains(fieldName.toLowerCase()))
@@ -23,8 +27,19 @@ public class ReflectionUtil {
         .orElseThrow(() -> new IllegalArgumentException("Unknown fieldName " + fieldName));
   }
 
+  // name case insensitive
+  public static List<Method> searchMethod(Class clazz, String name) {
+    return Stream.of(clazz.getMethods())
+        .filter(m -> m.getName().toLowerCase().contains(name.toLowerCase()))
+        .collect(toList());
+  }
+
   public static Method getGetter(Class clazz, String fieldName) {
     return searchMethod(clazz, fieldName, "get");
+  }
+
+  public static List<Method> getAllGetters(Class clazz) {
+    return searchMethod(clazz, "get");
   }
 
   public static <T, S> boolean extractAndApplyValues(T data, Element elem, S schema) {

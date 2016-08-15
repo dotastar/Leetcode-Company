@@ -1,6 +1,7 @@
 package projects.crawler.subproject.autohome.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.base.Joiner;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,4 +21,9 @@ public class BrandDetail {
   protected String brandDetailedName;
   @JsonProperty
   protected List<String> sellingModels = new ArrayList<>();
+
+  @Override
+  public String toString() {
+    return brandDetailedName + "," + Joiner.on(':').join(sellingModels);
+  }
 }

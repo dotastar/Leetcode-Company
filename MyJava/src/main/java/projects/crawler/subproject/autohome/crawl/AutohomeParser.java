@@ -40,8 +40,8 @@ public class AutohomeParser {
 //    AutoTestUtils.runTestClassAndPrint(AutohomeParser.class);
     Exporter exporter = new Exporter();
     DealerPost.Dao dao = new AutohomeModule().getInstance(DealerPost.Dao.class);
-    String[] fields = { "title", "brand", "phone", "address", "city", "promotion" };
-    exporter.exportToCsv("beijing.csv", dao, fields);
+//    String[] fields = { "title", "brand", "phone", "address", "city", "promotion" };
+    exporter.exportDealersToCsv("dealers_nationwide.csv", dao);
   }
 
   public static final String USER_AGENT = "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:25.0) Gecko/20100101 Firefox/25.0";
