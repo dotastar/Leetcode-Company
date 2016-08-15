@@ -2,15 +2,20 @@ package projects.crawler.data;
 
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
+import org.apache.commons.lang3.StringUtils;
 import org.bson.types.ObjectId;
 import org.mongojack.DBCursor;
 import org.mongojack.DBQuery;
+import org.mongojack.DBUpdate;
 import org.mongojack.JacksonDBCollection;
 import org.mongojack.WriteResult;
 import projects.crawler.data.model.Model;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+
+import static com.google.common.base.Preconditions.checkArgument;
 
 public class BaseDao<T extends Model<K>, K> {
 
@@ -70,5 +75,16 @@ public class BaseDao<T extends Model<K>, K> {
 
   public WriteResult deleteMany(DBQuery.Query query) {
     return coll.remove(query);
+  }
+
+  public void updateById(K id, Map<String, ?> fields) {
+    checkArgument(!fields.isEmpty());
+    for (String field : fields.keySet()) {
+      checkArgument(!StringUtils.isBlank(field));
+    }
+
+    DBUpdate.Builder update = new DBUpdate.Builder();
+    fields.forEach(update::set);
+    coll.updateById(id, update);
   }
 }

@@ -4,6 +4,8 @@ import lombok.Data;
 import projects.crawler.data.db.DBConfig;
 
 /**
+ * AutohomeConfig
+ * <p>
  * Created by yazhoucao on 8/7/16.
  */
 @Data

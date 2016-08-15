@@ -9,6 +9,8 @@ import com.google.inject.Module;
 import com.google.inject.Provides;
 import com.mongodb.DB;
 import com.mongodb.MongoClient;
+import com.mongodb.MongoClientOptions;
+import com.mongodb.MongoOptions;
 import projects.crawler.data.db.DBConfig;
 
 import javax.inject.Singleton;
@@ -33,13 +35,20 @@ public abstract class BaseModule extends AbstractModule {
 
   @Provides
   @Singleton
-  @SuppressWarnings("deprecated")
   protected DB provideDatabase(DBConfig config) {
 
     Preconditions.checkNotNull(config.getDBName());
     Preconditions.checkNotNull(config.getIP());
     Preconditions.checkNotNull(config.getPort());
 
+    MongoClientOptions options = MongoClientOptions.builder()
+//        .maxConnectionIdleTime()
+//        .maxConnectionLifeTime()
+//        .socketTimeout();
+        .connectTimeout(config.getConnectTime())
+        .maxWaitTime(config.getMaxWaitTime())
+        .socketKeepAlive(true)
+        .build();
 //    MongoCredential credential = MongoCredential.createCredential(null, config.getDBName(), null);
     MongoClient client = new MongoClient(config.getIP(), config.getPort());
     return client.getDB(config.getDBName());

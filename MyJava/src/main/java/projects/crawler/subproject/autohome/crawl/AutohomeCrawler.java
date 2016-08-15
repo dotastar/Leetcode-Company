@@ -50,7 +50,7 @@ public class AutohomeCrawler {
       String url = baseUrl.replace("#", Integer.toString(pageIdx));
       List<DealerPost> posts;
       try {
-        log.info("=============== Page " + pageIdx + " =================");
+        log.debug("=============== Page " + pageIdx + " =================");
         Document postsPage = Jsoup.connect(url).timeout(TIMEOUT).userAgent(USER_AGENT).get();
         if (AutohomeParser.isEndPage(postsPage)) {
           break;

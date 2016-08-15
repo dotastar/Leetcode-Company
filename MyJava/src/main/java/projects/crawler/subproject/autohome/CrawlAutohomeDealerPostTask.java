@@ -18,17 +18,17 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
- *
- * Created by yazhoucao on 10/28/15.
+ * CrawlAutohomeDealerPostTask
+ * <p>
  */
 @Slf4j
-public class CrawlAutohomeDealerTask extends BaseTask<String, City> {
+public class CrawlAutohomeDealerPostTask extends BaseTask<String, City> {
 
   private final static int numThreads = 10;
   private final static int logFrequency = 5;
   private final static AtomicLong postsCnt = new AtomicLong();
 
-  public CrawlAutohomeDealerTask(Iterator<? extends City> iterator) {
+  public CrawlAutohomeDealerPostTask(Iterator<? extends City> iterator) {
     super(iterator, numThreads, logFrequency);
   }
 
@@ -55,11 +55,11 @@ public class CrawlAutohomeDealerTask extends BaseTask<String, City> {
     List<City> cityQueue = cityCrawler.convert(cityCrawler.extractCities(cityPage));
     Preconditions.checkState(!cityQueue.isEmpty());
 
-    CrawlAutohomeDealerTask crawlTask = new CrawlAutohomeDealerTask(cityQueue.iterator());
+    CrawlAutohomeDealerPostTask crawlTask = new CrawlAutohomeDealerPostTask(cityQueue.iterator());
     new TaskControl(crawlTask);
   }
 
   public static void main(String[] args) throws IOException {
-    CrawlAutohomeDealerTask.startCrawling();
+    CrawlAutohomeDealerPostTask.startCrawling();
   }
 }

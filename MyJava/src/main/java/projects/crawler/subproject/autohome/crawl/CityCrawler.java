@@ -11,14 +11,20 @@ import org.jsoup.select.Elements;
 import projects.crawler.data.model.City;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static java.util.stream.Collectors.toCollection;
 
 /**
- *
+ * CityCrawler
+ * <p>
  * Created by yazhoucao on 8/12/16.
  */
 @Slf4j
@@ -26,7 +32,7 @@ public class CityCrawler {
 
   public static final String CITY_URL = "http://dealer.autohome.com.cn/dealerlist/Dealer/GetCityPanel";
 
-//  private static final String PROVINCE = ".citypop-scity dt";
+  //  private static final String PROVINCE = ".citypop-scity dt";
   private static final String CITY_IN_A_PROVINCE = ".citypop-scity dd";
 
   public List<City> convert(Map<String, Set<City>> cityByProvince) {
