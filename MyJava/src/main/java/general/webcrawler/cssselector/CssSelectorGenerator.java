@@ -1,5 +1,8 @@
 package general.webcrawler.cssselector;
 
+import general.webcrawler.parser.FieldMatchCondition;
+import general.webcrawler.parser.ListItemMatchCondition;
+import general.webcrawler.parser.ListIterationCssSelector;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;

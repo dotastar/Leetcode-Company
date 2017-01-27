@@ -4,6 +4,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import general.webcrawler.parser.FieldMatchCondition;
+import general.webcrawler.parser.ListItemMatchCondition;
+import general.webcrawler.parser.ListIterationCssSelector;
 import javafx.util.Pair;
 
 import org.jsoup.Jsoup;
@@ -118,7 +121,8 @@ public class CssSelectorGeneratorTest {
     FieldMatchCondition p2Name = new FieldMatchCondition(FieldMatchCondition.FieldType.OWN_TEXT, projec2tName, FieldMatchCondition.MatchType.EQUALS);
     FieldMatchCondition p1Desc = new FieldMatchCondition(FieldMatchCondition.FieldType.OWN_TEXT, p1Description, FieldMatchCondition.MatchType.EQUALS);
 
-    ListItemMatchCondition listMatch = new ListItemMatchCondition(new FieldMatchCondition[] { p1Name, p1Desc }, new Pair<>(p1Name, p2Name));
+    ListItemMatchCondition
+        listMatch = new ListItemMatchCondition(new FieldMatchCondition[] { p1Name, p1Desc }, new Pair<>(p1Name, p2Name));
     ListIterationCssSelector result = generator.autoGenerateListItems(body, listMatch);
 
     System.out.println("Final generated list root CssSelector: " + result.getListSelector());

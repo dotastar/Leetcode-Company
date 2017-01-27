@@ -164,5 +164,13 @@
             <version>4.1.0</version>
         </dependency>
 
+      <!-- https://mvnrepository.com/artifact/org.elasticsearch/elasticsearch -->
+      <dependency>
+        <groupId>org.elasticsearch</groupId>
+        <artifactId>elasticsearch</artifactId>
+        <version>5.1.2</version>
+      </dependency>
+
+
     </dependencies>
 </project>
