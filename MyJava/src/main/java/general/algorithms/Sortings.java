@@ -1,18 +1,27 @@
 package general.algorithms;
 
-import static org.junit.Assert.assertTrue;
-
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Random;
-
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import org.junit.Test;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
 import org.junit.runner.notification.Failure;
 
+import static general.algorithms.Sortings.Record.Type.Type1;
+import static general.algorithms.Sortings.Record.Type.Type2;
+import static general.algorithms.Sortings.Record.Type.Type3;
+import static org.junit.Assert.assertTrue;
+
 public class Sortings {
 
 	public static void main(String[] args) {
+		sortByJava();
+
 		Result res = JUnitCore.runClasses(Sortings.class);
 		for (Failure f : res.getFailures()) {
 			System.err.println(f.toString());
@@ -21,6 +30,41 @@ public class Sortings {
 		System.out.println("Total Tests: " + res.getRunCount());
 		System.out.println("Failures : " + res.getFailureCount());
 
+	}
+
+	@AllArgsConstructor @Data
+	public static class Record {
+		public int numValue;
+		public boolean boolVal;
+		public Type type;
+
+		enum Type {
+			Type1,
+			Type2,
+			Type3
+		}
+	}
+
+	private static void sortByJava() {
+		List<Record> records = new ArrayList<>();
+		records.add(new Record(3, true, Type3));
+		records.add(new Record(1, false, Type1));
+		records.add(new Record(1, true, Type1));
+		records.add(new Record(1, true, Type2));
+		records.add(new Record(2, true, Type3));
+		records.add(new Record(5, true, Type1));
+		records.add(new Record(4, false, Type2));
+
+		System.out.println("Before sorting:");
+		System.out.println(records.stream().map(record -> record.toString() + "\n").reduce(String::concat));
+
+		records.sort(Comparator.comparing(Record::isBoolVal)
+				.reversed()
+				.thenComparing(Record::getType)
+				.thenComparing(Record::getNumValue));
+
+		System.out.println("Printing sorted order:");
+		System.out.println(records.stream().map(record -> record.toString() + "\n").reduce(String::concat));
 	}
 
 	/************************** Quick Sort **************************/
