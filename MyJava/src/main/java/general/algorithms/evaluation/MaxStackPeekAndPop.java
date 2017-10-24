@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.TreeSet;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -52,13 +53,25 @@ public class MaxStackPeekAndPop {
   /**
    * Potential approaches and pitfalls:
    * 1.Arrays are generally bad news, because deleting from the middle is an O(n) operation
+   *
    * 2.LinkedList and Heap
-   * This can work well, but remove() from both the LinkedList and the Heap are O(n) operations because of the difficulty of finding an element in the middle. Each element will need a pointer to its partner element, and will need to know how to delete itself.
+   * This can work well, but remove() from both the LinkedList and the Heap are O(n) operations because of the difficulty of finding an element in the middle.
+   * Each element will need a pointer to its partner element, and will need to know how to delete itself.
+   *
    * 3.LinkedList and BST
-   * This is perhaps easier, since a 'standard' BST can be used. Each BST element can point to its element in the list, and deleting a known node from a LinkedList is easy. They will have to write their own List, though, to get access to the nodes themselves. They will also need to keep track of the maximum element in the BST through whatever means to support O(1) peekMax.
+   * This is perhaps easier, since a 'standard' BST can be used. Each BST element can point to its element in the list, and deleting a known node from a LinkedList is easy.
+   * They will have to write their own List, though, to get access to the nodes themselves. They will also need to keep track of the maximum element in the BST through whatever means to support O(1) peekMax.
+   *
    * 4.Custom objects
-   * These are objects that function as both list elements and tree elements, and thus will typically have at least 5 pointers on them (next, prev, parent, left, right). Some may have 7 (next, prev, larger, smaller, parent, left, right) to support the three types of lookups that are needed (binary search into sorted list, find max, find top). While this approach generally indicates that the candidate has understood what needs to be done well, actual implementation tends to be complex and spend a lot of time on 'peripheral' functions like the binary search. If the candidate suggests this, feel free to tell them to assume the existence of the helper functions that they need (such as the tree traversal and balancing code), rather than spending time writing those. Keep the interview focused on keeping the structures in sync, not implementing a BST.
-   * 5.Another approach is to build an object with a 'deleted' flag and a reference to it's partner object, and just flipping that on removal. This means that peek() and pop() need to dig to find the first 'real' element, but avoids modifying the middle of the stack/heap at the expense of some memory. It's also a good solution for synchronization issues, since it makes the areas that need to be held under lock simpler.
+   * These are objects that function as both list elements and tree elements, and thus will typically have at least 5 pointers on them (next, prev, parent, left, right).
+   * Some may have 7 (next, prev, larger, smaller, parent, left, right) to support the three types of lookups that are needed (binary search into sorted list, find max, find top).
+   * While this approach generally indicates that the candidate has understood what needs to be done well, actual implementation tends to be complex and spend a lot of time on 'peripheral' functions like the binary search.
+   * If the candidate suggests this, feel free to tell them to assume the existence of the helper functions that they need (such as the tree traversal and balancing code), rather than spending time writing those.
+   * Keep the interview focused on keeping the structures in sync, not implementing a BST.
+   *
+   * 5.Another approach is to build an object with a 'deleted' flag and a reference to it's partner object, and just flipping that on removal.
+   * This means that peek() and pop() need to dig to find the first 'real' element, but avoids modifying the middle of the stack/heap at the expense of some memory.
+   * It's also a good solution for synchronization issues, since it makes the areas that need to be held under lock simpler.
    *
    * There are also tradeoffs to (potentially) be made around the speed of different methods. The suggested solution gives O(log('n)) for push, pop, and popMax, but...
    * A pair of linked lists can give O('n) push, O(1) pop and popMax. One list stores elements in insertion order, the other stores in sorted order (and does a linear scan on insertion), but removing the top of one and linking that to the element in the other is constant time, good for situations where quick removal is more important.
@@ -114,6 +127,12 @@ public class MaxStackPeekAndPop {
   public static class MaxStackImplBST_naive<T extends Comparable<T>> implements MaxStack<T> {
     private LinkedNode<T> listHead;
     private LinkedNode<T> listTail;
+    /**
+     * It needs a Map<T, List<LinkedNode<T>>. It will be used to store and remove duplicates
+     *
+     * TreeSet instance performs all element comparisons using its compareTo (or compare) method,
+     * so two elements that are deemed equal by this method are, from the standpoint of the set, equal
+     */
     private TreeMap<T, List<LinkedNode<T>>> maxTree = new TreeMap<>(Comparator.naturalOrder());
 
     @Override
@@ -133,10 +152,10 @@ public class MaxStackPeekAndPop {
         return null;
       }
 
-      LinkedNode<T> popFromStack = popFromStack();
-      LinkedNode<T> popFromMaxTree = popFromMaxTree(popFromStack.getData());
-      Verify.verify(popFromStack.equals(popFromMaxTree));
-      return popFromStack.getData();
+      LinkedNode<T> stackNode = popFromStack();
+      LinkedNode<T> treeNode = popFromMaxTree(stackNode.getData());
+      Verify.verify(stackNode.equals(treeNode));
+      return stackNode.getData();
     }
 
     @Override
@@ -189,7 +208,7 @@ public class MaxStackPeekAndPop {
     private LinkedNode<T> popFromStack() {
       LinkedNode<T> oldTail = listTail;
       listTail = listTail.prev;
-      if (listTail == null) {
+      if (listTail == null) { // case: there was only one node
         listHead = null;
       }
       return oldTail;
