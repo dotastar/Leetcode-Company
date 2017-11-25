@@ -55,9 +55,11 @@ public class ParSeqExamples {
     executeTaskAndPrint("original task: ", task);
 
     /**
-     * chain a recover() to handle original failure task
+     * add one more task (map(rawStr ...))
+     * and then chain a recover() to handle original failure task
      */
     Task<Optional<String>> recoveredTask = task
+        .map(rawStr -> rawStr + " - second operation applied!")
         .map("toOptional", subStr -> subStr == null ? Optional.<String>empty() : Optional.of(subStr))
         .recover(e -> Optional.of("recovered value from Exception[" + e.getMessage() + "]"));
 
