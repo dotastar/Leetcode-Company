@@ -1,6 +1,8 @@
 package projects.crawler.parseq.engine;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Optional;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -24,14 +26,26 @@ public class PageIterator implements Iterator<Optional<Document>> {
   private int noResultPageCnt;
   private int failureCnt;
 
-  private CrawlEngine engine;
-
   public PageIterator(String baseUrl, String queryParameterIndexName, String noResultSelector) {
     this.baseUrl = baseUrl;
     this.queryParameterIndexName = queryParameterIndexName;
     this.noResultElemSelector = noResultSelector;
     this.currentIndex = 0;
     this.noResultPageCnt = 0;
+  }
+
+  public List<Document> crawl() {
+    List<Document> pages = new ArrayList<>();
+    while (hasNext()) {
+      Optional<Document> optionalPage = next();
+      if (!optionalPage.isPresent()) {
+        continue;
+      }
+      Document page = optionalPage.get();
+
+      pages.add(page);
+    }
+    return pages;
   }
 
   @Override
@@ -41,22 +55,31 @@ public class PageIterator implements Iterator<Optional<Document>> {
 
   @Override
   public Optional<Document> next() {
-    Optional<Document> optionalPage = getByPageIndex(++currentIndex);
+    ++currentIndex;
+    String url = buildUrl(currentIndex);
+    Optional<Document> optionalPage = SimpleHttpClient.get(url);
+
     if (!optionalPage.isPresent()) {
+      log.warn("Failed to crawl page {}", url);
       failureCnt++;
-    } else if (isNoResultPage(optionalPage.get())) {
+    } else if (hasResult(optionalPage.get())) {
+      log.info("Crawled page {} successfully.", url);
+    } else { // isPresent && !hasResult
+      log.info("Crawled page {}, reached NoResultPage!", url);
       noResultPageCnt++;
     }
     return optionalPage;
   }
 
-  private boolean isNoResultPage(Document document) {
-    Elements noResultDivs = document.select(noResultElemSelector);
-    return !noResultDivs.isEmpty();
+  /**
+   * Use css selector to find element(s) that can identify this page as a "no result" page
+   */
+  public boolean hasResult(Document document) {
+    Elements noResultElems = document.select(noResultElemSelector);
+    return noResultElems.isEmpty();
   }
 
-  private Optional<Document> getByPageIndex(int i) {
-    String url = baseUrl + "?" + queryParameterIndexName + i;
-    return SimpleHttpClient.get(url);
+  private String buildUrl(int i) {
+    return baseUrl + "?" + queryParameterIndexName + i;
   }
 }

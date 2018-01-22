@@ -4,6 +4,7 @@ import com.google.inject.Provides;
 import javax.inject.Singleton;
 import projects.crawler.data.BaseModule;
 import projects.crawler.data.db.DBConfig;
+import projects.crawler.parseq.engine.CrawlEngine;
 import projects.crawler.parseq.engine.EngineConfig;
 
 
@@ -29,4 +30,12 @@ public class AutohomeV2Module extends BaseModule {
   public EngineConfig provideEngineConfig() {
     return new EngineConfig();
   }
+
+  @Provides
+  @Singleton
+  public CrawlEngine provideCrawlEngine(EngineConfig engineConfig) {
+    return new CrawlEngine(engineConfig);
+  }
+
+
 }

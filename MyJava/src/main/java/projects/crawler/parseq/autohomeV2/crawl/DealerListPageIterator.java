@@ -3,6 +3,7 @@ package projects.crawler.parseq.autohomeV2.crawl;
 import com.google.common.base.Verify;
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
@@ -18,7 +19,7 @@ public class DealerListPageIterator extends PageIterator {
 
   // The unique page element that identifies between a normal page and a page exceeds max page index
   private static final String NO_RESULT_PAGE_SELECTOR = ".dealer-list-wrap .no-result";
-  private static final String QUERY_PARAMETER_PAGE_INDEX = "kindId=2&pageIndex=";
+  private static final String QUERY_PARAMETER_PAGE_INDEX = "pageIndex=";
 
   public DealerListPageIterator(String baseUrl) {
     super(baseUrl, QUERY_PARAMETER_PAGE_INDEX, NO_RESULT_PAGE_SELECTOR);

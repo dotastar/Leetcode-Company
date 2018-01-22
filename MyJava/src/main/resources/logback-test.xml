@@ -58,6 +58,12 @@
 
     </appender>
 
+    <root name="com.yazhoucao.MyJava.projects.crawler.parseq" level="DEBUG">
+        <appender-ref ref="STDOUT" />
+        <appender-ref ref="APP" />
+        <appender-ref ref="DEBUG-OUT" />
+    </root>
+
     <root name="com.yazhoucao.MyJava.projects.crawler.taskframework.yiyaodaibiao" level="INFO">
         <appender-ref ref="STDOUT" />
         <appender-ref ref="APP" />
