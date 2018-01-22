@@ -11,6 +11,7 @@ import com.mongodb.DB;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientOptions;
 import com.mongodb.MongoOptions;
+import com.mongodb.ServerAddress;
 import projects.crawler.data.db.DBConfig;
 
 import javax.inject.Singleton;
@@ -36,7 +37,6 @@ public abstract class BaseModule extends AbstractModule {
   @Provides
   @Singleton
   protected DB provideDatabase(DBConfig config) {
-
     Preconditions.checkNotNull(config.getDBName());
     Preconditions.checkNotNull(config.getIP());
     Preconditions.checkNotNull(config.getPort());
@@ -50,7 +50,8 @@ public abstract class BaseModule extends AbstractModule {
         .socketKeepAlive(true)
         .build();
 //    MongoCredential credential = MongoCredential.createCredential(null, config.getDBName(), null);
-    MongoClient client = new MongoClient(config.getIP(), config.getPort());
+    ServerAddress serverAddress = new ServerAddress(config.getIP(), config.getPort());
+    MongoClient client = new MongoClient(serverAddress, options);
     return client.getDB(config.getDBName());
   }
 }

@@ -52,7 +52,7 @@ import org.mongojack.DBUpdate;
 import org.mongojack.JacksonDBCollection;
 import org.mongojack.WriteResult;
 import org.mongojack.internal.update.SingleUpdateOperationValue;
-import projects.crawler.utils.CollectionUtil;
+import projects.crawler.utils.CollectionUtils;
 import projects.crawler.data.model.Model;
 import projects.crawler.data.db.ModelSerializer;
 
@@ -555,7 +555,7 @@ public abstract class OldBaseDao<T extends Model<K>, K> {
    */
   public DBCursor<T> getAllWithFields(Collection<String> requiredFields, Collection<String> optionalFields) {
     Query condition;
-    if (!CollectionUtil.isNullOrEmpty(requiredFields)) {
+    if (!CollectionUtils.isNullOrEmpty(requiredFields)) {
       List<Query> parts = Lists.newArrayList();
       for (String field : requiredFields) {
         parts.add(DBQuery.exists(field));
@@ -580,7 +580,7 @@ public abstract class OldBaseDao<T extends Model<K>, K> {
   public DBCursor<T> getAllWithRequiredNeededAndWantedFields(Collection<String> requiredFields,
       Collection<String> neededFields, Collection<String> wantedFields) {
     Query condition;
-    if (!CollectionUtil.isNullOrEmpty(requiredFields)) {
+    if (!CollectionUtils.isNullOrEmpty(requiredFields)) {
       List<Query> parts = Lists.newArrayList();
       for (String field : requiredFields) {
         parts.add(DBQuery.exists(field));
@@ -608,7 +608,7 @@ public abstract class OldBaseDao<T extends Model<K>, K> {
    */
   public DBCursor<T> getOnlyWithFields(Collection<String> requiredFields) {
     Query condition;
-    if (!CollectionUtil.isNullOrEmpty(requiredFields)) {
+    if (!CollectionUtils.isNullOrEmpty(requiredFields)) {
       List<Query> parts = Lists.newArrayList();
       for (String field : requiredFields) {
         parts.add(DBQuery.exists(field));
@@ -658,7 +658,7 @@ public abstract class OldBaseDao<T extends Model<K>, K> {
     Preconditions.checkNotNull(query); // use DBQuery.empty() to match all
     List<DBObject> stages = Lists.newArrayList();
     stages.add(match(query));
-    if (!CollectionUtil.isNullOrEmpty(uniqueTuples)) {
+    if (!CollectionUtils.isNullOrEmpty(uniqueTuples)) {
       // If requested, first select unique tuples of the specified columns.
       // e.g. first get unique (user, person) pairs then count persons contacted by user or users contacting persons
       stages.add(groupCount(ImmutableMap.of("userId", "$userId", "personId", "$personId")));

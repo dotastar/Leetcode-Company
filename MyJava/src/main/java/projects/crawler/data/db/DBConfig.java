@@ -1,10 +1,5 @@
 package projects.crawler.data.db;
 
-import lombok.Data;
-import lombok.NonNull;
-
-import javax.inject.Inject;
-
 /**
  * MongoConn Config
  *
