@@ -15,6 +15,7 @@ import projects.crawler.parseq.autohomeV2.model.DealerPost;
 import projects.crawler.parseq.autohomeV2.parser.AutoBrandIdParser;
 import projects.crawler.parseq.autohomeV2.parser.DealerListPageParser;
 import projects.crawler.parseq.engine.CrawlEngine;
+import projects.crawler.parseq.engine.PageFetcher;
 
 
 @Slf4j
