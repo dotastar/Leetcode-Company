@@ -2,6 +2,7 @@ package projects.crawler.taskframework.yiyaodaibiao.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.mongodb.DB;
+import javax.inject.Inject;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,8 +12,6 @@ import org.mongojack.DBQuery;
 import org.mongojack.Id;
 import projects.crawler.data.model.Model;
 import projects.crawler.taskframework.yiyaodaibiao.YiyaodaibiaoModule;
-
-import javax.inject.Inject;
 
 @Data
 @Builder
@@ -29,20 +28,16 @@ public class JobPost implements Model<ObjectId> {
   @JsonProperty private String city;
   @JsonProperty private String province;
 
-  public JobPost() {
-    this.id = new ObjectId();
-  }
-
   public JobPost(ObjectId id, String title, String companyName, String district, String postDate, String url, String parentUrl, String city, String province) {
     this(id, id, title, companyName, district, postDate, url, parentUrl, city, province);
   }
 
   public static class Dao extends projects.crawler.data.BaseDao<JobPost, ObjectId> {
-    public static final String COLLECTION_NAME = "jobPost";
+    static final String COLLECTION_NAME = "jobPost";
 
     @Inject
     public Dao(DB db) {
-      super(db, COLLECTION_NAME, JobPost.class, ObjectId.class);
+      super(db.getCollection(COLLECTION_NAME), JobPost.class, ObjectId.class);
     }
   }
 

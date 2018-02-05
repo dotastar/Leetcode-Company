@@ -55,11 +55,11 @@ public class Job implements Model<ObjectId> {
     }
 
     public static class Dao extends projects.crawler.data.BaseDao<Job, ObjectId> {
-        public static final String COLLECTION_NAME = "job";
+        static final String COLLECTION_NAME = "job";
 
         @Inject
         public Dao(DB db) {
-            super(db, COLLECTION_NAME, Job.class, ObjectId.class);
+            super(db.getCollection(COLLECTION_NAME), Job.class, ObjectId.class);
         }
     }
 }

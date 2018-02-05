@@ -1,7 +1,6 @@
 package projects.crawler.parseq.autohomeV2.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.common.collect.ImmutableList;
 import com.mongodb.DB;
 import java.util.ArrayList;
 import java.util.Date;
@@ -10,10 +9,9 @@ import javax.inject.Inject;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.bson.types.ObjectId;
-import org.junit.Assert;
 import org.mongojack.Id;
+import projects.crawler.data.BaseDao;
 import projects.crawler.data.model.Model;
-import projects.crawler.taskframework.autohome.AutohomeModule;
 
 
 @Data
@@ -49,7 +47,7 @@ public class DealerPost implements Model<ObjectId> {
     this.id = key;
   }
 
-  public static class Dao extends projects.crawler.data.BaseDao<DealerPost, ObjectId> {
+  public static class Dao extends BaseDao<DealerPost, ObjectId> {
     static final String COLLECTION_NAME = "dealerPost";
 
     @Inject

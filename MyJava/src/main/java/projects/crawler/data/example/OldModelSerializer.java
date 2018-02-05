@@ -1,4 +1,4 @@
-package projects.crawler.data.db;
+package projects.crawler.data.example;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -13,6 +13,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.deser.std.StdDelegatingDeserializer;
 import com.fasterxml.jackson.databind.module.SimpleAbstractTypeResolver;
@@ -22,8 +23,17 @@ import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.fasterxml.jackson.databind.ser.std.StdDelegatingSerializer;
 import com.fasterxml.jackson.databind.util.StdConverter;
 import com.fasterxml.jackson.databind.util.TokenBuffer;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.google.common.base.Throwables;
-import lombok.RequiredArgsConstructor;
+import java.io.IOException;
+import java.io.StringWriter;
+import java.time.LocalDate;
+import java.time.ZoneOffset;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.math3.linear.ArrayRealVector;
 import org.bson.types.ObjectId;
@@ -35,21 +45,11 @@ import org.mongojack.internal.MongoJackModule;
 import org.mongojack.internal.stream.ServerErrorProblemHandler;
 import projects.crawler.data.model.Model;
 
-import java.io.IOException;
-import java.io.StringWriter;
-import java.time.LocalDate;
-import java.time.ZoneOffset;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
-
 /**
  * Serializes and deserializes to/from JSON.
  */
 @Slf4j
-public class ModelSerializer {
+public class OldModelSerializer {
 
   /** Parse an ObjectId encoded either as a plain string or as an object node as exported by MongoDB (in the form {"$oid": * }) */
   private static class ToObjectIdDeserializer extends JsonDeserializer<ObjectId> {
@@ -76,32 +76,6 @@ public class ModelSerializer {
     }
   }
 
-  /** Parse an enum type but replace unknown values with specified fallback value. */
-  @RequiredArgsConstructor
-  public static class IgnoreUnknownValuesDeserializer<E extends Enum<E>> extends JsonDeserializer<E> {
-    private final Class<E> enumClass;
-    private final E fallbackValue;
-
-    @Override public E deserialize(JsonParser jp, DeserializationContext ctx) throws IOException {
-      JsonNode node = jp.readValueAsTree();
-      if (node == null) {
-        return null;
-      }
-      try {
-        return Enum.valueOf(enumClass, node.textValue());
-      } catch (IllegalArgumentException e) {
-        log.info("Ignoring unknown {} value: {}", enumClass.getSimpleName(), node.textValue());
-        return fallbackValue;
-      }
-    }
-
-//    public static class UserFlag extends IgnoreUnknownValuesDeserializer<User.Flag> {
-//      UserFlag() {
-//        super(User.Flag.class, null);
-//      }
-//    }
-  }
-
   private static final ObjectMapper JSON_MAPPER;
 
   public static final ObjectMapper MONGO_MAPPER;
@@ -112,9 +86,11 @@ public class ModelSerializer {
 
     // Don't include null props or empty lists
     MONGO_MAPPER.setSerializationInclusion(Include.NON_EMPTY);
+    MONGO_MAPPER.registerModule(new JavaTimeModule());
+    MONGO_MAPPER.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS,false);
 
     // Only include whitelisted props
-    MONGO_MAPPER.setVisibilityChecker(
+    MONGO_MAPPER.setVisibility(
         MONGO_MAPPER.getSerializationConfig().getDefaultVisibilityChecker()
             .withFieldVisibility(JsonAutoDetect.Visibility.NONE)
             .withGetterVisibility(JsonAutoDetect.Visibility.NONE)
@@ -124,13 +100,14 @@ public class ModelSerializer {
 
     JSON_MAPPER = new ObjectMapper();
     JSON_MAPPER.setSerializationInclusion(Include.NON_EMPTY);
-    JSON_MAPPER.setVisibilityChecker(
+    JSON_MAPPER.setVisibility(
         JSON_MAPPER.getSerializationConfig().getDefaultVisibilityChecker()
             .withFieldVisibility(JsonAutoDetect.Visibility.NONE)
             .withGetterVisibility(JsonAutoDetect.Visibility.NONE)
             .withIsGetterVisibility(JsonAutoDetect.Visibility.NONE)
             .withSetterVisibility(JsonAutoDetect.Visibility.NONE)
             .withCreatorVisibility(JsonAutoDetect.Visibility.NONE));
+
     JSON_MAPPER.registerModule(new JsonModule());
   }
 
@@ -242,7 +219,7 @@ public class ModelSerializer {
 
     private static final long serialVersionUID = 1L;
 
-    public CustomSerializers() {
+    CustomSerializers() {
       addSerializer(ObjectId.class, new ObjectIdSerializer());
       addSerializer(ArrayRealVector.class, new ArrayRealVectorSerializer());
       addSerializer(LocalDate.class, new StdDelegatingSerializer(LocalDateToDate.INSTANCE));
@@ -253,7 +230,7 @@ public class ModelSerializer {
 
     private static final long serialVersionUID = 1L;
 
-    public CustomDeserializers() {
+    CustomDeserializers() {
       addDeserializer(ObjectId.class, new ToObjectIdDeserializer());
       addDeserializer(ArrayRealVector.class, new ArrayRealVectorDeserializer());
       addDeserializer(LocalDate.class, new StdDelegatingDeserializer<>(DateToLocalDate.INSTANCE));

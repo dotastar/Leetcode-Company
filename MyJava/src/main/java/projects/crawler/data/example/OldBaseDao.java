@@ -38,24 +38,6 @@ import com.mongodb.DuplicateKeyException;
 import com.mongodb.MongoException;
 import com.mongodb.ReadPreference;
 import com.mongodb.WriteConcern;
-import lombok.SneakyThrows;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.ClassUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.bson.types.ObjectId;
-import org.mongojack.DBCursor;
-import org.mongojack.DBProjection;
-import org.mongojack.DBProjection.ProjectionBuilder;
-import org.mongojack.DBQuery;
-import org.mongojack.DBQuery.Query;
-import org.mongojack.DBUpdate;
-import org.mongojack.JacksonDBCollection;
-import org.mongojack.WriteResult;
-import org.mongojack.internal.update.SingleUpdateOperationValue;
-import projects.crawler.utils.CollectionUtils;
-import projects.crawler.data.model.Model;
-import projects.crawler.data.db.ModelSerializer;
-
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
@@ -73,6 +55,22 @@ import java.util.Map.Entry;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.function.Function;
+import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ClassUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.bson.types.ObjectId;
+import org.mongojack.DBCursor;
+import org.mongojack.DBProjection;
+import org.mongojack.DBProjection.ProjectionBuilder;
+import org.mongojack.DBQuery;
+import org.mongojack.DBQuery.Query;
+import org.mongojack.DBUpdate;
+import org.mongojack.JacksonDBCollection;
+import org.mongojack.WriteResult;
+import org.mongojack.internal.update.SingleUpdateOperationValue;
+import projects.crawler.data.model.Model;
+import projects.crawler.utils.CollectionUtils;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -112,7 +110,7 @@ public abstract class OldBaseDao<T extends Model<K>, K> {
   protected final JacksonDBCollection<T, K> collection;
 
   public OldBaseDao(DB db, String collectionName, Class<T> clazz, Class<K> idClazz) {
-    this.collection = JacksonDBCollection.wrap(db.getCollection(collectionName), clazz, idClazz, ModelSerializer.MONGO_MAPPER);
+    this.collection = JacksonDBCollection.wrap(db.getCollection(collectionName), clazz, idClazz, OldModelSerializer.MONGO_MAPPER);
   }
 
   public OldBaseDao(DB db, String collectionName, Class<? extends OldBaseDao<T, K>> clazz) {
@@ -122,7 +120,7 @@ public abstract class OldBaseDao<T extends Model<K>, K> {
   @SuppressWarnings("unchecked")
   private OldBaseDao(DB db, String collectionName, Type[] actualTypeArguments) {
     this.collection = GenericJacksonDBCollection.wrap(db.getCollection(collectionName),
-        (ParameterizedType) actualTypeArguments[0], (Class<K>) actualTypeArguments[1], ModelSerializer.MONGO_MAPPER);
+        (ParameterizedType) actualTypeArguments[0], (Class<K>) actualTypeArguments[1], OldModelSerializer.MONGO_MAPPER);
   }
 
   @SuppressWarnings("unchecked")
@@ -446,7 +444,7 @@ public abstract class OldBaseDao<T extends Model<K>, K> {
       return chain(x -> Iterables.get((Iterable<?>) x, Integer.valueOf(path)), getter(pathIterator, type.containedType(0), keyType));
     }
 
-    BeanDescription beanDescription = ModelSerializer.MONGO_MAPPER.getSerializationConfig().introspect(type);
+    BeanDescription beanDescription = OldModelSerializer.MONGO_MAPPER.getSerializationConfig().introspect(type);
 
     BeanPropertyDefinition property = findProperty(beanDescription, path);
     if (!pathIterator.hasNext()) {
@@ -522,16 +520,16 @@ public abstract class OldBaseDao<T extends Model<K>, K> {
     }
 
     DBUpdate.Builder builder = new DBUpdate.Builder();
-    //JsonNode rootNode = ModelSerializer.MONGO_MAPPER.valueToTree(pojo);
-    BeanDescription beanDescription = ModelSerializer.MONGO_MAPPER.getSerializationConfig()
-        .introspect(ModelSerializer.MONGO_MAPPER.constructType(bean.getClass()));
+    //JsonNode rootNode = OldModelSerializer.MONGO_MAPPER.valueToTree(pojo);
+    BeanDescription beanDescription = OldModelSerializer.MONGO_MAPPER.getSerializationConfig()
+        .introspect(OldModelSerializer.MONGO_MAPPER.constructType(bean.getClass()));
     //List<BeanPropertyDefinition> properties = beanDescription.findProperties();
     for (String field : fields) {
       BeanPropertyDefinition property = findProperty(beanDescription, field);
       Object newValue = getValue(bean, property);
       if (newValue == null) {
         builder.unset(field);
-      } else if (ModelSerializer.MONGO_MAPPER.getSerializationConfig().getSerializationInclusion() == Include.NON_EMPTY
+      } else if (OldModelSerializer.MONGO_MAPPER.getSerializationConfig().getSerializationInclusion() == Include.NON_EMPTY
           && isEmpty(newValue)) {
         builder.unset(field);
       } else {
@@ -718,7 +716,7 @@ public abstract class OldBaseDao<T extends Model<K>, K> {
   }
 
   public DBObject updateToDBObject(DBUpdate.Builder update) {
-    return update.serialiseAndGet(ModelSerializer.MONGO_MAPPER, collection.getCollectionKey().getType());
+    return update.serialiseAndGet(OldModelSerializer.MONGO_MAPPER, collection.getCollectionKey().getType());
   }
 
   protected static BasicDBObject groupField(String keyColumn, String field) {
@@ -810,7 +808,7 @@ public abstract class OldBaseDao<T extends Model<K>, K> {
 
   /** Assumes there is a POJO Field for the JSON field */
   private Class<?> getType(String field) {
-    BeanDescription beanDescription = ModelSerializer.MONGO_MAPPER.getSerializationConfig()
+    BeanDescription beanDescription = OldModelSerializer.MONGO_MAPPER.getSerializationConfig()
         .introspect(collection.getCollectionKey().getType());
     BeanPropertyDefinition property = findProperty(beanDescription, field);
     Class<?> type = property.getField().getAnnotated().getType();
@@ -919,8 +917,8 @@ public abstract class OldBaseDao<T extends Model<K>, K> {
   private static BeanPropertyDefinition findProperty(BeanDescription beanDescription, String field) {
     for (BeanPropertyDefinition property : beanDescription.findProperties()) {
       if (property.hasField() && property.getField().hasAnnotation(JsonUnwrapped.class)) {
-        BeanDescription unwrappedBeanDescription = ModelSerializer.MONGO_MAPPER.getSerializationConfig()
-            .introspect(ModelSerializer.MONGO_MAPPER.constructType(property.getField().getRawType()));
+        BeanDescription unwrappedBeanDescription = OldModelSerializer.MONGO_MAPPER.getSerializationConfig()
+            .introspect(OldModelSerializer.MONGO_MAPPER.constructType(property.getField().getRawType()));
         try {
           log.debug("Searching for {} in {}: {}", field, unwrappedBeanDescription.getType(),
               unwrappedBeanDescription.findProperties());
@@ -945,10 +943,11 @@ public abstract class OldBaseDao<T extends Model<K>, K> {
       BeanPropertyDefinition property1, BeanPropertyDefinition property2) {
     for (PropertyDescriptor prop : Introspector.getBeanInfo(beanDescription.getBeanClass()).getPropertyDescriptors()) {
       if (prop.getName().equals(property2.getName())) {
-        POJOPropertyBuilder delegatePropertyBuilder =
-            new POJOPropertyBuilder(PropertyName.construct(prop.getName(), null), null, true);
-        delegatePropertyBuilder.addGetter(new AnnotatedMethod(beanDescription.getClassInfo(), prop.getReadMethod(), null, null),
-            prop.getName(), true, false);
+        AnnotatedMethod annotatedMethod =
+            new AnnotatedMethod(beanDescription.getClassInfo(), prop.getReadMethod(), null, null);
+        PropertyName propertyName = PropertyName.construct(prop.getName(), null);
+        POJOPropertyBuilder delegatePropertyBuilder = new POJOPropertyBuilder(null, null, true, propertyName);
+        delegatePropertyBuilder.addGetter(annotatedMethod, propertyName, true, false, true);
         return delegatePropertyBuilder;
       }
     }

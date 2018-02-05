@@ -8,13 +8,14 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
+import projects.crawler.data.model.FetchResult;
 import projects.crawler.network.SimpleHttpClient;
 
 
 @Slf4j
 @Data
-public class PageIterator implements Iterator<Optional<Document>> {
-  private static final int MAX_NO_RESULT_PAGE_COUNT = 2;
+public class PageIterator implements Iterator<FetchResult> {
+  private static final int MAX_NO_RESULT_PAGE_COUNT = 1;
   private static final int MAX_FAILURE_COUNT = 3;
 
   // e.g. https://dealer.autohome.com.cn/beijing?pageIndex=1
@@ -34,16 +35,14 @@ public class PageIterator implements Iterator<Optional<Document>> {
     this.noResultPageCnt = 0;
   }
 
-  public List<Document> crawl() {
-    List<Document> pages = new ArrayList<>();
+  /**
+   * Optional not present indicates a fetching failed request
+   */
+  public List<FetchResult> crawl() {
+    List<FetchResult> pages = new ArrayList<>();
     while (hasNext()) {
-      Optional<Document> optionalPage = next();
-      if (!optionalPage.isPresent()) {
-        continue;
-      }
-      Document page = optionalPage.get();
-
-      pages.add(page);
+      FetchResult optionalPage = next();
+      pages.add(optionalPage);
     }
     return pages;
   }
@@ -54,21 +53,24 @@ public class PageIterator implements Iterator<Optional<Document>> {
   }
 
   @Override
-  public Optional<Document> next() {
+  public FetchResult next() {
     ++currentIndex;
     String url = buildUrl(currentIndex);
     Optional<Document> optionalPage = SimpleHttpClient.get(url);
-
+    FetchResult result;
     if (!optionalPage.isPresent()) {
       log.warn("Failed to crawl page {}", url);
       failureCnt++;
+      result = FetchResult.failed(url);
     } else if (hasResult(optionalPage.get())) {
       log.info("Crawled page {} successfully.", url);
+      result = FetchResult.success(url, optionalPage.get());
     } else { // isPresent && !hasResult
       log.info("Crawled page {}, reached NoResultPage!", url);
       noResultPageCnt++;
+      result = FetchResult.noResult(url, optionalPage.get());
     }
-    return optionalPage;
+    return result;
   }
 
   /**
@@ -79,7 +81,7 @@ public class PageIterator implements Iterator<Optional<Document>> {
     return noResultElems.isEmpty();
   }
 
-  private String buildUrl(int i) {
+  protected String buildUrl(int i) {
     return baseUrl + "?" + queryParameterIndexName + i;
   }
 }

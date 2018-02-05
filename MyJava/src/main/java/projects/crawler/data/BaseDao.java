@@ -1,7 +1,12 @@
 package projects.crawler.data;
 
-import com.mongodb.DB;
 import com.mongodb.DBCollection;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Consumer;
+import javax.annotation.Nullable;
 import org.apache.commons.lang3.StringUtils;
 import org.bson.types.ObjectId;
 import org.mongojack.DBCursor;
@@ -9,32 +14,37 @@ import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
 import org.mongojack.JacksonDBCollection;
 import org.mongojack.WriteResult;
+import projects.crawler.data.db.ModelMapper;
 import projects.crawler.data.model.Model;
-
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
 public class BaseDao<T extends Model<K>, K> {
+  private static Set<String> indexedCollections = ConcurrentHashMap.newKeySet();
 
   protected final JacksonDBCollection<T, K> coll;
 
   public BaseDao(DBCollection mongoColl, Class<T> clazz, Class<K> idClazz) {
-    coll = JacksonDBCollection.wrap(mongoColl, clazz, idClazz);
+    this(JacksonDBCollection.wrap(mongoColl, clazz, idClazz, ModelMapper.MONGO_MAPPER), null);
   }
 
-  public BaseDao(DB db, String collName, Class<T> clazz, Class<K> idClazz) {
-    coll = JacksonDBCollection.wrap(db.getCollection(collName), clazz, idClazz);
+  public BaseDao(DBCollection mongoColl, Class<T> clazz, Class<K> idClazz, Consumer<DBCollection> indexCreator) {
+    this(JacksonDBCollection.wrap(mongoColl, clazz, idClazz, ModelMapper.MONGO_MAPPER), indexCreator);
   }
 
-  public void insert(T doc) {
-    coll.insert(doc);
+  private BaseDao(JacksonDBCollection<T, K> collection, @Nullable Consumer<DBCollection> indexCreator) {
+    this.coll = collection;
+    if (indexCreator != null && indexedCollections.add(collection.getFullName())) {
+      indexCreator.accept(collection.getDbCollection());
+    }
   }
 
-  public void insertMany(List<T> docs) {
-    coll.insert(docs);
+  public WriteResult<T, K> insert(T doc) {
+    return coll.insert(doc);
+  }
+
+  public WriteResult<T, K> insertMany(List<T> docs) {
+    return coll.insert(docs);
   }
 
   public long count() {

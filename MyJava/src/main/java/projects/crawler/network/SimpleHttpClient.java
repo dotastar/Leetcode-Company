@@ -17,8 +17,8 @@ import projects.crawler.utils.RecoveryHelper;
 @Singleton
 public class SimpleHttpClient {
   public static final String USER_AGENT = "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:25.0) Gecko/20100101 Firefox/25.0";
-  private static final int TIMEOUT_SECOND = 5;
-  private static final int MAX_ATTEMPTS = 3;
+  private static final int TIMEOUT_SECOND = 30;
+  private static final int MAX_ATTEMPTS = 5;
   private static final int BACKOFF_TIME_MS = 1000;
   // AsyncHttpClientConfig
 //  private static final int MAX_IO_EXCEPTION_RETRY = 2;
