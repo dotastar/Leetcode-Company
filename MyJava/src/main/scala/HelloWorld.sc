@@ -1,0 +1,1 @@
+val book = "Programming Scala"
