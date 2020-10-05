@@ -3,13 +3,13 @@ package interview.leetcode;
 /**
  * Given two words word1 and word2, find the minimum number of steps required to
  * convert word1 to word2. (each operation is counted as 1 step.)
- * 
+ *
  * You have the following 3 operations permitted on a word:
- * 
+ *
  * a) Insert a character b) Delete a character c) Replace a character
- * 
+ *
  * @author yazhoucao
- * 
+ *
  */
 public class Edit_Distance {
 
@@ -22,15 +22,15 @@ public class Edit_Distance {
 	 * Dynamic programming
 	 * dp[i][j] is the min distance of word1.sub(0...i-1) and word2.sub(0...j-1)
 	 * x = word1[i], y = word2[j],
-	 * 
+	 *
 	 * When x==y:
 	 * A.1. if x == y, then dp[i][j] == dp[i-1][j-1]
-	 * 
+	 *
 	 * When x!=y, dp[i][j] is the min of the three situations:
 	 * B.1. if we insert y for word1, then dp[i][j] = dp[i][j-1] + 1
 	 * B.2. if we delete x for word1, then dp[i][j] = dp[i-1][j] + 1
 	 * B.3. if we replace x with y for word1, then dp[i][j] = dp[i-1][j-1] + 1
-	 * 
+	 *
 	 */
 	public static int minDistance(String word1, String word2) {
 		int len1 = word1.length();
@@ -90,7 +90,7 @@ public class Edit_Distance {
 		int prev = 0; // to store dp[i-1][j-1]
 		for (int j = 0; j <= n; j++)
 			dp[j] = j;  // initialize dp[0][j]
-		
+
 		for (int i = 1; i <= m; i++) {
 			prev = i - 1; // or prev = dp[0];
 			dp[0] = i;	// initialize dp[i][0]
