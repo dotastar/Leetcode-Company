@@ -4,8 +4,8 @@ from typing import List
 class Solution:
     def removeDuplicates(self, nums: List[int]) -> int:
         # 0,0,1,1,1,2,2,3,3,4
-        #     ^
-        #   ^
+        #     ^                i
+        #   ^                  next_avail
         # 0 1 1,1,1,2,2,3,3,4
         #           ^
         #     ^
